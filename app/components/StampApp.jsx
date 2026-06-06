@@ -366,7 +366,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4;min-
 
 /* ══════ OVERLAY ══════ */
 .overlay{
-  position:absolute;top:0;left:0;right:0;bottom:0;background:var(--white);
+  position:fixed;top:0;left:0;right:0;bottom:0;max-height:100vh;background:var(--white);
   z-index:200;overflow-y:auto;overflow-x:hidden;
   display:none
 }
