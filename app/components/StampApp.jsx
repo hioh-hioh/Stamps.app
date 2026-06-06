@@ -1822,7 +1822,6 @@ export default function App() {
 +     <PinSVG color="var(--red)"/>
 +   </div>
 + </div>
-プッシュしてください！
               <div style={{display:"flex",justifyContent:"center",gap:6,marginTop:8}}>
                 <div style={{width:6,height:6,borderRadius:"50%",background:"rgba(28,27,31,1)"}}/>
                 <div style={{width:6,height:6,borderRadius:"50%",background:"rgba(28,27,31,0.3)"}}/>
