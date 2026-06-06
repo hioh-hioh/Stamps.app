@@ -1393,7 +1393,7 @@ export default function App() {
                   );
                 } else { setUserLocation({lat:35.6580,lng:139.7016}); setLocLoading(false); }
               }}
-              style={{cursor:"pointer"}}>
+              >
               <Ic.Search/>
               <input placeholder="Search Stamp / スタンプ検索" readOnly style={{cursor:"pointer"}}/>
             </div>
