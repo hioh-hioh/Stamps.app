@@ -106,7 +106,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4;min-
 
 /* ── NAV ── */
 .bnav{
-  position:absolute;bottom:0;left:0;right:0;
+  position:fixed;bottom:0;left:0;right:0;
   width:393px;
   display:flex;align-items:flex-start;
   background:var(--white);
