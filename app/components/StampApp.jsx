@@ -107,11 +107,11 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4;min-
 /* ── NAV ── */
 .bnav{
   position:fixed;bottom:0;left:0;right:0;
-  width:393px;
+  width:100%;max-width:390px;
   display:flex;align-items:flex-start;
   background:var(--white);
   border-top:1px solid var(--border);
-  padding:12px 0 28px;z-index:999
+  padding:12px 0;z-index:999
 }
 .nbtn{
   flex:1;display:flex;flex-direction:column;align-items:center;
