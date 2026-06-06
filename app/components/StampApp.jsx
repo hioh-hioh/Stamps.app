@@ -101,7 +101,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4;min-
    box-shadow:var(--sh-lg)
  }
  @media(min-width:480px){
-   .frame{min-height:844px;border-radius:40px;margin:40px auto;}.fab{position:absolute;}.bnav{position:absolute;}
+   .frame{min-height:844px;border-radius:40px;margin:40px auto;}.fab{position:absolute;}.bnav{position:absolute;}.bsheet{position:absolute;}
  }
 
 /* ── NAV ── */
@@ -331,7 +331,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4;min-
 
 /* bottom sheet */
 .bsheet{
-  position:absolute;bottom:90px;left:0;right:0;
+  position:fixed;bottom:90px;left:0;right:0;
   display:flex;justify-content:center;
   z-index:60;padding:0 16px
 }
