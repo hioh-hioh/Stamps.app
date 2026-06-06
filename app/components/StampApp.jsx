@@ -92,14 +92,17 @@ const S = `
   --sh-md:0 4px 16px rgba(0,0,0,.10);
   --sh-lg:0 8px 32px rgba(0,0,0,.14);
 }
-body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
+body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4;min-height:100vh;display:flex;justify-content:center;align-items:flex-start;}
 
 .frame{
-  width:390px;height:844px;background:var(--white);
-  margin:0 auto;position:relative;overflow:hidden;
-  display:flex;flex-direction:column;
-  border-radius:40px;box-shadow:var(--sh-lg)
-}
+   width:100%;max-width:390px;min-height:100vh;height:auto;background:var(--white);
+   margin:0 auto;position:relative;overflow:hidden;
+   display:flex;flex-direction:column;
+   box-shadow:var(--sh-lg)
+ }
+ @media(min-width:480px){
+   .frame{min-height:844px;border-radius:40px;margin:40px auto;}
+ }
 
 /* ── NAV ── */
 .bnav{
