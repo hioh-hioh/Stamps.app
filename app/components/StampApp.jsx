@@ -381,7 +381,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4;min-
 }
 .ov-sbar span{font-size:14px;color:var(--text3)}
 .ov-back{
-  position:absolute;bottom:0;left:0;right:0;background:rgba(255,255,255,.85);height:40px;display:flex;align-items:center;padding:0 12px;
+  position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.85);height:40px;display:flex;align-items:center;padding:0 12px;
   border:none;cursor:pointer;color:var(--text2);font-size:22px;line-height:1
 }
 
