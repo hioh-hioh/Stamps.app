@@ -1811,9 +1811,18 @@ export default function App() {
                 </button>
               </div>
               {/* ── hero画像 ── */}
-              <div className="detail-hero" style={{height:220,borderRadius:8,margin:"12px 16px"}}>
-                <div style={{position:"absolute",inset:0,background:"var(--red-bg)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:80}}>🏮</div>
-              </div>
+              <div className="detail-hero" style={{height:220,borderRadius:8,margin:"12px 16px",overflow:"hidden",position:"relative"}}>
+   <MapView
+     lat={selSpot.lat}
+     lng={selSpot.lng}
+     zoom={15}
+     style={{position:"absolute",inset:0,width:"100%",height:"100%"}}
+   />
++   <div className="map-pin" style={{position:"absolute",left:"50%",top:"50%",transform:"translate(-50%,-100%)"}}>
++     <PinSVG color="var(--red)"/>
++   </div>
++ </div>
+プッシュしてください！
               <div style={{display:"flex",justifyContent:"center",gap:6,marginTop:8}}>
                 <div style={{width:6,height:6,borderRadius:"50%",background:"rgba(28,27,31,1)"}}/>
                 <div style={{width:6,height:6,borderRadius:"50%",background:"rgba(28,27,31,0.3)"}}/>
