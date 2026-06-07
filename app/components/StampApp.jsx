@@ -1424,8 +1424,8 @@ export default function App() {
               </button>
             </div>
 
-            {/* FAB */}onClick={()=>{setNewCiOpen(true);if(navigator.geolocation)navigator.geolocation.getCurrentPosition(pos=>setUserLocation({lat:pos.coords.latitude,lng:pos.coords.longitude}),()=>setUserLocation({lat:35.6580,lng:139.7016}));}}
-            <button className="fab" style={{paddingTop:4}} >+</button>
+            {/* FAB */}
+ <button className="fab" style={{paddingTop:4}} onClick={()=>{setNewCiOpen(true);if(navigator.geolocation)navigator.geolocation.getCurrentPosition(pos=>setUserLocation({lat:pos.coords.latitude,lng:pos.coords.longitude}),()=>setUserLocation({lat:35.6580,lng:139.7016}));}}>+</button>
 
             {/* bottom sheet */}
             <div className={`bsheet ${selSpot?"":"hidden"}`}>
