@@ -101,12 +101,12 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4;min-
    box-shadow:var(--sh-lg)
  }
  @media(min-width:480px){
-   .frame{min-height:844px;border-radius:40px;margin:40px auto;}.fab{position:absolute;right:20px;bottom:90px;}.bnav{position:absolute;bottom:0;left:0;right:0;transform:none;width:100%;}.bsheet{position:absolute;}
+   .frame{min-height:844px;border-radius:40px;margin:40px auto;}.fab{position:absolute;right:20px;bottom:90px;}.bsheet{position:absolute;}
  }
 
 /* ── NAV ── */
 .bnav{
-  position:fixed;bottom:0;left:0;right:0;
+  position:absolute;bottom:0;left:0;right:0;
   width:100%;max-width:390px;
   display:flex;align-items:flex-start;
   background:var(--white);
