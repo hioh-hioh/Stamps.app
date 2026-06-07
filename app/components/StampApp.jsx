@@ -101,7 +101,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4;min-
    box-shadow:var(--sh-lg)
  }
  @media(min-width:480px){
-   .frame{min-height:844px;border-radius:40px;margin:40px auto;}.fab{position:absolute;right:20px;bottom:90px;}.bsheet{position:absolute;}
+   .frame{min-height:844px;border-radius:40px;margin:40px auto;}.fab{position:absolute;right:20px;bottom:90px;}.bsheet{position:absolute;}.bnav{position:sticky;bottom:0;}
  }
 
 /* ── NAV ── */
