@@ -1,6 +1,8 @@
 'use client'
 import { Marker as MapMarker } from 'react-map-gl/mapbox'
 import { useState } from "react";
+import { supabase } from '../../lib/supabase'
+import { useEffect } from 'react'
 import MapView from './MapView'
 // ══════════════════════════════════════════════
 // DATA
@@ -1126,6 +1128,16 @@ const Ic = {
 // APP
 // ══════════════════════════════════════════════
 export default function App() {
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
   const [tab, setTab]             = useState("home");
   const [selSpot, setSelSpot]     = useState(null);
   const [overlay, setOverlay]     = useState(null); // "form"|"detail"
@@ -1605,6 +1617,17 @@ export default function App() {
                   <div className="prof-name">{profile.name}</div>
                   <div className="prof-bio">{profile.location}<br/>{profile.bio}</div>
                 </div>
+                {!user ? (
+                  <button onClick={()=>supabase.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin}})}
+                    style={{padding:"6px 16px",borderRadius:100,border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:700,background:"#616168",color:"#fff"}}>
+                    Googleでログイン
+                  </button>
+                ) : (
+                  <button onClick={()=>supabase.auth.signOut()}
+                    style={{padding:"6px 16px",borderRadius:100,border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:13,color:"var(--text2)",background:"var(--gray-50)"}}>
+                    ログアウト
+                  </button>
+                )}
                 <button className="edit-btn" onClick={()=>{
                   setEditDraft({name:profile.name,location:profile.location,bio:profile.bio});
                   setProfileEditOpen(true);
