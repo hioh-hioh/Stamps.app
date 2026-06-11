@@ -1,8 +1,6 @@
 'use client'
 import { Marker as MapMarker } from 'react-map-gl/mapbox'
-import { useState } from "react";
-import { supabase } from '../../lib/supabase'
-import { useEffect } from 'react'
+import { useState, useEffect } from "react";import { supabase } from '../../lib/supabase'
 import MapView from './MapView'
 // ══════════════════════════════════════════════
 // DATA
@@ -1619,7 +1617,7 @@ export default function App() {
                 </div>
                 {!user ? (
                   <button onClick={()=>supabase.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin}})}
-                    style={{padding:"6px 16px",borderRadius:100,border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:700,background:"#616168",color:"#fff"}}>
+                    style={{padding:"6px 16px",borderRadius:100,border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:700,background:"#616168",color:"#fff",marginRight:4}}
                     Googleでログイン
                   </button>
                 ) : (
