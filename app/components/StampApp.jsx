@@ -1198,12 +1198,22 @@ export default function App() {
   const openDetail = (spot) => { setSelSpot(spot); setOverlay("detail"); };
   const closeOv = () => setOverlay(null);
 
-  const submit = () => {
+  const submit = async () => {
     const now = new Date();
     const ds = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,"0")}/${String(now.getDate()).padStart(2,"0")}`;
     const ts = `${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
-    setArchives(a=>[{id:Date.now(),spot:selSpot.name,sub:`${selSpot.category}　${selSpot.area}`,date:`${ds} ${ts}`,note:ciText||"チェックイン！",emoji:"🏮",hasImg:hasPrev,color:"#E1F5EE",category:ciCat||"観光",tags:[...ciTags,selSpot.area.replace("東京都","")],limited:ciLimited,dateFrom:ciDateFrom,dateTo:ciDateTo},...a]);
+    const newEntry = {id:Date.now(),spot:selSpot.name,sub:`${selSpot.category}　${selSpot.area}`,date:`${ds} ${ts}`,note:ciText||"チェックイン！",emoji:"🏮",hasImg:hasPrev,color:"#E1F5EE",category:ciCat||"観光",tags:[...ciTags,selSpot.area.replace("東京都","")],limited:ciLimited,dateFrom:ciDateFrom,dateTo:ciDateTo};
+    setArchives(a=>[newEntry,...a]);
     setCheckins(c=>c+1);
+    if(user) {
+      await supabase.from('checkins').insert({
+        user_id: user.id,
+        spot: selSpot.name,
+        note: ciText||"チェックイン！",
+        tags: ciTags.join(','),
+        visibility: ciVis,
+      });
+    }
     setOverlay(null); setSelSpot(null);
     showToast("チェックイン完了！","ok");
   };
