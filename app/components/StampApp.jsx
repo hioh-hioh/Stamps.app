@@ -1612,7 +1612,7 @@ export default function App() {
               </div>
               <div className="prof-info">
                 <div style={{flex:1}}>
-                  <div className="prof-name">{profile.name}</div>
+                  <div className="prof-name">{user ? (user.user_metadata?.full_name || user.email) : profile.name}</div>
                   <div className="prof-bio">{profile.location}<br/>{profile.bio}</div>
                 </div>
                 {!user ? (
