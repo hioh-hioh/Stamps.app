@@ -1617,12 +1617,12 @@ export default function App() {
                 </div>
                 {!user ? (
                   <button onClick={()=>supabase.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin}})}
-                    style={{padding:"6px 16px",borderRadius:100,border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:700,background:"#616168",color:"#fff",marginRight:4}}
+                    style={{padding:"6px 16px",borderRadius:100,border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:700,background:"#616168",color:"#fff",marginRight:4}}>
                     Googleでログイン
                   </button>
                 ) : (
                   <button onClick={()=>supabase.auth.signOut()}
-                    style={{padding:"6px 16px",borderRadius:100,border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:13,color:"var(--text2)",background:"var(--gray-50)"}}>
+                    style={{padding:"6px 16px",borderRadius:100,border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:13,color:"var(--text2)",background:"var(--gray-50)",marginRight:4}}>
                     ログアウト
                   </button>
                 )}
