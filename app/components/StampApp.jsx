@@ -1,6 +1,6 @@
 'use client'
 import { Marker as MapMarker } from 'react-map-gl/mapbox'
-import { useState, useEffect } from "react";import { supabase } from '../../lib/supabase'
+import { useState } from "react";
 import MapView from './MapView'
 // ══════════════════════════════════════════════
 // DATA
@@ -79,7 +79,7 @@ const ARCHIVE_ITEMS = [
 // STYLES
 // ══════════════════════════════════════════════
 const S = `
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Public+Sans:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --red:#E8452A; --red-dark:#C43520; --red-bg:#FEF0ED;
@@ -92,26 +92,23 @@ const S = `
   --sh-md:0 4px 16px rgba(0,0,0,.10);
   --sh-lg:0 8px 32px rgba(0,0,0,.14);
 }
-body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4;min-height:100vh;display:flex;justify-content:center;align-items:flex-start;}
+body{font-family:'Noto Sans JP',sans-serif;background:#E8E8E4}
 
 .frame{
-   width:100%;max-width:390px;min-height:100vh;height:auto;background:var(--white);
-   margin:0 auto;position:relative;overflow:hidden;
-   display:flex;flex-direction:column;
-   box-shadow:var(--sh-lg)
- }
- @media(min-width:480px){
-   .frame{min-height:844px;border-radius:40px;margin:40px auto;}.fab{position:absolute;right:20px;bottom:90px;}.bsheet{position:absolute;}.map-screen{height:calc(100vh - 80px);}
- }
+  width:390px;height:844px;background:var(--white);
+  margin:0 auto;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;
+  border-radius:40px;box-shadow:var(--sh-lg)
+}
 
 /* ── NAV ── */
 .bnav{
-  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
-  width:100%;max-width:390px;
+  position:absolute;bottom:0;left:0;right:0;
+  width:393px;
   display:flex;align-items:flex-start;
   background:var(--white);
   border-top:1px solid var(--border);
-  padding:12px 0;z-index:999
+  padding:12px 0 28px;z-index:999
 }
 .nbtn{
   flex:1;display:flex;flex-direction:column;align-items:center;
@@ -227,7 +224,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4;min-
 .saved-empty{padding:32px 16px;text-align:center;color:var(--text3);font-size:13px}
 
 .fab{
-  position:fixed;bottom:90px;right:20px;
+  position:absolute;bottom:90px;right:20px;
   width:52px;height:52px;border-radius:50%;
   background:var(--red);color:var(--white);
   border:none;cursor:pointer;font-size:26px;
@@ -331,7 +328,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4;min-
 
 /* bottom sheet */
 .bsheet{
-  position:fixed;bottom:90px;left:0;right:0;
+  position:absolute;bottom:90px;left:0;right:0;
   display:flex;justify-content:center;
   z-index:60;padding:0 16px
 }
@@ -366,13 +363,13 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4;min-
 
 /* ══════ OVERLAY ══════ */
 .overlay{
-  position:fixed;top:0;left:0;right:0;bottom:0;max-height:100vh;background:var(--white);
+  position:absolute;top:0;left:0;right:0;bottom:0;background:var(--white);
   z-index:200;overflow-y:auto;overflow-x:hidden;
   display:none
 }
 .overlay.open{display:block}
 
-.ov-maparea{height:220px;background:#E8EEF4;position:relative;overflow:hidden;border-radius:0 0 8px 8px}
+.ov-maparea{height:220px;background:#E8EEF4;position:relative;overflow:hidden}
 .ov-sbar{
   position:absolute;top:12px;left:12px;right:12px;
   display:flex;align-items:center;gap:8px;
@@ -381,19 +378,19 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4;min-
 }
 .ov-sbar span{font-size:14px;color:var(--text3)}
 .ov-back{
-  position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.85);height:40px;display:flex;align-items:center;padding:0 12px;
+  position:absolute;top:10px;right:10px;background:none;
   border:none;cursor:pointer;color:var(--text2);font-size:22px;line-height:1
 }
 
 .ov-body{
   width:393px;
-  padding:0 16px 120px;
+  padding:0 16px 28px;
   display:flex;flex-direction:column;
   align-items:center;
   gap:20px;
   box-sizing:border-box;
   background:#FCFCFC;
-  border-radius:8px;
+  border-radius:8px 8px 0 0;
 }
 .ov-name{font-size:18px;font-weight:700;color:var(--text)}
 .ov-sub{font-size:13px;color:var(--text2);margin-top:3px}
@@ -456,9 +453,6 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4;min-
   color:var(--text3);font-size:13px;line-height:1;
   padding:0;display:flex;align-items:center
 }
-.tag-chip-on{
-  background:#616168;color:#fff
-}
 
 .limited-wrap{
   padding:14px 0;border-bottom:1px solid var(--gray-50)
@@ -498,7 +492,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4;min-
 .limited-date-input{
   border:1px solid var(--border);border-radius:8px;
   padding:8px 10px;font-size:13px;font-family:inherit;
-  color:var(--text);outline:none;background:var(--white);
+  color:var(--text);outline:none;background:var(--gray-50);
   transition:border-color .15s;width:100%
 }
 .limited-date-input:focus{border-color:var(--gray-400);background:var(--white)}
@@ -506,20 +500,20 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4;min-
 
 .vis-row{
   display:flex;align-items:center;justify-content:space-between;
-  padding:16px 0;border-bottom:1px solid var(--gray-50);width:100%;
+  padding:16px 0;border-bottom:1px solid var(--gray-50);
   box-sizing:border-box;width:100%
 }
 .vis-row label{font-size:14px;color:var(--text)}
-.vis-tog{display:flex;border-radius:24px;overflow:hidden;border:1px solid var(--border);padding:3px;gap:2px;background:var(--white)}
+.vis-tog{display:flex;border-radius:20px;overflow:hidden;border:1px solid var(--border)}
 .vtbtn{
   padding:6px 16px;font-size:13px;border:none;cursor:pointer;
   font-family:inherit;background:none;color:var(--text2);transition:all .15s
 }
-.vtbtn.on{background:#616168;color:#fff;border-radius:20px}
+.vtbtn.on{background:var(--gray-800);color:#fff}
 
 .submit-btn{
-  width:100%;padding:16px;background:#616168;color:#fff;
-  border:none;border-radius:100px;font-size:14px;font-weight:700;
+  width:100%;padding:16px;background:var(--gray-800);color:#fff;
+  border:none;border-radius:14px;font-size:16px;font-weight:700;
   font-family:inherit;cursor:pointer;margin-top:8px;letter-spacing:.05em;
   transition:opacity .15s
 }
@@ -599,7 +593,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4;min-
 .vtab.on{color:#5D5D5D;border-bottom-color:#5D5D5D}
 
 /* Grid view */
-.photo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px;padding:16px}
+.photo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px;padding:0 16px}
 .gcell{
   aspect-ratio:1;background:var(--gray-100);
   overflow:hidden;cursor:pointer;position:relative;
@@ -789,6 +783,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4;min-
 .arc-back{background:none;border:none;cursor:pointer;color:var(--text2);display:flex}
 .arc-img{
   width:100%;height:260px;background:var(--red-bg);
+  border-radius:8px;
   display:flex;align-items:center;justify-content:center;font-size:80px
 }
 .arc-body{padding:20px 16px}
@@ -1077,18 +1072,16 @@ const Ic = {
   ),
   Clock: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mic"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
   Pin: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mic"><path d="M20 10c0 6-8 13-8 13S4 16 4 10a8 8 0 0116 0z"/><circle cx="12" cy="10" r="3"/></svg>,
-  Stamp: () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 16c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2z"/><path d="M10 10c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2z"/><path d="M16 16c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2z"/><path d="M6 12c0-1.1.9-2 2-2s2 .9 2 2"/><path d="M14 8c0-1.1.9-2 2-2s2 .9 2 2"/></svg>,
+  Stamp: () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8H6a4 4 0 000 8h12a4 4 0 000-8z"/></svg>,
   Photo: () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>,
   Camera: () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>,
   Back: () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>,
   // Nav icons
   NavTimeline: ({a}) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" style={{aspectRatio:"1/1"}}>
-      <mask id="mask0_185_2614" style={{maskType:"alpha"}} maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
-        <rect width="24" height="24" fill="#D9D9D9"/>
-      </mask>
-      <g mask="url(#mask0_185_2614)">
-        <path d="M15.3 16.7L16.7 15.3L13 11.6V7H11V12.4L15.3 16.7ZM12 22C10.6167 22 9.31667 21.7375 8.1 21.2125C6.88333 20.6875 5.825 19.975 4.925 19.075C4.025 18.175 3.3125 17.1167 2.7875 15.9C2.2625 14.6833 2 13.3833 2 12C2 10.6167 2.2625 9.31667 2.7875 8.1C3.3125 6.88333 4.025 5.825 4.925 4.925C5.825 4.025 6.88333 3.3125 8.1 2.7875C9.31667 2.2625 10.6167 2 12 2C13.3833 2 14.6833 2.2625 15.9 2.7875C17.1167 3.3125 18.175 4.025 19.075 4.925C19.975 5.825 20.6875 6.88333 21.2125 8.1C21.7375 9.31667 22 10.6167 22 12C22 13.3833 21.7375 14.6833 21.2125 15.9C20.6875 17.1167 19.975 18.175 19.075 19.075C18.175 19.975 17.1167 20.6875 15.9 21.2125C14.6833 21.7375 13.3833 22 12 22Z" fill={a?"#EB4B24":"#808080"}/>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <mask id="m1" style={{maskType:"alpha"}} maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24"><rect width="24" height="24" fill="#D9D9D9"/></mask>
+      <g mask="url(#m1)">
+        <path d="M13 13H21V19C21 19.55 20.8042 20.0208 20.4125 20.4125C20.0208 20.8042 19.55 21 19 21H13V13ZM13 11V3H19C19.55 3 20.0208 3.19583 20.4125 3.5875C20.8042 3.97917 21 4.45 21 5V11H13ZM11 11H3V5C3 4.45 3.19583 3.97917 3.5875 3.5875C3.97917 3.19583 4.45 3 5 3H11V11ZM11 13V21H5C4.45 21 3.97917 20.8042 3.5875 20.4125C3.19583 20.0208 3 19.55 3 19V13H11Z" fill={a?"#EB4B24":"#808080"}/>
       </g>
     </svg>
   ),
@@ -1126,16 +1119,6 @@ const Ic = {
 // APP
 // ══════════════════════════════════════════════
 export default function App() {
-  const [user, setUser] = useState(null);
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-    });
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-    return () => subscription.unsubscribe();
-  }, []);
   const [tab, setTab]             = useState("home");
   const [selSpot, setSelSpot]     = useState(null);
   const [overlay, setOverlay]     = useState(null); // "form"|"detail"
@@ -1148,7 +1131,6 @@ export default function App() {
   const [ciDateFrom, setCiDateFrom] = useState("");
   const [ciDateTo, setCiDateTo]     = useState("");
   const [savedSpots, setSavedSpots] = useState([]);
-  const [showLocPicker, setShowLocPicker] = useState(false);
   const [mapFilter, setMapFilter]   = useState("all"); // "all"|"saved"|"checkedin"
   const [showSaved, setShowSaved]   = useState(false);
   const [hasPrev, setHasPrev]     = useState(false);
@@ -1170,9 +1152,10 @@ export default function App() {
   const [spotSearch, setSpotSearch] = useState("");
   const [nearbyOpen, setNearbyOpen] = useState(false);
   const [nearbySearch, setNearbySearch] = useState("");
+  const [geoResults, setGeoResults] = useState([]);
+const [geoLoading, setGeoLoading] = useState(false);
+const [sessionToken] = useState(()=>crypto.randomUUID());
   const [userLocation, setUserLocation] = useState(null);
-  const [viewingUser, setViewingUser] = useState(null); // 他ユーザーページ表示用
-  const [followingUsers, setFollowingUsers] = useState([]); // フォロー中のユーザー
   const [locLoading, setLocLoading] = useState(false);
   const [photoViewer, setPhotoViewer] = useState(null);
   const [profile, setProfile] = useState({
@@ -1193,27 +1176,33 @@ export default function App() {
     setToast({msg,type}); setToastOn(true);
     setTimeout(()=>setToastOn(false), 2200);
   };
-
+const searchGeo = async (q) => {
+    setSpotSearch(q);
+    if(q.trim().length < 2){ setGeoResults([]); return; }
+    setGeoLoading(true);
+    try {
+      const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+      const res = await fetch(
+        `https://api.mapbox.com/search/searchbox/v1/suggest?q=${encodeURIComponent(q)}&language=ja&country=JP&limit=8&session_token=${sessionToken}&access_token=${token}`
+      );
+      const data = await res.json();
+      setGeoResults(data.suggestions || []);
+    } catch(e) {
+      setGeoResults([]);
+    } finally {
+      setGeoLoading(false);
+    }
+  };
   const openForm = (spot) => { setSelSpot(spot); setCiText(""); setHasPrev(false); setCiCat(""); setCiTags([]); setCiTagInput(""); setCiLimited(false); setCiDateFrom(""); setCiDateTo(""); setOverlay("form"); };
   const openDetail = (spot) => { setSelSpot(spot); setOverlay("detail"); };
   const closeOv = () => setOverlay(null);
 
-  const submit = async () => {
+  const submit = () => {
     const now = new Date();
     const ds = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,"0")}/${String(now.getDate()).padStart(2,"0")}`;
     const ts = `${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
-    const newEntry = {id:Date.now(),spot:selSpot.name,sub:`${selSpot.category}　${selSpot.area}`,date:`${ds} ${ts}`,note:ciText||"チェックイン！",emoji:"🏮",hasImg:hasPrev,color:"#E1F5EE",category:ciCat||"観光",tags:[...ciTags,selSpot.area.replace("東京都","")],limited:ciLimited,dateFrom:ciDateFrom,dateTo:ciDateTo};
-    setArchives(a=>[newEntry,...a]);
+    setArchives(a=>[{id:Date.now(),spot:selSpot.name,sub:`${selSpot.category}　${selSpot.area}`,date:`${ds} ${ts}`,note:ciText||"チェックイン！",emoji:"🏮",hasImg:hasPrev,color:"#E1F5EE",category:ciCat||"観光",tags:[...ciTags,selSpot.area.replace("東京都","")],limited:ciLimited,dateFrom:ciDateFrom,dateTo:ciDateTo},...a]);
     setCheckins(c=>c+1);
-    if(user) {
-      await supabase.from('checkins').insert({
-        user_id: user.id,
-        spot: selSpot.name,
-        note: ciText||"チェックイン！",
-        tags: ciTags.join(','),
-        visibility: ciVis,
-      });
-    }
     setOverlay(null); setSelSpot(null);
     showToast("チェックイン完了！","ok");
   };
@@ -1258,11 +1247,15 @@ export default function App() {
                 <input placeholder="Search Stamp / スタンプ検索" value={searchQ} onChange={e=>setSearchQ(e.target.value)}/>
               </div>
             </div>
-            {/* FAB */}
-            <button className="fab" style={{paddingTop:4}} onClick={()=>{setNewCiOpen(true);if(navigator.geolocation)navigator.geolocation.getCurrentPosition(pos=>setUserLocation({lat:pos.coords.latitude,lng:pos.coords.longitude}),()=>setUserLocation({lat:35.6580,lng:139.7016}));}}>+</button>
+
             {/* Timeline */}
             {(()=>{
-              
+              // モックタイムラインデータ
+              const TIMELINE_MOCK = [
+                { id:201, spot:"渋谷ちかみち総合インフォメーション", category:"観光案内所", area:"東京都渋谷区", date:"2025/11/17 12:17", dateKey:"2025/11/17", dateLabel:"2025/11/17 (Mon)", emoji:"🏮", color:"#E1F5EE", note:"今日は渋谷からスタンプ集め開始！", hasImg:true },
+                { id:202, spot:"渋谷公園", category:"公園", area:"東京都渋谷区", date:"2025/11/17 12:17", dateKey:"2025/11/17", dateLabel:"2025/11/17 (Mon)", emoji:"🌳", color:"#E1F5E1", note:"天気がいいな〜", hasImg:false },
+                { id:203, spot:"渋谷駅", category:"鉄道駅", area:"東京都渋谷区", date:"2025/11/16 10:00", dateKey:"2025/11/16", dateLabel:"2025/11/16 (Sun)", emoji:"🚉", color:"#EBF0F5", note:"今日は渋谷からスタンプ集め開始！", hasImg:true },
+              ];
 
               // archivesをタイムライン形式に変換してマージ
               const arcItems = archives.map(a=>({
@@ -1283,7 +1276,7 @@ export default function App() {
                 hasImg: a.hasImg||false,
               }));
 
-              const allItems = [...arcItems];
+              const allItems = [...arcItems, ...TIMELINE_MOCK];
               const filtered = searchQ.trim()===""
                 ? allItems
                 : allItems.filter(item=>
@@ -1321,20 +1314,13 @@ export default function App() {
                         const matchSpot = MAP_SPOTS.find(s=>s.name===item.spot);
                         return (
                           <div key={item.id}
-                            style={{display:"flex",gap:12,padding:"4px 16px",cursor:"pointer"}}
+                            style={{display:"flex",gap:12,padding:"12px 16px",cursor:"pointer"}}
                             onClick={()=>{
                               if(matchSpot){ setSelSpot(matchSpot); setOverlay("detail"); }
                             }}>
-                            {/* アイコン＋縦線 */}
-                            <div style={{display:"flex",flexDirection:"column",alignItems:"center",flexShrink:0,alignSelf:"stretch"}}>
-                              <div style={{width:11,height:27,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,marginTop:-2}}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="11" height="27" viewBox="0 0 11 27" fill="none">
-                                  <circle cx="5.5" cy="13" r="5" fill="#EB4B24"/>
-                                </svg>
-                              </div>
-                              {ii < group.items.length-1 && (
-                                <div style={{flex:1,width:2,background:"#EDEDED",borderRadius:1,marginTop:4}}/>
-                              )}
+                            {/* スタンプアイコン */}
+                            <div style={{width:40,height:40,borderRadius:"50%",background:item.color,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0}}>
+                              {item.emoji}
                             </div>
                             {/* 内容 */}
                             <div style={{flex:1,minWidth:0}}>
@@ -1344,7 +1330,7 @@ export default function App() {
                               <div style={{fontSize:12,color:"var(--text3)",marginBottom:8,display:"flex",gap:8}}>
                                 {item.category && <span>{item.category}</span>}
                                 {item.area && <span>{item.area}</span>}
-                                <span>{item.date?.slice(11)}</span>
+                                <span>{item.date}</span>
                               </div>
                               {item.note && (
                                 <div style={{fontSize:14,color:"rgba(28,27,31,1)",lineHeight:1.6,marginBottom:8}}>
@@ -1352,7 +1338,7 @@ export default function App() {
                                 </div>
                               )}
                               {item.hasImg && (
-                                <div style={{width:"100%",height:180,borderRadius:8,background:item.color,marginBottom:16,display:"flex",alignItems:"center",justifyContent:"center",fontSize:48}}>
+                                <div style={{width:"100%",height:180,borderRadius:8,background:item.color,display:"flex",alignItems:"center",justifyContent:"center",fontSize:48}}>
                                   {item.emoji}
                                 </div>
                               )}
@@ -1416,7 +1402,7 @@ export default function App() {
                   );
                 } else { setUserLocation({lat:35.6580,lng:139.7016}); setLocLoading(false); }
               }}
-              >
+              style={{cursor:"pointer"}}>
               <Ic.Search/>
               <input placeholder="Search Stamp / スタンプ検索" readOnly style={{cursor:"pointer"}}/>
             </div>
@@ -1444,42 +1430,10 @@ export default function App() {
               </button>
             </div>
 
-            {/* 現在地ボタン */}
-            <button style={{position:"fixed",bottom:154,right:20,width:52,height:52,background:"none",border:"none",cursor:"pointer",padding:0,zIndex:50}}
-              onClick={()=>{
-                if(navigator.geolocation){
-                  navigator.geolocation.getCurrentPosition(pos=>{
-                    setUserLocation({lat:pos.coords.latitude,lng:pos.coords.longitude});
-                    window.__mapboxFlyTo&&window.__mapboxFlyTo(pos.coords.longitude,pos.coords.latitude);
-                  });
-                }
-              }}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 52 52" fill="none">
-                <g filter="url(#filter0_d_190_2664)">
-                  <rect x="6" y="4" width="40" height="40" rx="20" fill="white"/>
-                  <mask id="mask0_190_2664" style={{maskType:"alpha"}} maskUnits="userSpaceOnUse" x="14" y="12" width="25" height="25">
-                    <rect x="14" y="12" width="24.5" height="24.5" fill="#D9D9D9"/>
-                  </mask>
-                  <g mask="url(#mask0_190_2664)">
-                    <path d="M25.1667 32.625V30.9583C23.4306 30.7639 21.941 30.0451 20.6979 28.8021C19.4549 27.559 18.7361 26.0694 18.5417 24.3333H16.875V22.6667H18.5417C18.7361 20.9306 19.4549 19.441 20.6979 18.1979C21.941 16.9549 23.4306 16.2361 25.1667 16.0417V14.375H26.8333V16.0417C28.5694 16.2361 30.059 16.9549 31.3021 18.1979C32.5451 19.441 33.2639 20.9306 33.4583 22.6667H35.125V24.3333H33.4583C33.2639 26.0694 32.5451 27.559 31.3021 28.8021C30.059 30.0451 28.5694 30.7639 26.8333 30.9583V32.625H25.1667ZM30.125 27.625C31.2639 26.4861 31.8333 25.1111 31.8333 23.5C31.8333 21.8889 31.2639 20.5139 30.125 19.375C28.9861 18.2361 27.6111 17.6667 26 17.6667C24.3889 17.6667 23.0139 18.2361 21.875 19.375C20.7361 20.5139 20.1667 21.8889 20.1667 23.5C20.1667 25.1111 20.7361 26.4861 21.875 27.625C23.0139 28.7639 24.3889 29.3333 26 29.3333C27.6111 29.3333 28.9861 28.7639 30.125 27.625ZM23.6458 25.8542C22.9931 25.2014 22.6667 24.4167 22.6667 23.5C22.6667 22.5833 22.9931 21.7986 23.6458 21.1458C24.2986 20.4931 25.0833 20.1667 26 20.1667C26.9167 20.1667 27.7014 20.4931 28.3542 21.1458C29.0069 21.7986 29.3333 22.5833 29.3333 23.5C29.3333 24.4167 29.0069 25.2014 28.3542 25.8542C27.7014 26.5069 26.9167 26.8333 26 26.8333C25.0833 26.8333 24.2986 26.5069 23.6458 25.8542Z" fill="#616168"/>
-                  </g>
-                </g>
-                <defs>
-                  <filter id="filter0_d_190_2664" x="0" y="0" width="52" height="52" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-                    <feFlood floodOpacity="0" result="BackgroundImageFix"/>
-                    <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-                    <feOffset dy="2"/>
-                    <feGaussianBlur stdDeviation="3"/>
-                    <feComposite in2="hardAlpha" operator="out"/>
-                    <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.03 0"/>
-                    <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_190_2664"/>
-                    <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_190_2664" result="shape"/>
-                  </filter>
-                </defs>
-              </svg>
-            </button>
             {/* FAB */}
-            <button className="fab" style={{paddingTop:4}} onClick={()=>{setNewCiOpen(true);if(navigator.geolocation)navigator.geolocation.getCurrentPosition(pos=>setUserLocation({lat:pos.coords.latitude,lng:pos.coords.longitude}),()=>setUserLocation({lat:35.6580,lng:139.7016}));}}>+</button>
+            <button className="fab"
+              onClick={()=>setNewCiOpen(true)}>+</button>
+
             {/* bottom sheet */}
             <div className={`bsheet ${selSpot?"":"hidden"}`}>
               {selSpot && (()=>{
@@ -1530,8 +1484,8 @@ export default function App() {
                         )}
                         <p className="sheet-comment">{selSpot.comment}</p>
                         <div style={{display:"flex",gap:8,marginTop:10,alignItems:"center"}}>
-                          <button style={{padding:"5px 14px 6px",background:"var(--red)",color:"#fff",border:"none",borderRadius:8,fontSize:13,cursor:"pointer",fontFamily:"inherit",fontWeight:500}} onClick={()=>openForm(selSpot)}>チェックイン</button>
-                          <button style={{padding:"5px 14px 6px",background:"none",color:"var(--red)",border:"1.5px solid var(--red)",borderRadius:8,fontSize:13,cursor:"pointer",fontFamily:"inherit"}} onClick={()=>openDetail(selSpot)}>詳細</button>
+                          <button style={{padding:"4px 14px 6px",background:"var(--red)",color:"#fff",border:"none",borderRadius:8,fontSize:13,cursor:"pointer",fontFamily:"inherit",fontWeight:500}} onClick={()=>openForm(selSpot)}>チェックイン</button>
+                          <button style={{padding:"4px 14px 6px",background:"none",color:"var(--red)",border:"1.5px solid var(--red)",borderRadius:8,fontSize:13,cursor:"pointer",fontFamily:"inherit"}} onClick={()=>openDetail(selSpot)}>詳細</button>
                           {/* 保存ボタン */}
                           <button className="bookmark-btn" onClick={()=>toggleSave(selSpot)} title={isSaved(selSpot)?"保存済み":"保存する"}>
                             <svg width="20" height="20" viewBox="0 0 24 24"
@@ -1573,41 +1527,6 @@ export default function App() {
           </div>
         )}
 
-        {/* ════ USER PAGE ════ */}
-        {viewingUser && (
-          <div className="overlay open" style={{zIndex:300}}>
-            <div className="mypage-screen">
-              <div className="profile-hd" style={{padding:"0 16px"}}>
-                <div style={{display:"flex",alignItems:"center",padding:"48px 0 16px 0"}}>
-                  <button style={{background:"none",border:"none",cursor:"pointer",color:"var(--text2)",display:"flex",padding:0,marginLeft:0,alignSelf:"flex-start"}} onClick={()=>setViewingUser(null)}>
-                    <Ic.Back/>
-                  </button>
-                </div>
-                <div className="prof-row">
-                  <div className="avatar"><Ic.User s={36}/></div>
-                  <div className="stats">
-                    <div className="stat"><span className="snum">0</span><span className="slbl">チェックイン</span></div>
-                    <div className="stat"><span className="snum">0</span><span className="slbl">コレクション</span></div>
-                    <div className="stat"><span className="snum">0</span><span className="slbl">フォロワー</span></div>
-                  </div>
-                </div>
-                <div className="prof-info">
-                  <div style={{flex:1}}>
-                    <div className="prof-name">{viewingUser.name}</div>
-                    <div className="prof-bio">スタンプコレクター</div>
-                  </div>
-                  <button
-                    onClick={()=>setFollowingUsers(f=>f.includes(viewingUser.name)?f.filter(x=>x!==viewingUser.name):[...f,viewingUser.name])}
-                    style={{padding:"6px 20px",borderRadius:100,border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:700,
-                      background:followingUsers.includes(viewingUser.name)?"var(--gray-100)":"#616168",
-                      color:followingUsers.includes(viewingUser.name)?"var(--text)":"#fff",transition:"all .15s"}}>
-                    {followingUsers.includes(viewingUser.name)?"フォロー中":"フォロー"}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
         {/* ════ MYPAGE ════ */}
         {tab==="mypage" && (
           <div className="mypage-screen">
@@ -1615,27 +1534,16 @@ export default function App() {
               <div className="prof-row">
                 <div className="avatar"><Ic.User s={36}/></div>
                 <div className="stats">
-                  <div className="stat"><span className="snum">{archives.length}</span><span className="slbl">チェックイン</span></div>
-                  <div className="stat"><span className="snum">{new Set(archives.map(a=>a.spot)).size}</span><span className="slbl">コレクション</span></div>
-                  <div className="stat"><span className="snum">0</span><span className="slbl">フォロワー</span></div>
+                  <div className="stat"><span className="snum">{archives.length}</span><span className="slbl">ポスト</span></div>
+                  <div className="stat"><span className="snum">{checkins}</span><span className="slbl">チェックイン</span></div>
+                  <div className="stat"><span className="snum">120</span><span className="slbl">いいね</span></div>
                 </div>
               </div>
               <div className="prof-info">
                 <div style={{flex:1}}>
-                  <div className="prof-name">{user ? (user.user_metadata?.full_name || user.email) : profile.name}</div>
+                  <div className="prof-name">{profile.name}</div>
                   <div className="prof-bio">{profile.location}<br/>{profile.bio}</div>
                 </div>
-                {!user ? (
-                  <button onClick={()=>supabase.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin}})}
-                    style={{padding:"6px 16px",borderRadius:100,border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:700,background:"#616168",color:"#fff",marginRight:4}}>
-                    Googleでログイン
-                  </button>
-                ) : (
-                  <button onClick={()=>supabase.auth.signOut()}
-                    style={{padding:"6px 16px",borderRadius:100,border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:13,color:"var(--text2)",background:"var(--gray-50)",marginRight:4}}>
-                    ログアウト
-                  </button>
-                )}
                 <button className="edit-btn" onClick={()=>{
                   setEditDraft({name:profile.name,location:profile.location,bio:profile.bio});
                   setProfileEditOpen(true);
@@ -1662,7 +1570,7 @@ export default function App() {
               return archives.length===0
                 ? <div style={{padding:"40px 16px",textAlign:"center",color:"var(--text3)",fontSize:13}}>まだチェックインがありません</div>
                 : (
-                  <div style={{display:"flex",gap:8,padding:"16px",alignItems:"flex-start"}}>
+                  <div style={{display:"flex",gap:8,padding:"8px 16px",alignItems:"flex-start"}}>
                     <div style={{display:"flex",flexDirection:"column",gap:24,flex:1,minWidth:0}}>
                       {left.map((e,i)=>(
                         <div key={e.id} className="m-cell" onClick={()=>setSelArc(e)}>
@@ -1757,31 +1665,13 @@ export default function App() {
               <div className="map-pin" style={{position:"absolute",left:"50%",top:"42%",transform:"translate(-50%,-100%)"}}>
                 <PinSVG color="var(--red)"/>
               </div>
+              <div className="ov-sbar"><Ic.Search/><span>Search Stamp</span></div>
               <button className="ov-back" onClick={closeOv}>←</button>
             </div>
-            <div className="ov-body" style={{display:"flex",flexDirection:"column",alignItems:"center",alignSelf:"stretch",gap:0,borderRadius:8}}>
-              <div className="ov-name" style={{marginTop:12,marginBottom:4}}>{selSpot.name}</div>
-              <div className="ov-sub" style={{marginBottom:8}}>{selSpot.category}　{selSpot.area}</div>
-              <span className="change-loc" onClick={()=>setShowLocPicker(true)}>位置情報を変更</span>
-              {showLocPicker && (
-                <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.4)",zIndex:300,display:"flex",alignItems:"flex-end",justifyContent:"center"}}
-                  onClick={()=>setShowLocPicker(false)}>
-                  <div style={{background:"var(--white)",width:"390px",borderRadius:"16px 16px 0 0",maxHeight:"60%",overflowY:"auto",padding:"16px 0 32px"}}
-                    onClick={e=>e.stopPropagation()}>
-                    <div style={{padding:"0 16px 12px",fontWeight:700,fontSize:15,borderBottom:"1px solid var(--border)"}}>スポットを選択</div>
-                    {MAP_SPOTS.map(s=>(
-                      <div key={s.id}
-                        style={{padding:"12px 16px",borderBottom:"1px solid var(--gray-50)",cursor:"pointer",fontSize:14,
-                          background:selSpot?.id===s.id?"var(--red-bg)":"var(--white)",
-                          color:selSpot?.id===s.id?"var(--red)":"var(--text)"}}
-                        onClick={()=>{setSelSpot(s);setShowLocPicker(false);}}>
-                        {s.name}
-                        <div style={{fontSize:12,color:"var(--text3)",marginTop:2}}>{s.category}　{s.area}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+            <div className="ov-body">
+              <div className="ov-name">{selSpot.name}</div>
+              <div className="ov-sub">{selSpot.category}　{selSpot.area}</div>
+              <span className="change-loc">位置情報を変更</span>
               <div className="input-card">
                 <textarea placeholder="最新情報" value={ciText} onChange={e=>setCiText(e.target.value)}/>
                 {hasPrev && (
@@ -1795,36 +1685,66 @@ export default function App() {
                   <button className="mbtn" onClick={()=>setHasPrev(true)}><Ic.Camera/></button>
                 </div>
               </div>
+              <div className="vis-row">
+                <label>カテゴリ</label>
+                <select value={ciCat} onChange={e=>setCiCat(e.target.value)}
+                  style={{border:"1px solid var(--border)",borderRadius:8,padding:"6px 10px",fontSize:13,fontFamily:"inherit",color:"var(--text)",background:"var(--white)",outline:"none",cursor:"pointer"}}>
+                  <option value="">選択してください</option>
+                  {CATEGORIES.filter(cat=>cat.type==="category").map(cat=>(
+                    <option key={cat.key} value={cat.key}>{cat.label}（{cat.labelJa}）</option>
+                  ))}
+                </select>
+              </div>
               {/* ハッシュタグ */}
               <div className="tag-input-wrap">
                 <label className="tag-input-label">ハッシュタグ</label>
-                <div className="tag-chips" style={{marginTop:0}}>
-                  {CATEGORIES.filter(c=>c.type!=="all").map(c=>{
-                    const on = ciTags.includes(c.key);
-                    return (
-                      <button key={c.key}
-                        className={"tag-chip" + (on?" tag-chip-on":"")}
-                        style={{border:"none",cursor:"pointer",fontFamily:"inherit"}}
-                        onClick={()=>setCiTags(t=>on?t.filter(x=>x!==c.key):[...t,c.key])}>
-                        {c.labelJa}
-                      </button>
-                    );
-                  })}
-                  <button className="tag-chip"
-                  style={{border:"none",cursor:"pointer",fontFamily:"inherit",display:"flex",justifyContent:"center",alignItems:"center",gap:"10px"}}
-                  onClick={()=>{const v=prompt("タグを入力");if(v&&v.trim()&&!ciTags.includes(v.trim()))setCiTags(t=>[...t,v.trim()]);}}>
-                  追加 ＋
-                </button>
+                <div className="tag-input-row">
+                  <span style={{color:"var(--text3)",fontSize:15}}>#</span>
+                  <input
+                    placeholder="タグを入力して追加"
+                    value={ciTagInput}
+                    onChange={e=>setCiTagInput(e.target.value.replace(/[#\s]/g,""))}
+                    onKeyDown={e=>{
+                      if((e.key==="Enter"||e.key===" "||e.key==="　")&&ciTagInput.trim()){
+                        e.preventDefault();
+                        if(!ciTags.includes(ciTagInput.trim()))
+                          setCiTags(t=>[...t,ciTagInput.trim()]);
+                        setCiTagInput("");
+                      }
+                    }}
+                  />
+                  <button className="tag-add-btn"
+                    onClick={()=>{
+                      if(ciTagInput.trim()&&!ciTags.includes(ciTagInput.trim())){
+                        setCiTags(t=>[...t,ciTagInput.trim()]);
+                        setCiTagInput("");
+                      }
+                    }}>＋</button>
                 </div>
+                {ciTags.length>0 && (
+                  <div className="tag-chips">
+                    {ciTags.map(tag=>(
+                      <div key={tag} className="tag-chip">
+                        <span>#{tag}</span>
+                        <button className="tag-chip-remove"
+                          onClick={()=>setCiTags(t=>t.filter(t2=>t2!==tag))}>×</button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
               {/* 期間限定設定 */}
-              <div className="limited-wrap" style={{width:"100%"}}>
+              <div className="limited-wrap">
                 <div className="limited-toggle-row">
-                  <label>期間限定</label>
-                  <div className="vis-tog">
-                    <button className={`vtbtn ${ciLimited?"on":""}`} onClick={()=>setCiLimited(true)}>ON</button>
-                    <button className={`vtbtn ${!ciLimited?"on":""}`} onClick={()=>setCiLimited(false)}>OFF</button>
-                  </div>
+                  <label>
+                    <span className="limited-badge">LIMITED</span>
+                    期間限定スタンプ
+                  </label>
+                  <label className="toggle-switch">
+                    <input type="checkbox" checked={ciLimited} onChange={e=>setCiLimited(e.target.checked)}/>
+                    <div className="toggle-track"/>
+                    <div className="toggle-thumb"/>
+                  </label>
                 </div>
                 {ciLimited && (
                   <div className="limited-dates">
@@ -1869,33 +1789,25 @@ export default function App() {
             const allPosts = [...spotPosts, ...mockPosts];
             return <>
               {/* ── ヘッダー: 戻るボタン左上 ── */}
-              <div style={{display:"flex",alignItems:"center",padding:"20px 16px 0",position:"sticky",top:0,background:"var(--white)",zIndex:10}}>
+              <div style={{display:"flex",alignItems:"center",padding:"14px 16px 0",position:"sticky",top:0,background:"var(--white)",zIndex:10}}>
                 <button className="ov-back" style={{position:"static",background:"none",border:"none",cursor:"pointer",color:"var(--text2)",display:"flex",padding:0}} onClick={closeOv}>
                   <Ic.Back/>
                 </button>
               </div>
               {/* ── hero画像 ── */}
-              <div className="detail-hero" style={{height:220,borderRadius:8,margin:"12px 16px",overflow:"hidden",position:"relative"}}>
-   <MapView
-     lat={selSpot.lat}
-     lng={selSpot.lng}
-     zoom={15}
-     style={{position:"absolute",inset:0,width:"100%",height:"100%"}}
-   />
-+   <div className="map-pin" style={{position:"absolute",left:"50%",top:"50%",transform:"translate(-50%,-100%)"}}>
-+     <PinSVG color="var(--red)"/>
-+   </div>
-+ </div>
+              <div className="detail-hero" style={{height:220,borderRadius:8,margin:"12px 16px"}}>
+                <div style={{position:"absolute",inset:0,background:"var(--red-bg)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:80}}>🏮</div>
+              </div>
               <div style={{display:"flex",justifyContent:"center",gap:6,marginTop:8}}>
                 <div style={{width:6,height:6,borderRadius:"50%",background:"rgba(28,27,31,1)"}}/>
                 <div style={{width:6,height:6,borderRadius:"50%",background:"rgba(28,27,31,0.3)"}}/>
                 <div style={{width:6,height:6,borderRadius:"50%",background:"rgba(28,27,31,0.3)"}}/>
               </div>
-              <div className="ov-body" style={{paddingTop:16,background:"var(--white)"}}>
+              <div className="ov-body" style={{paddingTop:16}}>
                 {/* タイトル＋ブックマーク */}
 <div style={{display:"flex",alignItems:"flex-start",gap:28,alignSelf:"stretch",width:"100%"}}>
   <div style={{flex:1}}>
-    <div className="ov-name" style={{marginTop:16}}>{selSpot.name}</div>
+    <div className="ov-name">{selSpot.name}</div>
     <div className="ov-sub" style={{display:"flex",gap:8,marginTop:4}}>
       <span>{selSpot.category}</span>
       <span>{selSpot.area}</span>
@@ -1922,10 +1834,7 @@ export default function App() {
                         <div className="spot-post-avatar"><Ic.User s={14}/></div>
                         <div style={{display:"flex",flexDirection:"column",alignItems:"flex-start",gap:4,flex:1}}>
                           <div className="spot-post-meta">
-                            <h4 style={{cursor: post.user && post.user!=="Anonymous" && post.user!=="You" ? "pointer":"default", color: post.user && post.user!=="Anonymous" ? "var(--text)":"var(--text)"}}
-   onClick={()=>{ if(post.user && post.user!=="Anonymous") setViewingUser({name:post.user}); }}>
-   {post.user||"You"}
- </h4>
+                            <h4>{post.user||"You"}</h4>
                             <p>{post.date}</p>
                           </div>
                           {post.note && <p className="spot-post-text">{post.note}</p>}
@@ -1945,18 +1854,7 @@ export default function App() {
                     ))
                   }
                 </div>
-                {/* 登録ユーザー */}
-                {selSpot.stampUpdatedBy && (
-                  <div style={{display:"flex",alignItems:"center",gap:12,marginTop:16,paddingTop:16,borderTop:"1px solid #EDEDED",width:"100%",cursor:"pointer"}}
-                    onClick={()=>setViewingUser(selSpot.stampUpdatedBy)}>
-                    <div style={{width:32,height:32,borderRadius:"50%",background:"var(--gray-100)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,color:"var(--text2)",fontWeight:700,flexShrink:0}}>
-                        {selSpot.stampUpdatedBy.name?.slice(0,1).toUpperCase()}
-                    </div>
-                    <span style={{fontSize:13,color:"#37383A"}}>
-                      {selSpot.stampUpdatedBy.name}　{selSpot.stampUpdatedAt}に作成
-                    </span>
-                  </div>
-                )}
+
                 <button className="submit-btn" style={{marginTop:24}} onClick={()=>setOverlay("form")}>チェックインする</button>
 
                 {/* ── マップ（写真一覧の下） ── */}
@@ -1981,13 +1879,7 @@ export default function App() {
               <button className="arc-back" onClick={()=>setSelArc(null)}><Ic.Back/></button>
               <h2>チェックイン記録</h2>
             </div>
-            <div style={{display:"flex",gap:4,overflowX:"auto"}}>
-                  {(selArc.images||[selArc.emoji]).map((img,i)=>(
-                    <div key={i} className="arc-img" style={{flexShrink:0,width:selArc.images?.length>1?"180px":"100%"}}>
-                      {img}
-                    </div>
-                  ))}
-                </div>
+            <div className="arc-img">{selArc.emoji}</div>
             <div className="arc-body">
               <div className="arc-spot">{selArc.spot}</div>
               <div className="arc-sub">{selArc.sub}</div>
@@ -2099,36 +1991,63 @@ export default function App() {
           <div className="spot-search-box">
             <Ic.Search/>
             <input
-              placeholder="Search Stamp / スタンプ検索"
+              placeholder="場所を検索（例：東京タワー）"
               value={spotSearch}
-              onChange={e=>setSpotSearch(e.target.value)}
+              onChange={e=>searchGeo(e.target.value)}
               autoFocus
             />
           </div>
           <div className="spot-list">
-            {MAP_SPOTS
-              .filter(s=>
-                spotSearch.trim()==="" ||
-                s.name.toLowerCase().includes(spotSearch.toLowerCase()) ||
-                s.area.includes(spotSearch) ||
-                s.category.includes(spotSearch)
-              )
-              .map(s=>(
-                <div key={s.id} className="spot-list-item" onClick={()=>{
-                  setNewCiOpen(false);
-                  setSpotSearch("");
-                  openForm(s);
-                }}>
-                  <div className="spot-list-info">
-                    <h4>{s.name}</h4>
-                    <p>{s.category}　{s.area}</p>
-                  </div>
-                  <div className="spot-list-count">
-                    {userLocation ? fmtDist(calcDist(userLocation.lat,userLocation.lng,s.lat,s.lng)) : "--"}
-                  </div>
+            {geoLoading && (
+              <div style={{padding:"24px 16px",textAlign:"center",color:"var(--text3)",fontSize:13}}>検索中...</div>
+            )}
+            {!geoLoading && geoResults.map(f=>(
+              <div key={f.mapbox_id} className="spot-list-item" onClick={async ()=>{
+                const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+                const res = await fetch(
+                  `https://api.mapbox.com/search/searchbox/v1/retrieve/${f.mapbox_id}?session_token=${sessionToken}&access_token=${token}`
+                );
+                const data = await res.json();
+                const feature = data.features?.[0];
+                if(!feature) return;
+                const [lng, lat] = feature.geometry.coordinates;
+                const spot = {
+                  id: f.mapbox_id,
+                  name: f.name,
+                  address: f.full_address || f.place_formatted || "",
+                  lat, lng,
+                  category: f.poi_category?.[0] || "場所",
+                  area: feature.properties?.context?.place?.name || "",
+                };
+                const { supabase } = await import("../../lib/supabase");
+                await supabase.from("spots").upsert(spot, { onConflict: "id" });
+                setNewCiOpen(false);
+                setSpotSearch("");
+                setGeoResults([]);
+                spot.checkins = spot.checkins ?? 0;
+                spot.hours = spot.hours ?? "";
+                spot.location = spot.location ?? spot.address ?? "";
+                spot.reviews = spot.reviews ?? [];
+                spot.comment = spot.comment ?? "";
+                openForm(spot);
+              }}>
+                <div className="spot-list-icon">📍</div>
+                <div className="spot-list-info">
+                  <h4>{f.name}</h4>
+                  <p style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{f.full_address || f.place_formatted}</p>
                 </div>
-              ))
-            }
+              </div>
+            ))}
+            {!geoLoading && spotSearch.length >= 2 && geoResults.length === 0 && (
+              <div style={{padding:"32px 16px",textAlign:"center",color:"var(--text3)",fontSize:13}}>
+                見つかりませんでした
+              </div>
+            )}
+            {spotSearch.trim() === "" && (
+              <div style={{padding:"32px 16px",textAlign:"center",color:"var(--text3)",fontSize:13}}>
+                スポット名や住所で検索してください
+              </div>
+            )}
           </div>
         </div>
 
