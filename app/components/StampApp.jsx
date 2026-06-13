@@ -1181,12 +1181,9 @@ const searchGeo = async (q) => {
     if(q.trim().length < 2){ setGeoResults([]); return; }
     setGeoLoading(true);
     try {
-      const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
-      const res = await fetch(
-        `https://api.mapbox.com/search/searchbox/v1/suggest?q=${encodeURIComponent(q)}&language=ja&country=JP&limit=8&session_token=${sessionToken}&access_token=${token}`
-      );
+      const res = await fetch(`/api/places?q=${encodeURIComponent(q)}`);
       const data = await res.json();
-      setGeoResults(data.suggestions || []);
+      setGeoResults(data.predictions || []);
     } catch(e) {
       setGeoResults([]);
     } finally {
@@ -2001,39 +1998,36 @@ const searchGeo = async (q) => {
               <div style={{padding:"24px 16px",textAlign:"center",color:"var(--text3)",fontSize:13}}>検索中...</div>
             )}
             {!geoLoading && geoResults.map(f=>(
-              <div key={f.mapbox_id} className="spot-list-item" onClick={async ()=>{
-                const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
-                const res = await fetch(
-                  `https://api.mapbox.com/search/searchbox/v1/retrieve/${f.mapbox_id}?session_token=${sessionToken}&access_token=${token}`
-                );
-                const data = await res.json();
-                const feature = data.features?.[0];
-                if(!feature) return;
-                const [lng, lat] = feature.geometry.coordinates;
+              <div key={f.place_id} className="spot-list-item" onClick={async ()=>{
+                const detailRes = await fetch(`/api/places/details?place_id=${f.place_id}`);
+                const detailData = await detailRes.json();
+                const result = detailData.result;
+                if(!result) return;
                 const spot = {
-                  id: f.mapbox_id,
-                  name: f.name,
-                  address: f.full_address || f.place_formatted || "",
-                  lat, lng,
-                  category: f.poi_category?.[0] || "場所",
-                  area: feature.properties?.context?.place?.name || "",
+                  id: f.place_id,
+                  name: result.name,
+                  address: result.formatted_address || "",
+                  lat: result.geometry.location.lat,
+                  lng: result.geometry.location.lng,
+                  category: result.types?.[0] || "場所",
+                  area: result.address_components?.find(c=>c.types.includes("locality"))?.long_name || "",
                 };
-                const { supabase } = await import("../../lib/supabase");
-                await supabase.from("spots").upsert(spot, { onConflict: "id" });
-                setNewCiOpen(false);
-                setSpotSearch("");
-                setGeoResults([]);
                 spot.checkins = spot.checkins ?? 0;
                 spot.hours = spot.hours ?? "";
                 spot.location = spot.location ?? spot.address ?? "";
                 spot.reviews = spot.reviews ?? [];
                 spot.comment = spot.comment ?? "";
+                const { supabase } = await import("../../lib/supabase");
+                await supabase.from("spots").upsert(spot, { onConflict: "id" });
+                setNewCiOpen(false);
+                setSpotSearch("");
+                setGeoResults([]);
                 openForm(spot);
               }}>
                 <div className="spot-list-icon">📍</div>
                 <div className="spot-list-info">
-                  <h4>{f.name}</h4>
-                  <p style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{f.full_address || f.place_formatted}</p>
+                  <h4>{f.structured_formatting?.main_text || f.description}</h4>
+                  <p style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{f.structured_formatting?.secondary_text || f.description}</p>
                 </div>
               </div>
             ))}
