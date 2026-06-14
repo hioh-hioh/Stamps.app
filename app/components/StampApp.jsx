@@ -99,7 +99,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:#E8E8E4}
   width:390px;height:844px;background:var(--white);
   margin:0 auto;position:relative;overflow:hidden;
   display:flex;flex-direction:column;
-  border-radius:40px;box-shadow:var(--sh-lg)
+  border-radius:0;box-shadow:var(--sh-lg)
 }
 
 /* ── NAV ── */
