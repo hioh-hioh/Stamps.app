@@ -1570,7 +1570,7 @@ const searchGeo = async (q) => {
               return archives.length===0
                 ? <div style={{padding:"40px 16px",textAlign:"center",color:"var(--text3)",fontSize:13}}>まだチェックインがありません</div>
                 : (
-                  <div style={{display:"flex",gap:8,padding:"8px 16px",alignItems:"flex-start"}}>
+                  <div style={{display:"flex",gap:8,padding:"20px 16px 8px",alignItems:"flex-start"}}>
                     <div style={{display:"flex",flexDirection:"column",gap:24,flex:1,minWidth:0}}>
                       {left.map((e,i)=>(
                         <div key={e.id} className="m-cell" onClick={()=>setSelArc(e)}>
