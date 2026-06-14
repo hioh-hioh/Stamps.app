@@ -329,7 +329,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:#E8E8E4}
 
 /* bottom sheet */
 .bsheet{
-  position:absolute;bottom:90px;left:0;right:0;
+  position:absolute;bottom:calc(90px + env(safe-area-inset-bottom));left:0;right:0;
   display:flex;justify-content:center;
   z-index:60;padding:0 16px
 }
