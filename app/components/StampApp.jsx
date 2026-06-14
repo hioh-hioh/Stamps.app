@@ -1872,8 +1872,6 @@ const searchGeo = async (q) => {
                 autoFocus
               />
             </div>
-            </div>
-            </div>
           </div>
           <div className="nearby-list">
             {nearbySearch.trim().length >= 2 ? (
