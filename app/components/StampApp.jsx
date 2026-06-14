@@ -2283,8 +2283,9 @@ const searchGeo = async (q) => {
             const items = selGroup.items.length > 0 ? selGroup.items : archives;
             const leftHeights  = [180,150,200,160,190,155];
             const rightHeights = [155,195,160,185,150,200];
-            const left  = items.filter((_,i)=>i%2===0);
-            const right = items.filter((_,i)=>i%2===1);
+            const imgItems = items.filter(e=>e.photos&&e.photos.length>0);
+            const left  = imgItems.filter((_,i)=>i%2===0);
+            const right = imgItems.filter((_,i)=>i%2===1);
             return <>
               <div className="group-hd">
                 <button className="arc-back" onClick={()=>setSelGroup(null)}><Ic.Back/></button>
