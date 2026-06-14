@@ -1915,9 +1915,9 @@ const searchGeo = async (q) => {
                   {allPosts.length===0
                     ? <div className="spot-empty">まだ投稿がありません<br/>最初にチェックインしてみましょう！</div>
                     : <>
-                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,width:"100%"}}>
+                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px 12px",width:"100%"}}>
                       {(showAllPosts ? allPosts : allPosts.slice(0,2)).map((post,pi)=>(
-                        <div key={post.id} className="spot-post-card" style={{display:"flex",flexDirection:"column",alignItems:"flex-start",gap:8,background:"var(--gray-50)",borderRadius:12,padding:12,boxShadow:"none"}}>
+                        <div key={post.id} className="spot-post-card" style={{display:"flex",flexDirection:"column",alignItems:"flex-start",gap:8,background:"#F6F6F6",borderRadius:12,padding:12,boxShadow:"none"}}>
                           <div className="spot-post-avatar"><Ic.User s={14}/></div>
                           <div style={{display:"flex",flexDirection:"column",alignItems:"flex-start",gap:4,flex:1}}>
                             <div className="spot-post-meta">
