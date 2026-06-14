@@ -1926,7 +1926,7 @@ const searchGeo = async (q) => {
                     <BookmarkSVG active={isSaved(selSpot)} size={20}/>
                   </button>
                 </div>
-                <button onClick={()=>{setShowSpotEdit(true);setOverlay("form");}}
+                <button onClick={()=>{setShowSpotEdit(true);setCiHours(selSpot.hours||"");setCiLocation(selSpot.location||"");setOverlay("form");}}
                   style={{background:"none",border:"none",color:"var(--text3)",fontSize:13,cursor:"pointer",fontFamily:"inherit",display:"block",margin:"8px auto 0",textDecoration:"underline"}}>
                   スポット情報を修正する
                 </button>
