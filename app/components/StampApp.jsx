@@ -1301,10 +1301,10 @@ const searchGeo = async (q) => {
                             }}>
                             {/* ドット＋縦線 */}
                             <div style={{display:"flex",flexDirection:"column",alignItems:"center",flexShrink:0,width:12}}>
-                              <div style={{height:12,flexShrink:0}}/>
+                              <div style={{width:2,background:"#EDEDEC",flex:"0 0 8px"}}/>
                               <div style={{width:12,height:12,borderRadius:"50%",background:"#E8452A",flexShrink:0}}/>
                               {ii < group.items.length-1
-                                ? <div style={{width:2,flex:1,background:"#E8D0CC",minHeight:12}}/>
+                                ? <div style={{width:2,flex:1,background:"#EDEDEC",minHeight:16}}/>
                                 : <div style={{flex:1}}/>
                               }
                             </div>
