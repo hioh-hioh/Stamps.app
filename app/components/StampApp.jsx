@@ -1840,6 +1840,7 @@ const searchGeo = async (q) => {
         <div className={`overlay ${overlay==="detail"?"open":""}`} style={{overflowY:"auto"}}>
           {selSpot && overlay==="detail" && (()=>{
             // このスポットへのチェックイン一覧
+            const [showAllPosts, setShowAllPosts] = React.useState(false);
             const spotPosts = archives.filter(a=>a.spot===selSpot.name);
             // モックレビューも投稿カード形式に変換
             const mockPosts = (selSpot.reviews||[]).filter(r=>r.text).map((r,i)=>({
@@ -1913,32 +1914,41 @@ const searchGeo = async (q) => {
                   </div>
                   {allPosts.length===0
                     ? <div className="spot-empty">まだ投稿がありません<br/>最初にチェックインしてみましょう！</div>
-                    : allPosts.map((post,pi)=>(
-                      <div key={post.id} className="spot-post-card" style={{display:"flex",alignItems:"flex-start",gap:16,alignSelf:"stretch",background:"none",boxShadow:"none",padding:0}}>
-                        <div className="spot-post-avatar"><Ic.User s={14}/></div>
-                        <div style={{display:"flex",flexDirection:"column",alignItems:"flex-start",gap:4,flex:1}}>
-                          <div className="spot-post-meta">
-                            <h4>{post.user||"You"}</h4>
-                            <p>{post.date}</p>
-                          </div>
-                          {post.note && <p className="spot-post-text">{post.note}</p>}
-                          {post.hasImg && (
-                            <div className="spot-post-imgs">
-                              {(post.photos&&post.photos.length>0 ? post.photos : [null]).map((url,ii)=>(
-                                <div key={ii} className="spot-post-img"
-                                  style={{background:post.color||"var(--red-bg)"}}
-                                  onClick={()=>setPhotoViewer({posts:allPosts,postIdx:pi,imgIdx:ii})}>
-                                  {url
-                                    ? <img src={url} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
-                                    : <span style={{fontSize:36}}>{post.emoji}</span>
-                                  }
-                                </div>
-                              ))}
+                    : <>
+                      {(showAllPosts ? allPosts : allPosts.slice(0,2)).map((post,pi)=>(
+                        <div key={post.id} className="spot-post-card" style={{display:"flex",alignItems:"flex-start",gap:16,alignSelf:"stretch",background:"none",boxShadow:"none",padding:0}}>
+                          <div className="spot-post-avatar"><Ic.User s={14}/></div>
+                          <div style={{display:"flex",flexDirection:"column",alignItems:"flex-start",gap:4,flex:1}}>
+                            <div className="spot-post-meta">
+                              <h4>{post.user||"You"}</h4>
+                              <p>{post.date}</p>
                             </div>
-                          )}
+                            {post.note && <p className="spot-post-text">{post.note}</p>}
+                            {post.hasImg && (
+                              <div className="spot-post-imgs">
+                                {(post.photos&&post.photos.length>0 ? post.photos : [null]).map((url,ii)=>(
+                                  <div key={ii} className="spot-post-img"
+                                    style={{background:post.color||"var(--red-bg)"}}
+                                    onClick={()=>setPhotoViewer({posts:allPosts,postIdx:pi,imgIdx:ii})}>
+                                    {url
+                                      ? <img src={url} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+                                      : <span style={{fontSize:36}}>{post.emoji}</span>
+                                    }
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    ))
+                      ))}
+                      {allPosts.length>2 && (
+                        <button onClick={()=>setShowAllPosts(v=>!v)}
+                          style={{background:"none",border:"none",color:"var(--text3)",fontSize:13,
+                            cursor:"pointer",fontFamily:"inherit",textDecoration:"underline",padding:0}}>
+                          {showAllPosts ? "閉じる" : `View more (${allPosts.length-2}件)`}
+                        </button>
+                      )}
+                    </>
                   }
                 </div>
 
