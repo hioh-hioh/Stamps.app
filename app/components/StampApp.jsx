@@ -1251,6 +1251,8 @@ const searchGeo = async (q) => {
         hours: ciHours||"",
         location: ciLocation||"",
       }, { onConflict:"id" });
+      // selSpotに即時反映
+      setSelSpot(s=>s ? {...s, hours:ciHours||s.hours, location:ciLocation||s.location} : s);
     }
 
     if(!error && data){
@@ -1865,7 +1867,7 @@ const searchGeo = async (q) => {
   <span>{selSpot.category}</span>
   <span>{selSpot.area}</span>
 </div>
-                <div style={{display:"flex",padding:"12px",flexDirection:"column",alignItems:"flex-start",gap:8,alignSelf:"stretch",borderRadius:4,background:"#F6F6F6",marginTop:16}}>
+                <div style={{display:"flex",padding:"12px",flexDirection:"column",alignItems:"flex-start",gap:8,alignSelf:"stretch",borderRadius:4,background:"#F6F6F6",marginTop:20}}>
                   <div className="mrow"><Ic.Clock/> {selSpot.hours}</div>
                   <div className="mrow"><Ic.Pin/> {selSpot.location}</div>
                 </div>
