@@ -1516,6 +1516,27 @@ const searchGeo = async (q) => {
             </div>
 
             {/* FAB */}
+            <button onClick={()=>{
+                if(!navigator.geolocation) return;
+                navigator.geolocation.getCurrentPosition(pos=>{
+                  if(window.__mapboxFlyTo) window.__mapboxFlyTo(pos.coords.longitude, pos.coords.latitude);
+                });
+              }}
+              style={{
+                position:"fixed",
+                bottom:`calc(${90 + 52 + 12}px + env(safe-area-inset-bottom))`,
+                right:"max(20px, calc(50vw - 175px))",
+                width:44, height:44, borderRadius:"50%",
+                background:"#fff", border:"none", cursor:"pointer",
+                boxShadow:"0 2px 6px rgba(0,0,0,0.15)",
+                display:"flex", alignItems:"center", justifyContent:"center",
+                zIndex:50,
+              }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#616168" strokeWidth="2">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+              </svg>
+            </button>
             <button className="fab"
               onClick={()=>setNewCiOpen(true)}>+</button>
 
