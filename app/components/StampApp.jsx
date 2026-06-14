@@ -1532,7 +1532,10 @@ const searchGeo = async (q) => {
                     <div className="bsheet-top">
                       <div className="bsheet-thumb" style={{cursor:"pointer"}}
                         onClick={()=>setPhotoViewer({posts:allPhotoPosts,postIdx:0,imgIdx:0})}>
-                        <div style={{width:"100%",height:"100%",background:"var(--red-bg)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:28}}>🏮</div>
+                        {spotPosts.length>0 && spotPosts[0].photos?.length>0
+                          ? <img src={spotPosts[0].photos[0]} style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:8}}/>
+                          : <div style={{width:"100%",height:"100%",background:"var(--red-bg)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:28}}>🏮</div>
+                        }
                       </div>
                       <div className="bsheet-info">
                         <h3 style={{paddingRight:24,lineHeight:1.4,wordBreak:"break-all"}}>{selSpot.name}</h3>
