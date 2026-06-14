@@ -1885,7 +1885,7 @@ const searchGeo = async (q) => {
                 {(()=>{
                   const photos = spotPosts.flatMap(a=>a.photos||[]).filter(Boolean);
                   return photos.length>0 ? (
-                    <div style={{width:"100%",marginBottom:16}}>
+                    <div style={{width:"100%",marginBottom:16,marginTop:20}}>
                       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:4}}>
                         {(showAllPosts ? photos : photos.slice(0,3)).map((url,i)=>(
                           <img key={i} src={url} style={{width:"100%",aspectRatio:"1",borderRadius:8,objectFit:"cover",display:"block"}}/>
