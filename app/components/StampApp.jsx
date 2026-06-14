@@ -2,6 +2,7 @@
 import { Marker as MapMarker } from 'react-map-gl/mapbox'
 import { useState } from "react";
 import MapView from './MapView'
+import Map from 'react-map-gl/mapbox'
 // ══════════════════════════════════════════════
 // DATA
 // ══════════════════════════════════════════════
@@ -378,22 +379,22 @@ body{font-family:'Noto Sans JP',sans-serif;background:#E8E8E4}
 }
 .ov-sbar span{font-size:14px;color:var(--text3)}
 .ov-back{
-  position:absolute;top:10px;right:10px;background:none;
+  position:absolute;top:10px;left:10px;background:none;
   border:none;cursor:pointer;color:var(--text2);font-size:22px;line-height:1
 }
 
 .ov-body{
-  width:393px;
+  width:100%;max-width:393px;
   padding:0 16px 28px;
   display:flex;flex-direction:column;
   align-items:center;
-  gap:20px;
+  gap:12px;
   box-sizing:border-box;
-  background:#FCFCFC;
+  background:var(--white);
   border-radius:8px 8px 0 0;
 }
-.ov-name{font-size:18px;font-weight:700;color:var(--text)}
-.ov-sub{font-size:13px;color:var(--text2);margin-top:3px}
+.ov-name{font-size:18px;font-weight:700;color:var(--text);margin-top:40px}
+.ov-sub{font-size:13px;color:var(--text2);margin-top:-8px}
 .change-loc{font-size:12px;color:var(--red);margin-top:4px;cursor:pointer;display:block}
 
 .input-card{
@@ -416,46 +417,13 @@ body{font-family:'Noto Sans JP',sans-serif;background:#E8E8E4}
 .prev-wrap{margin-top:10px;position:relative;display:inline-block}
 .prev-rm{
   position:absolute;top:-6px;right:-6px;
-  width:18px;height:18px;background:var(--gray-800);
+  width:18px;height:18px;background:#616168;
   color:#fff;border-radius:50%;border:none;cursor:pointer;
   font-size:11px;display:flex;align-items:center;justify-content:center
 }
 
-.tag-input-wrap{
-  margin-top:0;padding:14px 0;border-bottom:1px solid var(--gray-50)
-}
-.tag-input-label{font-size:14px;color:var(--text);margin-bottom:10px;display:block}
-.tag-input-row{
-  display:flex;align-items:center;gap:8px;
-  background:var(--gray-50);border-radius:10px;
-  padding:8px 12px;border:1px solid var(--border)
-}
-.tag-input-row input{
-  border:none;background:none;flex:1;font-size:14px;
-  font-family:inherit;color:var(--text);outline:none
-}
-.tag-input-row input::placeholder{color:var(--text3)}
-.tag-add-btn{
-  background:none;border:none;cursor:pointer;
-  color:var(--text3);font-size:18px;line-height:1;
-  display:flex;align-items:center;justify-content:center;
-  width:24px;height:24px;border-radius:50%;transition:color .15s
-}
-.tag-add-btn:hover{color:var(--text)}
-.tag-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.tag-chip{
-  display:flex;align-items:center;gap:4px;
-  padding:4px 10px;border-radius:20px;
-  background:var(--gray-100);font-size:12px;color:var(--text2)
-}
-.tag-chip-remove{
-  background:none;border:none;cursor:pointer;
-  color:var(--text3);font-size:13px;line-height:1;
-  padding:0;display:flex;align-items:center
-}
-
 .limited-wrap{
-  padding:14px 0;border-bottom:1px solid var(--gray-50)
+  padding:14px 0;
 }
 .limited-toggle-row{
   display:flex;align-items:center;justify-content:space-between
@@ -484,7 +452,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:#E8E8E4}
 }
 .toggle-switch input:checked ~ .toggle-thumb{transform:translateX(18px)}
 .limited-dates{
-  display:flex;align-items:center;gap:8px;
+  display:flex;align-items:center;gap:8px;justify-content:flex-end;background:var(--white);width:100%;
   margin-top:12px;flex-wrap:wrap
 }
 .limited-date-field{display:flex;flex-direction:column;gap:4px;flex:1;min-width:120px}
@@ -492,7 +460,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:#E8E8E4}
 .limited-date-input{
   border:1px solid var(--border);border-radius:8px;
   padding:8px 10px;font-size:13px;font-family:inherit;
-  color:var(--text);outline:none;background:var(--gray-50);
+  color:var(--text);outline:none;background:var(--white);
   transition:border-color .15s;width:100%
 }
 .limited-date-input:focus{border-color:var(--gray-400);background:var(--white)}
@@ -500,7 +468,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:#E8E8E4}
 
 .vis-row{
   display:flex;align-items:center;justify-content:space-between;
-  padding:16px 0;border-bottom:1px solid var(--gray-50);
+  padding:16px 0;
   box-sizing:border-box;width:100%
 }
 .vis-row label{font-size:14px;color:var(--text)}
@@ -509,10 +477,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:#E8E8E4}
   padding:6px 16px;font-size:13px;border:none;cursor:pointer;
   font-family:inherit;background:none;color:var(--text2);transition:all .15s
 }
-.vtbtn.on{background:var(--gray-800);color:#fff}
+.vtbtn.on{background:#616168;color:#fff}
 
 .submit-btn{
-  width:100%;padding:16px;background:var(--gray-800);color:#fff;
+  width:100%;padding:16px;background:#616168;color:#fff;
   border:none;border-radius:14px;font-size:16px;font-weight:700;
   font-family:inherit;cursor:pointer;margin-top:8px;letter-spacing:.05em;
   transition:opacity .15s
@@ -840,7 +808,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:#E8E8E4}
 .modal-type-btn span.type-emoji{font-size:20px}
 .modal-type-btn span.type-label{font-size:12px}
 .modal-type-btn.on{
-  border-color:var(--gray-800);background:var(--gray-800);
+  border-color:var(--gray-800);background:#616168;
   color:#fff;font-weight:500
 }
 .modal-actions{display:flex;gap:8px}
@@ -957,7 +925,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:#E8E8E4}
 /* Toast */
 .toast{
   position:absolute;bottom:96px;left:50%;transform:translateX(-50%) translateY(16px);
-  background:var(--gray-800);color:#fff;
+  background:#616168;color:#fff;
   padding:10px 22px;border-radius:24px;font-size:13px;
   opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;
   white-space:nowrap;z-index:400
@@ -1125,8 +1093,6 @@ export default function App() {
   const [ciText, setCiText]       = useState("");
   const [ciVis, setCiVis]         = useState("public");
   const [ciCat, setCiCat]         = useState("");
-  const [ciTags, setCiTags]       = useState([]);
-  const [ciTagInput, setCiTagInput] = useState("");
   const [ciLimited, setCiLimited]   = useState(false);
   const [ciDateFrom, setCiDateFrom] = useState("");
   const [ciDateTo, setCiDateTo]     = useState("");
@@ -1190,7 +1156,7 @@ const searchGeo = async (q) => {
       setGeoLoading(false);
     }
   };
-  const openForm = (spot) => { setSelSpot(spot); setCiText(""); setHasPrev(false); setCiCat(""); setCiTags([]); setCiTagInput(""); setCiLimited(false); setCiDateFrom(""); setCiDateTo(""); setOverlay("form"); };
+  const openForm = (spot) => { setSelSpot(spot); setCiText(""); setHasPrev(false); setCiCat(""); setCiLimited(false); setCiDateFrom(""); setCiDateTo(""); setOverlay("form"); };
   const openDetail = (spot) => { setSelSpot(spot); setOverlay("detail"); };
   const closeOv = () => setOverlay(null);
 
@@ -1198,7 +1164,7 @@ const searchGeo = async (q) => {
     const now = new Date();
     const ds = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,"0")}/${String(now.getDate()).padStart(2,"0")}`;
     const ts = `${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
-    setArchives(a=>[{id:Date.now(),spot:selSpot.name,sub:`${selSpot.category}　${selSpot.area}`,date:`${ds} ${ts}`,note:ciText||"チェックイン！",emoji:"🏮",hasImg:hasPrev,color:"#E1F5EE",category:ciCat||"観光",tags:[...ciTags,selSpot.area.replace("東京都","")],limited:ciLimited,dateFrom:ciDateFrom,dateTo:ciDateTo},...a]);
+    setArchives(a=>[{id:Date.now(),spot:selSpot.name,sub:`${selSpot.category}　${selSpot.area}`,date:`${ds} ${ts}`,note:ciText||"チェックイン！",emoji:"🏮",hasImg:hasPrev,color:"#E1F5EE",category:ciCat||"観光",tags:[],limited:ciLimited,dateFrom:ciDateFrom,dateTo:ciDateTo},...a]);
     setCheckins(c=>c+1);
     setOverlay(null); setSelSpot(null);
     showToast("チェックイン完了！","ok");
@@ -1654,20 +1620,30 @@ const searchGeo = async (q) => {
 
 
         {/* ════ CHECKIN FORM OVERLAY ════ */}
-        <div className={`overlay ${overlay==="form"?"open":""}`}>
+        <div className={`overlay ${overlay==="form"?"open":""}`} style={{overflowY:"auto"}}>
           {selSpot && overlay==="form" && <>
             <div className="ov-maparea">
-              <MapBg h={220}/>
-              <div className="map-pin" style={{position:"absolute",left:"50%",top:"42%",transform:"translate(-50%,-100%)"}}>
-                <PinSVG color="var(--red)"/>
-              </div>
-              <div className="ov-sbar"><Ic.Search/><span>Search Stamp</span></div>
-              <button className="ov-back" onClick={closeOv}>←</button>
+              <Map
+                mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+                initialViewState={{
+                  longitude: selSpot.lng || 139.7016,
+                  latitude: selSpot.lat || 35.6580,
+                  zoom: 15,
+                }}
+                style={{ width: '100%', height: '100%' }}
+                mapStyle="mapbox://styles/kthhtm/cmptvkv4f006501su5hqm3cp2"
+                interactive={false}
+              >
+                <div style={{position:"absolute",left:"50%",top:"50%",transform:"translate(-50%,-100%)"}}>
+                  <PinSVG color="var(--red)"/>
+                </div>
+              </Map>
+              <button className="ov-back" onClick={closeOv} style={{position:"absolute",top:16,left:16}}>←</button>
             </div>
             <div className="ov-body">
               <div className="ov-name">{selSpot.name}</div>
               <div className="ov-sub">{selSpot.category}　{selSpot.area}</div>
-              <span className="change-loc">位置情報を変更</span>
+              <span className="change-loc" style={{color:"var(--text3)"}}>位置情報を変更</span>
               <div className="input-card">
                 <textarea placeholder="最新情報" value={ciText} onChange={e=>setCiText(e.target.value)}/>
                 {hasPrev && (
@@ -1681,92 +1657,38 @@ const searchGeo = async (q) => {
                   <button className="mbtn" onClick={()=>setHasPrev(true)}><Ic.Camera/></button>
                 </div>
               </div>
-              <div className="vis-row">
-                <label>カテゴリ</label>
-                <select value={ciCat} onChange={e=>setCiCat(e.target.value)}
-                  style={{border:"1px solid var(--border)",borderRadius:8,padding:"6px 10px",fontSize:13,fontFamily:"inherit",color:"var(--text)",background:"var(--white)",outline:"none",cursor:"pointer"}}>
-                  <option value="">選択してください</option>
-                  {CATEGORIES.filter(cat=>cat.type==="category").map(cat=>(
-                    <option key={cat.key} value={cat.key}>{cat.label}（{cat.labelJa}）</option>
-                  ))}
-                </select>
-              </div>
-              {/* ハッシュタグ */}
-              <div className="tag-input-wrap">
-                <label className="tag-input-label">ハッシュタグ</label>
-                <div className="tag-input-row">
-                  <span style={{color:"var(--text3)",fontSize:15}}>#</span>
-                  <input
-                    placeholder="タグを入力して追加"
-                    value={ciTagInput}
-                    onChange={e=>setCiTagInput(e.target.value.replace(/[#\s]/g,""))}
-                    onKeyDown={e=>{
-                      if((e.key==="Enter"||e.key===" "||e.key==="　")&&ciTagInput.trim()){
-                        e.preventDefault();
-                        if(!ciTags.includes(ciTagInput.trim()))
-                          setCiTags(t=>[...t,ciTagInput.trim()]);
-                        setCiTagInput("");
-                      }
-                    }}
-                  />
-                  <button className="tag-add-btn"
-                    onClick={()=>{
-                      if(ciTagInput.trim()&&!ciTags.includes(ciTagInput.trim())){
-                        setCiTags(t=>[...t,ciTagInput.trim()]);
-                        setCiTagInput("");
-                      }
-                    }}>＋</button>
-                </div>
-                {ciTags.length>0 && (
-                  <div className="tag-chips">
-                    {ciTags.map(tag=>(
-                      <div key={tag} className="tag-chip">
-                        <span>#{tag}</span>
-                        <button className="tag-chip-remove"
-                          onClick={()=>setCiTags(t=>t.filter(t2=>t2!==tag))}>×</button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
               {/* 期間限定設定 */}
-              <div className="limited-wrap">
-                <div className="limited-toggle-row">
-                  <label>
-                    <span className="limited-badge">LIMITED</span>
-                    期間限定スタンプ
-                  </label>
-                  <label className="toggle-switch">
-                    <input type="checkbox" checked={ciLimited} onChange={e=>setCiLimited(e.target.checked)}/>
-                    <div className="toggle-track"/>
-                    <div className="toggle-thumb"/>
-                  </label>
+              <div className="vis-row" style={{marginBottom:"-8px"}}>
+                <label>期間限定</label>
+                <div className="vis-tog">
+                  <button className={`vtbtn ${ciLimited?"on":""}`} onClick={()=>setCiLimited(true)}>ON</button>
+                  <button className={`vtbtn ${!ciLimited?"on":""}`} onClick={()=>setCiLimited(false)}>OFF</button>
                 </div>
-                {ciLimited && (
-                  <div className="limited-dates">
-                    <div className="limited-date-field">
-                      <span className="limited-date-label">START</span>
-                      <input type="date" className="limited-date-input"
-                        value={ciDateFrom} onChange={e=>setCiDateFrom(e.target.value)}/>
-                    </div>
-                    <span className="limited-sep">→</span>
-                    <div className="limited-date-field">
-                      <span className="limited-date-label">END</span>
-                      <input type="date" className="limited-date-input"
-                        value={ciDateTo} onChange={e=>setCiDateTo(e.target.value)}/>
-                    </div>
-                  </div>
-                )}
               </div>
-              <div className="vis-row">
+              {ciLimited && (
+                <div className="limited-dates" style={{marginTop:"-8px"}}>
+                  <div className="limited-date-field">
+                    <span className="limited-date-label">START</span>
+                    <input type="date" className="limited-date-input"
+                      value={ciDateFrom} onChange={e=>setCiDateFrom(e.target.value)}/>
+                  </div>
+                  <span className="limited-sep">→</span>
+                  <div className="limited-date-field">
+                    <span className="limited-date-label">END</span>
+                    <input type="date" className="limited-date-input"
+                      value={ciDateTo} onChange={e=>setCiDateTo(e.target.value)}/>
+                  </div>
+                </div>
+              )}
+              </div>
+              <div className="vis-row" style={{paddingLeft:16,paddingRight:16,width:"100%",boxSizing:"border-box",marginTop:"4px"}}>
                 <label>公開範囲</label>
                 <div className="vis-tog">
                   <button className={`vtbtn ${ciVis==="public"?"on":""}`} onClick={()=>setCiVis("public")}>公開する</button>
                   <button className={`vtbtn ${ciVis==="private"?"on":""}`} onClick={()=>setCiVis("private")}>自分だけ</button>
                 </div>
               </div>
-              <button className="submit-btn" onClick={submit}>チェックイン</button>
-            </div>
+              <button className="submit-btn" onClick={submit} style={{marginTop:40,marginBottom:120,marginLeft:16,marginRight:16,width:"calc(100% - 32px)"}}>チェックイン</button>
           </>}
         </div>
 
