@@ -1859,12 +1859,12 @@ const searchGeo = async (q) => {
               <div className="ov-body" style={{paddingTop:16}}>
                 {/* タイトル＋ブックマーク */}
 <div style={{display:"flex",alignItems:"center",gap:8,alignSelf:"stretch",width:"100%"}}>
-  <div className="ov-name" style={{flex:1,margin:0}}>{selSpot.name}</div>
+  <div className="ov-name" style={{flex:1,margin:0,textAlign:"center"}}>{selSpot.name}</div>
   <button className="bookmark-btn" onClick={()=>toggleSave(selSpot)} style={{flexShrink:0}}>
     <BookmarkSVG active={isSaved(selSpot)} size={20}/>
   </button>
 </div>
-<div className="ov-sub" style={{display:"flex",gap:8,marginTop:4}}>
+<div className="ov-sub" style={{display:"flex",gap:8,marginTop:-4}}>
   <span>{selSpot.category}</span>
   <span>{selSpot.area}</span>
 </div>
