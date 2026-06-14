@@ -1439,6 +1439,7 @@ const searchGeo = async (q) => {
                 );
             })()}
           </div>
+        )}
         {/* ════ MAP ════ */}
         {tab==="map" && (
           <div className="map-screen">
