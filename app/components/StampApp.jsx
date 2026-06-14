@@ -1139,9 +1139,7 @@ const [user, setUser] = useState(null);
   });
   const [profileEditOpen, setProfileEditOpen] = useState(false);
   const [editDraft, setEditDraft] = useState({name:"",location:"",bio:""}); // {posts:[], postIdx:0, imgIdx:0}
-  const [folders, setFolders]       = useState([
-    { id:1, title:"Conan Stamp Rally 2027", type:"rally", ids:[] },
-  ]);
+  const [folders, setFolders]       = useState([]);
   const [showFolderModal, setShowFolderModal] = useState(false);
   const [folderName, setFolderName]   = useState("");
   const [folderPhotos, setFolderPhotos] = useState([]); // mock photo list
