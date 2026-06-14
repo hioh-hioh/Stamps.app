@@ -1119,6 +1119,8 @@ export default function App() {
   const [spotSearch, setSpotSearch] = useState("");
   const [nearbyOpen, setNearbyOpen] = useState(false);
   const [nearbySearch, setNearbySearch] = useState("");
+  const [nearbyGeoResults, setNearbyGeoResults] = useState([]);
+const [nearbyGeoLoading, setNearbyGeoLoading] = useState(false);
   const [geoResults, setGeoResults] = useState([]);
 const [geoLoading, setGeoLoading] = useState(false);
 const [sessionToken] = useState(()=>crypto.randomUUID());
@@ -1852,76 +1854,106 @@ const searchGeo = async (q) => {
             <div className="nearby-search-input">
               <Ic.Search/>
               <input
-                placeholder="Search Stamp / スタンプ検索"
+                placeholder="場所を検索（例：東京駅）"
                 value={nearbySearch}
-                onChange={e=>setNearbySearch(e.target.value)}
+                onChange={async e=>{
+                  const q = e.target.value;
+                  setNearbySearch(q);
+                  if(q.trim().length < 2){ setNearbyGeoResults([]); return; }
+                  setNearbyGeoLoading(true);
+                  try {
+                    const res = await fetch(`/api/places?q=${encodeURIComponent(q)}${userLocation?`&lat=${userLocation.lat}&lng=${userLocation.lng}`:""}`);
+                    const data = await res.json();
+                    setNearbyGeoResults(data.predictions || []);
+                  } catch(e){ setNearbyGeoResults([]); }
+                  finally { setNearbyGeoLoading(false); }
+                }}
                 autoFocus
               />
             </div>
+            </div>
           </div>
           <div className="nearby-list">
-            {locLoading ? (
-              <div style={{padding:"40px 16px",textAlign:"center",color:"var(--text3)",fontSize:13}}>
-                📍 現在地を取得中...
-              </div>
-            ) : (()=>{
-              const filtered = MAP_SPOTS
-                .map(s=>({
-                  ...s,
-                  dist: userLocation ? calcDist(userLocation.lat,userLocation.lng,s.lat,s.lng) : null
-                }))
-                .filter(s=>
-                  nearbySearch.trim()==="" ||
-                  s.name.toLowerCase().includes(nearbySearch.toLowerCase()) ||
-                  s.category.includes(nearbySearch) ||
-                  s.area.includes(nearbySearch)
-                )
-                .sort((a,b)=> a.dist!=null&&b.dist!=null ? a.dist-b.dist : 0);
-
-              const nearby  = filtered.filter(s=>s.dist!=null && s.dist<=1.0);
-              const farther = filtered.filter(s=>s.dist==null || s.dist>1.0);
-
-              return <>
-                {nearby.length>0 && <>
-                  <div className="nearby-section-label">📍 近く（1km以内）</div>
-                  {nearby.map(s=>(
-                    <div key={s.id} className="nearby-item" onClick={()=>{
-                      setNearbyOpen(false); setNearbySearch("");
-                      setSelSpot(s); setTab("map");
-                    }}>
-                      <div className="nearby-icon">🏮</div>
-                      <div className="nearby-info">
-                        <h4>{s.name}</h4>
-                        <p>{s.category}　{s.area}</p>
-                      </div>
-                      <div className="nearby-dist">
-                        {s.dist!=null && fmtDist(s.dist)}
-                        <span>{s.checkins.toLocaleString()} stamps</span>
-                      </div>
+            {nearbySearch.trim().length >= 2 ? (
+              <>
+                {nearbyGeoLoading && <div style={{padding:"24px 16px",textAlign:"center",color:"var(--text3)",fontSize:13}}>検索中...</div>}
+                {!nearbyGeoLoading && nearbyGeoResults.map(f=>(
+                  <div key={f.place_id} className="nearby-item" onClick={async ()=>{
+                    const res = await fetch(`/api/places/details?place_id=${f.place_id}`);
+                    const data = await res.json();
+                    const result = data.result;
+                    if(!result) return;
+                    const spot = {
+                      id: f.place_id,
+                      name: result.name,
+                      address: result.formatted_address || "",
+                      lat: result.geometry.location.lat,
+                      lng: result.geometry.location.lng,
+                      category: result.types?.[0] || "場所",
+                      area: result.address_components?.find(c=>c.types.includes("locality"))?.long_name || "",
+                      checkins: 0, hours: "", location: result.formatted_address || "", reviews: [], comment: "",
+                    };
+                    const { supabase } = await import("../../lib/supabase");
+                    await supabase.from("spots").upsert(spot, { onConflict: "id" });
+                    setNearbyOpen(false);
+                    setNearbySearch("");
+                    setNearbyGeoResults([]);
+                    if(window.__mapboxFlyTo) window.__mapboxFlyTo(spot.lng, spot.lat);
+                    setSelSpot(spot);
+                    setTab("map");
+                  }}>
+                    <div className="nearby-icon">📍</div>
+                    <div className="nearby-info">
+                      <h4>{f.structured_formatting?.main_text || f.description}</h4>
+                      <p style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{f.structured_formatting?.secondary_text || f.description}</p>
                     </div>
-                  ))}
-                </>}
-                {farther.length>0 && <>
-                  <div className="nearby-section-label">{nearby.length>0?"その他のスポット":"すべてのスポット"}</div>
-                  {farther.map(s=>(
-                    <div key={s.id} className="nearby-item" onClick={()=>{
-                      setNearbyOpen(false); setNearbySearch("");
-                      setSelSpot(s); setTab("map");
-                    }}>
-                      <div className="nearby-icon">🏮</div>
-                      <div className="nearby-info">
-                        <h4>{s.name}</h4>
-                        <p>{s.category}　{s.area}</p>
+                  </div>
+                ))}
+                {!nearbyGeoLoading && nearbyGeoResults.length === 0 && (
+                  <div style={{padding:"32px 16px",textAlign:"center",color:"var(--text3)",fontSize:13}}>見つかりませんでした</div>
+                )}
+              </>
+            ) : (
+              locLoading ? (
+                <div style={{padding:"40px 16px",textAlign:"center",color:"var(--text3)",fontSize:13}}>📍 現在地を取得中...</div>
+              ) : (()=>{
+                const filtered = MAP_SPOTS
+                  .map(s=>({...s, dist: userLocation ? calcDist(userLocation.lat,userLocation.lng,s.lat,s.lng) : null}))
+                  .sort((a,b)=> a.dist!=null&&b.dist!=null ? a.dist-b.dist : 0);
+                const nearby  = filtered.filter(s=>s.dist!=null && s.dist<=1.0);
+                const farther = filtered.filter(s=>s.dist==null || s.dist>1.0);
+                return <>
+                  {nearby.length>0 && <>
+                    <div className="nearby-section-label">📍 近く（1km以内）</div>
+                    {nearby.map(s=>(
+                      <div key={s.id} className="nearby-item" onClick={()=>{
+                        setNearbyOpen(false); setNearbySearch("");
+                        if(window.__mapboxFlyTo) window.__mapboxFlyTo(s.lng, s.lat);
+                        setSelSpot(s); setTab("map");
+                      }}>
+                        <div className="nearby-icon">🏮</div>
+                        <div className="nearby-info"><h4>{s.name}</h4><p>{s.category}　{s.area}</p></div>
+                        <div className="nearby-dist">{s.dist!=null && fmtDist(s.dist)}<span>{s.checkins.toLocaleString()} stamps</span></div>
                       </div>
-                      <div className="nearby-dist">
-                        {s.dist!=null && fmtDist(s.dist)}
-                        <span>{s.checkins.toLocaleString()} stamps</span>
+                    ))}
+                  </>}
+                  {farther.length>0 && <>
+                    <div className="nearby-section-label">{nearby.length>0?"その他のスポット":"すべてのスポット"}</div>
+                    {farther.map(s=>(
+                      <div key={s.id} className="nearby-item" onClick={()=>{
+                        setNearbyOpen(false); setNearbySearch("");
+                        if(window.__mapboxFlyTo) window.__mapboxFlyTo(s.lng, s.lat);
+                        setSelSpot(s); setTab("map");
+                      }}>
+                        <div className="nearby-icon">🏮</div>
+                        <div className="nearby-info"><h4>{s.name}</h4><p>{s.category}　{s.area}</p></div>
+                        <div className="nearby-dist">{s.dist!=null && fmtDist(s.dist)}<span>{s.checkins.toLocaleString()} stamps</span></div>
                       </div>
-                    </div>
-                  ))}
-                </>}
-              </>;
-            })()}
+                    ))}
+                  </>}
+                </>;
+              })()
+            )}
           </div>
         </div>
 
