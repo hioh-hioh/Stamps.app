@@ -1311,6 +1311,28 @@ const searchGeo = async (q) => {
         {/* ════ HOME ════ */}
         {tab==="home" && (
           <div className="home-screen">
+          {!user ? (
+            <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",height:"70vh",gap:16,padding:"0 32px",textAlign:"center"}}>
+              <div style={{fontSize:48}}>🏮</div>
+              <div style={{fontSize:18,fontWeight:700,color:"var(--text)"}}>スタンプを記録しよう</div>
+              <div style={{fontSize:14,color:"var(--text3)",lineHeight:1.6}}>Googleアカウントでログインすると、チェックイン記録や写真を保存できます。</div>
+              <button onClick={()=>supabase.auth.signInWithOAuth({provider:"google",options:{redirectTo:window.location.origin}})}
+                style={{marginTop:8,padding:"12px 24px",background:"var(--red)",color:"#fff",border:"none",borderRadius:12,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>
+                Googleでログイン
+              </button>
+            </div>
+          ) : (
+          {!user ? (
+            <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",height:"70vh",gap:16,padding:"0 32px",textAlign:"center"}}>
+              <div style={{fontSize:48}}>🏮</div>
+              <div style={{fontSize:18,fontWeight:700,color:"var(--text)"}}>スタンプを記録しよう</div>
+              <div style={{fontSize:14,color:"var(--text3)",lineHeight:1.6}}>Googleアカウントでログインすると、チェックイン記録や写真を保存できます。</div>
+              <button onClick={()=>supabase.auth.signInWithOAuth({provider:"google",options:{redirectTo:window.location.origin}})}
+                style={{marginTop:8,padding:"12px 24px",background:"var(--red)",color:"#fff",border:"none",borderRadius:12,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>
+                Googleでログイン
+              </button>
+            </div>
+          ) : (
             {/* Sticky header */}
             <div className="home-search">
               <div className="home-search-box">
@@ -1436,7 +1458,8 @@ const searchGeo = async (q) => {
                       )}
                     </div>
                   ))}
-                </div>
+                )}
+          </div>
               );
             })()}
           </div>
