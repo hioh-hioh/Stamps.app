@@ -1157,7 +1157,7 @@ const searchGeo = async (q) => {
     if(q.trim().length < 2){ setGeoResults([]); return; }
     setGeoLoading(true);
     try {
-      const res = await fetch(`/api/places?q=${encodeURIComponent(q)}`);
+      const res = await fetch(`/api/places?q=${encodeURIComponent(q)}${userLocation ? `&lat=${userLocation.lat}&lng=${userLocation.lng}` : ""}`);
       const data = await res.json();
       setGeoResults(data.predictions || []);
     } catch(e) {
