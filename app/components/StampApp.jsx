@@ -1155,7 +1155,7 @@ useEffect(()=>{
     });
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_,session)=>{
       setUser(session?.user ?? null);
-      if(session?.user) loadCheckins(session.user.id);
+      if(session?.user){ loadCheckins(session.user.id); loadProfile(session.user.id); }
       else setArchives([]);
     });
     return () => subscription.unsubscribe();
@@ -1186,6 +1186,10 @@ useEffect(()=>{
       lat: d.lat,
       lng: d.lng,
     })));
+  };
+  const loadProfile = async (userId) => {
+    const { data } = await supabase.from("profiles").select("*").eq("id", userId).single();
+    if(data) setProfile({ name: data.name||"", location: data.location||"", bio: data.bio||"" });
   };
   const showToast = (msg, type="") => {
     setToast({msg,type}); setToastOn(true);
@@ -2237,7 +2241,8 @@ const searchGeo = async (q) => {
           <div className="pe-hd">
             <button className="arc-back" onClick={()=>setProfileEditOpen(false)}><Ic.Back/></button>
             <h2>プロフィール編集</h2>
-            <button className="pe-save" onClick={()=>{
+            <button className="pe-save" onClick={async()=>{
+              await supabase.from("profiles").upsert({id:user.id,...editDraft});
               setProfile({...editDraft});
               setProfileEditOpen(false);
               showToast("保存しました","ok");
