@@ -1177,7 +1177,7 @@ const searchGeo = async (q) => {
     const now = new Date();
     const ds = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,"0")}/${String(now.getDate()).padStart(2,"0")}`;
     const ts = `${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
-    setArchives(a=>[{id:Date.now(),spot:selSpot.name,sub:`${selSpot.category}　${selSpot.area}`,date:`${ds} ${ts}`,note:ciText||"チェックイン！",emoji:"🏮",hasImg:ciPhotos.length>0,color:"#E1F5EE",category:ciCat||"観光",tags:[],limited:ciLimited,dateFrom:ciDateFrom,dateTo:ciDateTo,lat:selSpot.lat,lng:selSpot.lng},...a]);
+    setArchives(a=>[{id:Date.now(),spot:selSpot.name,sub:`${selSpot.category}　${selSpot.area}`,date:`${ds} ${ts}`,note:ciText||"チェックイン！",emoji:"🏮",hasImg:ciPhotos.length>0,photos:ciPhotos.map(p=>p.url),color:"#E1F5EE",category:ciCat||"観光",tags:[],limited:ciLimited,dateFrom:ciDateFrom,dateTo:ciDateTo,lat:selSpot.lat,lng:selSpot.lng},...a]);
     setCheckins(c=>c+1);
     setOverlay(null); setSelSpot(null); setCiPhotos([]);
     showToast("チェックイン完了！","ok");
@@ -1314,8 +1314,14 @@ const searchGeo = async (q) => {
                                 </div>
                               )}
                               {item.hasImg && (
-                                <div style={{width:"100%",height:180,borderRadius:8,background:item.color,display:"flex",alignItems:"center",justifyContent:"center",fontSize:48}}>
-                                  {item.emoji}
+                                <div style={{display:"flex",gap:6,marginTop:4,overflowX:"auto"}}>
+                                  {(item.photos&&item.photos.length>0) ? item.photos.map((url,i)=>(
+                                    <img key={i} src={url} style={{width:"100%",maxWidth:280,height:180,borderRadius:8,objectFit:"cover",flexShrink:0,display:"block"}}/>
+                                  )) : (
+                                    <div style={{width:"100%",height:180,borderRadius:8,background:item.color,display:"flex",alignItems:"center",justifyContent:"center",fontSize:48}}>
+                                      {item.emoji}
+                                    </div>
+                                  )}
                                 </div>
                               )}
                             </div>
@@ -1850,7 +1856,15 @@ const searchGeo = async (q) => {
               <button className="arc-back" onClick={()=>setSelArc(null)}><Ic.Back/></button>
               <h2>チェックイン記録</h2>
             </div>
-            <div className="arc-img">{selArc.emoji}</div>
+            {selArc.photos && selArc.photos.length > 0 ? (
+              <div style={{display:"flex",gap:6,overflowX:"auto",padding:"0 16px"}}>
+                {selArc.photos.map((url,i)=>(
+                  <img key={i} src={url} style={{width:"100%",maxWidth:340,height:220,borderRadius:8,objectFit:"cover",flexShrink:0,display:"block"}}/>
+                ))}
+              </div>
+            ) : (
+              <div className="arc-img">{selArc.emoji}</div>
+            )}
             <div className="arc-body">
               <div className="arc-spot">{selArc.spot}</div>
               <div className="arc-sub">{selArc.sub}</div>
