@@ -1858,13 +1858,10 @@ const searchGeo = async (q) => {
               </div>
               <div className="ov-body" style={{paddingTop:16}}>
                 {/* タイトル＋ブックマーク */}
-<div style={{display:"flex",alignItems:"center",gap:8,alignSelf:"stretch",width:"100%"}}>
-  <div className="ov-name" style={{flex:1,margin:0,textAlign:"center"}}>{selSpot.name}</div>
-  <button className="bookmark-btn" onClick={()=>toggleSave(selSpot)} style={{flexShrink:0}}>
-    <BookmarkSVG active={isSaved(selSpot)} size={20}/>
-  </button>
+<div style={{display:"flex",alignItems:"center",width:"100%"}}>
+  <div className="ov-name" style={{flex:1,margin:0,textAlign:"left"}}>{selSpot.name}</div>
 </div>
-<div className="ov-sub" style={{display:"flex",gap:8,marginTop:-4}}>
+<div className="ov-sub" style={{display:"flex",gap:8,marginTop:4,justifyContent:"flex-start"}}>
   <span>{selSpot.category}</span>
   <span>{selSpot.area}</span>
 </div>
@@ -1920,7 +1917,13 @@ const searchGeo = async (q) => {
                   }
                 </div>
 
-                <button className="submit-btn" style={{marginTop:40}} onClick={()=>setOverlay("form")}>チェックインする</button>
+                <div style={{display:"flex",gap:8,alignItems:"center",marginTop:40}}>
+                  <button className="submit-btn" style={{flex:1,margin:0}} onClick={()=>setOverlay("form")}>チェックインする</button>
+                  <button className="bookmark-btn" onClick={()=>toggleSave(selSpot)}
+                    style={{flexShrink:0,width:44,height:44,borderRadius:12,border:"1px solid var(--border)",background:"#fff",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                    <BookmarkSVG active={isSaved(selSpot)} size={20}/>
+                  </button>
+                </div>
                 <button onClick={()=>{setShowSpotEdit(true);setOverlay("form");}}
                   style={{background:"none",border:"none",color:"var(--text3)",fontSize:13,cursor:"pointer",fontFamily:"inherit",display:"block",margin:"8px auto 0",textDecoration:"underline"}}>
                   スポット情報を修正する
