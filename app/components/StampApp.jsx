@@ -1436,7 +1436,7 @@ const searchGeo = async (q) => {
                       )}
                     </div>
                   ))}
-                );
+                </div>
             })()}
           </div>
         )}
