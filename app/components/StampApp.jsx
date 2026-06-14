@@ -81,7 +81,7 @@ const ARCHIVE_ITEMS = [
 // STYLES
 // ══════════════════════════════════════════════
 const S = `
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --red:#E8452A; --red-dark:#C43520; --red-bg:#FEF0ED;
@@ -94,7 +94,7 @@ const S = `
   --sh-md:0 4px 16px rgba(0,0,0,.10);
   --sh-lg:0 8px 32px rgba(0,0,0,.14);
 }
-body{font-family:'Noto Sans JP',sans-serif;background:#E8E8E4}
+body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 
 .frame{
   width:390px;height:844px;background:var(--white);
