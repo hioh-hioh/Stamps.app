@@ -1206,7 +1206,7 @@ const searchGeo = async (q) => {
       setGeoLoading(false);
     }
   };
-  const openForm = (spot) => { setSelSpot(spot); setCiText(""); setHasPrev(false); setCiCat(""); setCiLimited(false); setCiDateFrom(""); setCiDateTo(""); setCiHours(spot.hours||""); setCiLocation(spot.location||""); setShowSpotEdit(!isCheckedIn(spot)); setOverlay("form"); };
+  const openForm = (spot) => { setSelSpot(spot); setCiText(""); setHasPrev(false); setCiCat(""); setCiLimited(false); setCiDateFrom(""); setCiDateTo(""); setCiHours(spot.hours||""); setCiLocation(""); setShowSpotEdit(!isCheckedIn(spot)); setOverlay("form"); };
   const openDetail = (spot) => { setSelSpot(spot); setOverlay("detail"); };
   const closeOv = () => setOverlay(null);
 
@@ -1773,9 +1773,9 @@ const searchGeo = async (q) => {
               </div>
               {/* スポット情報入力 */}
               {showSpotEdit && (
-                <div style={{padding:"0 16px"}}>
+                <div style={{padding:"0 16px",width:"100%",boxSizing:"border-box"}}>
                   {!isCheckedIn(selSpot) && (
-                    <div style={{fontSize:12,color:"var(--red)",fontWeight:700,marginBottom:8}}>
+                    <div style={{fontSize:13,color:"var(--red)",fontWeight:700,marginBottom:12,textAlign:"left"}}>
                       🎉 初めてのチェックイン！スポット情報を登録しましょう
                     </div>
                   )}
