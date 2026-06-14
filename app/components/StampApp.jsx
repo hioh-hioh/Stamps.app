@@ -1917,7 +1917,7 @@ const searchGeo = async (q) => {
                     : <>
                       <div style={{display:"flex",gap:12,width:"100%",overflowX: showAllPosts?"visible":"auto"}}>
                       {(showAllPosts ? allPosts : allPosts.slice(0,2)).map((post,pi)=>(
-                        <div key={post.id} className="spot-post-card" style={{display:"flex",flexDirection:"column",alignItems:"flex-start",gap:8,background:"none",boxShadow:"none",padding:0,minWidth:showAllPosts?"auto":"60%",flex:showAllPosts?"1":"0 0 auto"}}>
+                        <div key={post.id} className="spot-post-card" style={{display:"flex",flexDirection:"column",alignItems:"flex-start",gap:8,background:"var(--gray-50)",borderRadius:12,padding:12,boxShadow:"none",minWidth:showAllPosts?"auto":"60%",flex:showAllPosts?"1":"0 0 auto"}}>
                           <div className="spot-post-avatar"><Ic.User s={14}/></div>
                           <div style={{display:"flex",flexDirection:"column",alignItems:"flex-start",gap:4,flex:1}}>
                             <div className="spot-post-meta">
