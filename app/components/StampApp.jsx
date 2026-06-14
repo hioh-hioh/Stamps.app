@@ -1140,6 +1140,9 @@ const [user, setUser] = useState(null);
   const [showFolderModal, setShowFolderModal] = useState(false);
   const [folderName, setFolderName]   = useState("");
   const [folderPhotos, setFolderPhotos] = useState([]); // mock photo list
+  const [selectMode, setSelectMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [showFolderPicker, setShowFolderPicker] = useState(false);
   const [toast, setToast]         = useState({msg:"",type:""});
   const [toastOn, setToastOn]     = useState(false);
 useEffect(()=>{
@@ -1567,38 +1570,64 @@ const searchGeo = async (q) => {
               const rightH = [155,195,160,185,150,200,145,175];
               const left  = archives.filter((_,i)=>i%2===0);
               const right = archives.filter((_,i)=>i%2===1);
+              const toggleSelect = (id) => setSelectedIds(s=>s.includes(id)?s.filter(x=>x!==id):[...s,id]);
               return archives.length===0
                 ? <div style={{padding:"40px 16px",textAlign:"center",color:"var(--text3)",fontSize:13}}>まだチェックインがありません</div>
-                : (
-                  <div style={{display:"flex",gap:8,padding:"28px 16px 8px",alignItems:"flex-start"}}>
-                    <div style={{display:"flex",flexDirection:"column",gap:24,flex:1,minWidth:0}}>
-                      {left.map((e,i)=>(
-                        <div key={e.id} className="m-cell" onClick={()=>setSelArc(e)}>
-                          <div className="m-cell-img" style={{height:leftH[i%leftH.length],background:e.color||"var(--red-bg)"}}>
-                            {e.photos&&e.photos.length>0
-                              ? <img src={e.photos[0]} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
-                              : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:e.hasImg?44:32,opacity:e.hasImg?1:0.3}}>{e.emoji}</div>
-                            }
-                          </div>
-                          <div className="m-cell-label">{e.spot}</div>
-                        </div>
-                      ))}
-                    </div>
-                    <div style={{display:"flex",flexDirection:"column",gap:24,flex:1,minWidth:0}}>
-                      {right.map((e,i)=>(
-                        <div key={e.id} className="m-cell" onClick={()=>setSelArc(e)}>
-                          <div className="m-cell-img" style={{height:rightH[i%rightH.length],background:e.color||"var(--red-bg)"}}>
-                            {e.photos&&e.photos.length>0
-                              ? <img src={e.photos[0]} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
-                              : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:e.hasImg?44:32,opacity:e.hasImg?1:0.3}}>{e.emoji}</div>
-                            }
-                          </div>
-                          <div className="m-cell-label">{e.spot}</div>
-                        </div>
-                      ))}
-                    </div>
+                : (<>
+                  {/* 整理バー */}
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 16px 8px"}}>
+                    {selectMode ? (<>
+                      <span style={{fontSize:13,color:"var(--text2)"}}>{selectedIds.length}件選択中</span>
+                      <div style={{display:"flex",gap:8}}>
+                        <button onClick={()=>{setSelectMode(false);setSelectedIds([]);}}
+                          style={{fontSize:13,color:"var(--text2)",background:"none",border:"1px solid var(--border)",borderRadius:8,padding:"5px 12px",cursor:"pointer",fontFamily:"inherit"}}>
+                          キャンセル
+                        </button>
+                        <button onClick={()=>{ if(selectedIds.length>0) setShowFolderPicker(true); }}
+                          style={{fontSize:13,color:"#fff",background:"var(--red)",border:"none",borderRadius:8,padding:"5px 12px",cursor:"pointer",fontFamily:"inherit",opacity:selectedIds.length>0?1:0.4}}>
+                          フォルダに追加
+                        </button>
+                      </div>
+                    </>) : (
+                      <button onClick={()=>setSelectMode(true)}
+                        style={{marginLeft:"auto",fontSize:13,color:"var(--text2)",background:"none",border:"1px solid var(--border)",borderRadius:8,padding:"5px 12px",cursor:"pointer",fontFamily:"inherit"}}>
+                        整理する
+                      </button>
+                    )}
                   </div>
-                );
+                  <div style={{display:"flex",gap:8,padding:"0 16px 20px",alignItems:"flex-start"}}>
+                    {[left,right].map((col,ci)=>(
+                      <div key={ci} style={{display:"flex",flexDirection:"column",gap:24,flex:1,minWidth:0}}>
+                        {col.map((e,i)=>{
+                          const h = ci===0 ? leftH[i%leftH.length] : rightH[i%rightH.length];
+                          const selected = selectedIds.includes(e.id);
+                          return (
+                            <div key={e.id} className="m-cell"
+                              onClick={()=> selectMode ? toggleSelect(e.id) : setSelArc(e)}
+                              style={{position:"relative"}}>
+                              <div className="m-cell-img" style={{height:h,background:e.color||"var(--red-bg)",
+                                outline: selected?"2.5px solid var(--red)":"none",borderRadius:8}}>
+                                {e.photos&&e.photos.length>0
+                                  ? <img src={e.photos[0]} style={{width:"100%",height:"100%",objectFit:"cover",display:"block",borderRadius:8}}/>
+                                  : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:e.hasImg?44:32,opacity:e.hasImg?1:0.3}}>{e.emoji}</div>
+                                }
+                                {selectMode && (
+                                  <div style={{position:"absolute",top:6,right:6,width:20,height:20,borderRadius:"50%",
+                                    background:selected?"var(--red)":"rgba(255,255,255,0.8)",
+                                    border:"2px solid "+(selected?"var(--red)":"var(--gray-400)"),
+                                    display:"flex",alignItems:"center",justifyContent:"center"}}>
+                                    {selected && <span style={{color:"#fff",fontSize:12,fontWeight:700}}>✓</span>}
+                                  </div>
+                                )}
+                              </div>
+                              <div className="m-cell-label">{e.spot}</div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ))}
+                  </div>
+                </>);
             })()}
 
             {/* list view */}
@@ -2205,6 +2234,50 @@ const searchGeo = async (q) => {
             </div>
           );
         })()}
+{/* ════ FOLDER PICKER ════ */}
+        {showFolderPicker && (
+          <div className="modal-backdrop" onClick={()=>setShowFolderPicker(false)}>
+            <div className="modal-sheet" onClick={e=>e.stopPropagation()}>
+              <div className="modal-sheet-hd">
+                <h3>フォルダを選択</h3>
+                <button onClick={()=>setShowFolderPicker(false)}>×</button>
+              </div>
+              <div className="modal-body">
+                {folders.length===0 && (
+                  <div style={{padding:"24px 0",textAlign:"center",color:"var(--text3)",fontSize:13}}>フォルダがありません</div>
+                )}
+                {folders.map(f=>(
+                  <div key={f.id} onClick={()=>{
+                    setFolders(fs=>fs.map(folder=>
+                      folder.id===f.id
+                        ? {...folder, ids:[...new Set([...folder.ids,...selectedIds])]}
+                        : folder
+                    ));
+                    setShowFolderPicker(false);
+                    setSelectMode(false);
+                    setSelectedIds([]);
+                    showToast(`「${f.title}」に追加しました`,"ok");
+                  }}
+                    style={{display:"flex",alignItems:"center",gap:12,padding:"14px 0",
+                      borderBottom:"1px solid var(--gray-50)",cursor:"pointer"}}>
+                    <div style={{width:40,height:40,borderRadius:8,background:"var(--gray-100)",
+                      display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}}>📁</div>
+                    <div>
+                      <div style={{fontSize:14,fontWeight:500,color:"var(--text)"}}>{f.title}</div>
+                      <div style={{fontSize:12,color:"var(--text3)",marginTop:2}}>{f.ids.length} stamps</div>
+                    </div>
+                  </div>
+                ))}
+                <button onClick={()=>{setShowFolderPicker(false);setShowFolderModal(true);}}
+                  style={{marginTop:16,width:"100%",padding:"12px",borderRadius:10,
+                    border:"1.5px dashed var(--border)",background:"none",
+                    cursor:"pointer",fontSize:13,color:"var(--text2)",fontFamily:"inherit"}}>
+                  ＋ 新しいフォルダを作成
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* ════ FOLDER MODAL ════ */}
         {showFolderModal && (
