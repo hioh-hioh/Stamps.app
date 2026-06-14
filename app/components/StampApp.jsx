@@ -1580,7 +1580,10 @@ const searchGeo = async (q) => {
                       {left.map((e,i)=>(
                         <div key={e.id} className="m-cell" onClick={()=>setSelArc(e)}>
                           <div className="m-cell-img" style={{height:leftH[i%leftH.length],background:e.color||"var(--red-bg)"}}>
-                            <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:e.hasImg?44:32,opacity:e.hasImg?1:0.3}}>{e.emoji}</div>
+                            {e.photos&&e.photos.length>0
+                              ? <img src={e.photos[0]} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
+                              : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:e.hasImg?44:32,opacity:e.hasImg?1:0.3}}>{e.emoji}</div>
+                            }
                           </div>
                           <div className="m-cell-label">{e.spot}</div>
                         </div>
@@ -1590,7 +1593,10 @@ const searchGeo = async (q) => {
                       {right.map((e,i)=>(
                         <div key={e.id} className="m-cell" onClick={()=>setSelArc(e)}>
                           <div className="m-cell-img" style={{height:rightH[i%rightH.length],background:e.color||"var(--red-bg)"}}>
-                            <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:e.hasImg?44:32,opacity:e.hasImg?1:0.3}}>{e.emoji}</div>
+                            {e.photos&&e.photos.length>0
+                              ? <img src={e.photos[0]} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
+                              : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:e.hasImg?44:32,opacity:e.hasImg?1:0.3}}>{e.emoji}</div>
+                            }
                           </div>
                           <div className="m-cell-label">{e.spot}</div>
                         </div>
