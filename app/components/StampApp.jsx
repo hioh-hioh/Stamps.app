@@ -1840,7 +1840,7 @@ const searchGeo = async (q) => {
         <div className={`overlay ${overlay==="detail"?"open":""}`} style={{overflowY:"auto"}}>
           {selSpot && overlay==="detail" && (()=>{
             // このスポットへのチェックイン一覧
-            const [showAllPosts, setShowAllPosts] = React.useState(false);
+            const [showAllPosts, setShowAllPosts] = useState(false);
             const spotPosts = archives.filter(a=>a.spot===selSpot.name);
             // モックレビューも投稿カード形式に変換
             const mockPosts = (selSpot.reviews||[]).filter(r=>r.text).map((r,i)=>({
