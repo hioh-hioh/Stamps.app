@@ -1254,6 +1254,7 @@ const searchGeo = async (q) => {
                 color: a.color||"var(--gray-100)",
                 note: a.note||"",
                 hasImg: a.hasImg||false,
+                photos: a.photos||[],
               }));
 
               const allItems = [...arcItems, ...TIMELINE_MOCK];
