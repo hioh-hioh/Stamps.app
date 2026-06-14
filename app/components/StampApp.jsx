@@ -1577,25 +1577,6 @@ const searchGeo = async (q) => {
               ];
               return (
                 <div style={{padding:"20px 16px 100px"}}>
-                  <div style={{display:"flex",justifyContent:"flex-end",marginBottom:12}}>
-                    {selectMode ? (
-                      <div style={{display:"flex",gap:8}}>
-                        <button onClick={()=>{setSelectMode(false);setSelectedIds([]);}}
-                          style={{fontSize:13,color:"var(--text2)",background:"none",border:"1px solid var(--border)",borderRadius:8,padding:"5px 12px",cursor:"pointer",fontFamily:"inherit"}}>
-                          キャンセル
-                        </button>
-                        <button onClick={()=>{ if(selectedIds.length>0) setShowFolderPicker(true); }}
-                          style={{fontSize:13,color:"#fff",background:"var(--red)",border:"none",borderRadius:8,padding:"5px 12px",cursor:"pointer",fontFamily:"inherit",opacity:selectedIds.length>0?1:0.4}}>
-                          フォルダに追加{selectedIds.length>0?` (${selectedIds.length})`:""}
-                        </button>
-                      </div>
-                    ) : (
-                      <button onClick={()=>setSelectMode(true)}
-                        style={{fontSize:13,color:"var(--text2)",background:"none",border:"1px solid var(--border)",borderRadius:8,padding:"5px 12px",cursor:"pointer",fontFamily:"inherit"}}>
-                        整理する
-                      </button>
-                    )}
-                  </div>
                   <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
                     {allFolders.map(f=>(
                       <div key={f.id} className="list-card" onClick={()=>setSelGroup({title:f.title,items:f.items})}>
