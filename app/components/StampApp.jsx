@@ -1101,6 +1101,7 @@ export default function App() {
   const [ciHours, setCiHours] = useState("");
   const [ciLocation, setCiLocation] = useState("");
   const [showSpotEdit, setShowSpotEdit] = useState(false);
+  const [showAllPosts, setShowAllPosts] = useState(false);
   const [savedSpots, setSavedSpots] = useState([]);
   const [mapFilter, setMapFilter]   = useState("all"); // "all"|"saved"|"checkedin"
   const [showSaved, setShowSaved]   = useState(false);
@@ -1840,7 +1841,6 @@ const searchGeo = async (q) => {
         <div className={`overlay ${overlay==="detail"?"open":""}`} style={{overflowY:"auto"}}>
           {selSpot && overlay==="detail" && (()=>{
             // このスポットへのチェックイン一覧
-            const [showAllPosts, setShowAllPosts] = useState(false);
             const spotPosts = archives.filter(a=>a.spot===selSpot.name);
             // モックレビューも投稿カード形式に変換
             const mockPosts = (selSpot.reviews||[]).filter(r=>r.text).map((r,i)=>({
