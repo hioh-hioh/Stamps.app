@@ -1862,7 +1862,8 @@ const searchGeo = async (q) => {
                   if(q.trim().length < 2){ setNearbyGeoResults([]); return; }
                   setNearbyGeoLoading(true);
                   try {
-                    const res = await fetch(`/api/places?q=${encodeURIComponent(q)}${userLocation?`&lat=${userLocation.lat}&lng=${userLocation.lng}`:""}`);
+                    const locParam = userLocation ? "&lat=" + userLocation.lat + "&lng=" + userLocation.lng : "";
+                    const res = await fetch("/api/places?q=" + encodeURIComponent(q) + locParam);
                     const data = await res.json();
                     setNearbyGeoResults(data.predictions || []);
                   } catch(e){ setNearbyGeoResults([]); }
@@ -1870,6 +1871,7 @@ const searchGeo = async (q) => {
                 }}
                 autoFocus
               />
+            </div>
             </div>
             </div>
           </div>
