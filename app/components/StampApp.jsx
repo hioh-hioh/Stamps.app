@@ -1834,7 +1834,25 @@ const searchGeo = async (q) => {
                   <button className={`vtbtn ${ciVis==="private"?"on":""}`} onClick={()=>setCiVis("private")}>自分だけ</button>
                 </div>
               </div>
-              <button className="submit-btn" onClick={submit} style={{marginTop:40,marginBottom:120,marginLeft:16,marginRight:16,width:"calc(100% - 32px)"}}>チェックイン</button>
+              {showSpotEdit && isCheckedIn(selSpot) ? (
+                <button className="submit-btn" onClick={async()=>{
+                  if(ciHours||ciLocation){
+                    await supabase.from("spots").upsert({
+                      id:String(selSpot.id||selSpot.name),
+                      name:selSpot.name,
+                      hours:ciHours||"",
+                      location:ciLocation||"",
+                    },{onConflict:"id"});
+                    setSelSpot(s=>s?{...s,hours:ciHours||s.hours,location:ciLocation||s.location}:s);
+                  }
+                  setOverlay("detail");
+                  showToast("スポット情報を更新しました","ok");
+                }} style={{marginTop:40,marginBottom:120,marginLeft:16,marginRight:16,width:"calc(100% - 32px)"}}>
+                  保存する
+                </button>
+              ) : (
+                <button className="submit-btn" onClick={submit} style={{marginTop:40,marginBottom:120,marginLeft:16,marginRight:16,width:"calc(100% - 32px)"}}>チェックイン</button>
+              )}
           </>}
         </div>
 
