@@ -1098,6 +1098,9 @@ export default function App() {
   const [ciLimited, setCiLimited]   = useState(false);
   const [ciDateFrom, setCiDateFrom] = useState("");
   const [ciDateTo, setCiDateTo]     = useState("");
+  const [ciHours, setCiHours] = useState("");
+  const [ciLocation, setCiLocation] = useState("");
+  const [showSpotEdit, setShowSpotEdit] = useState(false);
   const [savedSpots, setSavedSpots] = useState([]);
   const [mapFilter, setMapFilter]   = useState("all"); // "all"|"saved"|"checkedin"
   const [showSaved, setShowSaved]   = useState(false);
@@ -1203,7 +1206,7 @@ const searchGeo = async (q) => {
       setGeoLoading(false);
     }
   };
-  const openForm = (spot) => { setSelSpot(spot); setCiText(""); setHasPrev(false); setCiCat(""); setCiLimited(false); setCiDateFrom(""); setCiDateTo(""); setOverlay("form"); };
+  const openForm = (spot) => { setSelSpot(spot); setCiText(""); setHasPrev(false); setCiCat(""); setCiLimited(false); setCiDateFrom(""); setCiDateTo(""); setCiHours(spot.hours||""); setCiLocation(spot.location||""); setShowSpotEdit(!isCheckedIn(spot)); setOverlay("form"); };
   const openDetail = (spot) => { setSelSpot(spot); setOverlay("detail"); };
   const closeOv = () => setOverlay(null);
 
@@ -1239,6 +1242,15 @@ const searchGeo = async (q) => {
       date_from: ciDateFrom||null,
       date_to: ciDateTo||null,
     }).select().single();
+    // スポット情報を更新
+    if(ciHours||ciLocation){
+      await supabase.from("spots").upsert({
+        id: String(selSpot.id||selSpot.name),
+        name: selSpot.name,
+        hours: ciHours||"",
+        location: ciLocation||"",
+      }, { onConflict:"id" });
+    }
 
     if(!error && data){
       setArchives(a=>[{
@@ -1759,6 +1771,35 @@ const searchGeo = async (q) => {
                   </label>
                 </div>
               </div>
+              {/* スポット情報入力 */}
+              {showSpotEdit && (
+                <div style={{padding:"0 16px"}}>
+                  {!isCheckedIn(selSpot) && (
+                    <div style={{fontSize:12,color:"var(--red)",fontWeight:700,marginBottom:8}}>
+                      🎉 初めてのチェックイン！スポット情報を登録しましょう
+                    </div>
+                  )}
+                  <div style={{marginBottom:12}}>
+                    <label style={{fontSize:12,color:"var(--text3)",fontWeight:500,display:"block",marginBottom:4}}>営業時間</label>
+                    <input className="modal-input" placeholder="例：10:00-20:00 / 終日"
+                      value={ciHours} onChange={e=>setCiHours(e.target.value)} style={{margin:0}}/>
+                  </div>
+                  <div style={{marginBottom:4}}>
+                    <label style={{fontSize:12,color:"var(--text3)",fontWeight:500,display:"block",marginBottom:4}}>スタンプ設置場所</label>
+                    <input className="modal-input" placeholder="例：入口入って左側"
+                      value={ciLocation} onChange={e=>setCiLocation(e.target.value)} style={{margin:0}}/>
+                  </div>
+                </div>
+              )}
+              {isCheckedIn(selSpot) && !showSpotEdit && (
+                <div style={{padding:"0 16px",marginBottom:8}}>
+                  <button onClick={()=>setShowSpotEdit(true)}
+                    style={{fontSize:13,color:"var(--text2)",background:"none",border:"1px solid var(--border)",
+                      borderRadius:8,padding:"6px 14px",cursor:"pointer",fontFamily:"inherit"}}>
+                    📝 スポット情報を修正する
+                  </button>
+                </div>
+              )}
               {/* 期間限定設定 */}
               <div className="vis-row" style={{marginBottom:"-8px"}}>
                 <label>期間限定</label>
