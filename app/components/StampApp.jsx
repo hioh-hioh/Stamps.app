@@ -1089,7 +1089,7 @@ const Ic = {
 // APP
 // ══════════════════════════════════════════════
 export default function App() {
-  const [tab, setTab]             = useState("home");
+  const [tab, setTab]             = useState("map");
   const [selSpot, setSelSpot]     = useState(null);
   const [overlay, setOverlay]     = useState(null); // "form"|"detail"
   const [ciText, setCiText]       = useState("");
