@@ -1954,11 +1954,11 @@ const searchGeo = async (q) => {
                   }
                 </div>
 
+                <button className="submit-btn" style={{marginTop:24}} onClick={()=>setOverlay("form")}>チェックインする</button>
                 <button onClick={()=>{setShowSpotEdit(true);setOverlay("form");}}
-                  style={{background:"none",border:"none",color:"var(--text3)",fontSize:13,cursor:"pointer",fontFamily:"inherit",display:"block",margin:"0 auto 8px",textDecoration:"underline"}}>
+                  style={{background:"none",border:"none",color:"var(--text3)",fontSize:13,cursor:"pointer",fontFamily:"inherit",display:"block",margin:"8px auto 0",textDecoration:"underline"}}>
                   スポット情報を修正する
                 </button>
-                <button className="submit-btn" style={{marginTop:8}} onClick={()=>setOverlay("form")}>チェックインする</button>
 
                 {/* ── マップ（写真一覧の下） ── */}
                 <div style={{marginTop:24,borderRadius:8,overflow:"hidden",height:180,position:"relative"}}>
