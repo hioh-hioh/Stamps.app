@@ -1782,12 +1782,12 @@ const searchGeo = async (q) => {
                   <div style={{marginBottom:12}}>
                     <label style={{fontSize:12,color:"var(--text3)",fontWeight:500,display:"block",marginBottom:4}}>営業時間</label>
                     <input className="modal-input" placeholder="例：10:00-20:00 / 終日"
-                      value={ciHours} onChange={e=>setCiHours(e.target.value)} style={{margin:0}}/>
+                      value={ciHours} onChange={e=>setCiHours(e.target.value)} style={{margin:0,width:"100%",boxSizing:"border-box",background:"#fff"}}/>
                   </div>
                   <div style={{marginBottom:4}}>
                     <label style={{fontSize:12,color:"var(--text3)",fontWeight:500,display:"block",marginBottom:4}}>スタンプ設置場所</label>
                     <input className="modal-input" placeholder="例：入口入って左側"
-                      value={ciLocation} onChange={e=>setCiLocation(e.target.value)} style={{margin:0}}/>
+                      value={ciLocation} onChange={e=>setCiLocation(e.target.value)} style={{margin:0,width:"100%",boxSizing:"border-box",background:"#fff"}}/>
                   </div>
                 </div>
               )}
