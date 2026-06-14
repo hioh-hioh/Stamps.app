@@ -1815,14 +1815,34 @@ const searchGeo = async (q) => {
                 </button>
               </div>
               {/* ── hero画像 ── */}
-              <div className="detail-hero" style={{height:220,borderRadius:8,margin:"12px 16px"}}>
-                <div style={{position:"absolute",inset:0,background:"var(--red-bg)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:80}}>🏮</div>
-              </div>
-              <div style={{display:"flex",justifyContent:"center",gap:6,marginTop:8}}>
-                <div style={{width:6,height:6,borderRadius:"50%",background:"rgba(28,27,31,1)"}}/>
-                <div style={{width:6,height:6,borderRadius:"50%",background:"rgba(28,27,31,0.3)"}}/>
-                <div style={{width:6,height:6,borderRadius:"50%",background:"rgba(28,27,31,0.3)"}}/>
-              </div>
+              {(()=>{
+                const allPhotos = spotPosts.flatMap(p=>p.photos||[]);
+                return allPhotos.length>0 ? (
+                  <>
+                    <div style={{display:"flex",overflowX:"auto",scrollSnapType:"x mandatory",scrollbarWidth:"none",margin:"12px 16px",borderRadius:8,gap:0}}>
+                      {allPhotos.map((url,i)=>(
+                        <div key={i} style={{flexShrink:0,width:"100%",height:220,scrollSnapAlign:"start",borderRadius:8,overflow:"hidden"}}>
+                          <img src={url} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{display:"flex",justifyContent:"center",gap:6,marginTop:8}}>
+                      {allPhotos.map((_,i)=>(
+                        <div key={i} style={{width:6,height:6,borderRadius:"50%",background:i===0?"rgba(28,27,31,1)":"rgba(28,27,31,0.3)"}}/>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="detail-hero" style={{height:220,borderRadius:8,margin:"12px 16px"}}>
+                      <div style={{position:"absolute",inset:0,background:"var(--red-bg)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:80}}>🏮</div>
+                    </div>
+                    <div style={{display:"flex",justifyContent:"center",gap:6,marginTop:8}}>
+                      <div style={{width:6,height:6,borderRadius:"50%",background:"rgba(28,27,31,1)"}}/>
+                    </div>
+                  </>
+                );
+              })()}
               <div className="ov-body" style={{paddingTop:16}}>
                 {/* タイトル＋ブックマーク */}
 <div style={{display:"flex",alignItems:"flex-start",gap:28,alignSelf:"stretch",width:"100%"}}>
