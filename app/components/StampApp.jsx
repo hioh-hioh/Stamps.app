@@ -1819,7 +1819,7 @@ const searchGeo = async (q) => {
                 const allPhotos = spotPosts.flatMap(p=>p.photos||[]);
                 return allPhotos.length>0 ? (
                   <>
-                    <div style={{display:"flex",overflowX:"auto",scrollSnapType:"x mandatory",scrollbarWidth:"none",margin:"12px 16px",borderRadius:8,gap:0}}>
+                    <div style={{display:"flex",overflowX:"auto",scrollSnapType:"x mandatory",scrollbarWidth:"none",margin:"12px 16px",borderRadius:8,gap:0,height:220}}>
                       {allPhotos.map((url,i)=>(
                         <div key={i} style={{flexShrink:0,width:"100%",height:220,scrollSnapAlign:"start",borderRadius:8,overflow:"hidden"}}>
                           <img src={url} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
