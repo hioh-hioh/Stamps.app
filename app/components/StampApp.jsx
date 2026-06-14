@@ -1564,20 +1564,20 @@ const searchGeo = async (q) => {
               </div>
             </div>
 
-            {/* grid view */}
-            {viewMode==="grid" && (()=>{
-              const leftH  = [180,150,200,160,190,155,170,145];
-              const rightH = [155,195,160,185,150,200,145,175];
-              const left  = archives.filter((_,i)=>i%2===0);
-              const right = archives.filter((_,i)=>i%2===1);
-              const toggleSelect = (id) => setSelectedIds(s=>s.includes(id)?s.filter(x=>x!==id):[...s,id]);
-              return archives.length===0
-                ? <div style={{padding:"40px 16px",textAlign:"center",color:"var(--text3)",fontSize:13}}>まだチェックインがありません</div>
-                : (<>
-                  {/* 整理バー */}
-                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 16px 8px"}}>
-                    {selectMode ? (<>
-                      <span style={{fontSize:13,color:"var(--text2)"}}>{selectedIds.length}件選択中</span>
+            {/* フォルダ一覧 */}
+            {(()=>{
+              const allFolders = [
+                { id:"all", title:"All", items: archives },
+                ...folders.map(f=>({
+                  id: f.id,
+                  title: f.title,
+                  items: archives.filter(e=>f.ids.includes(e.id))
+                }))
+              ];
+              return (
+                <div style={{padding:"20px 16px 100px"}}>
+                  <div style={{display:"flex",justifyContent:"flex-end",marginBottom:12}}>
+                    {selectMode ? (
                       <div style={{display:"flex",gap:8}}>
                         <button onClick={()=>{setSelectMode(false);setSelectedIds([]);}}
                           style={{fontSize:13,color:"var(--text2)",background:"none",border:"1px solid var(--border)",borderRadius:8,padding:"5px 12px",cursor:"pointer",fontFamily:"inherit"}}>
@@ -1585,104 +1585,45 @@ const searchGeo = async (q) => {
                         </button>
                         <button onClick={()=>{ if(selectedIds.length>0) setShowFolderPicker(true); }}
                           style={{fontSize:13,color:"#fff",background:"var(--red)",border:"none",borderRadius:8,padding:"5px 12px",cursor:"pointer",fontFamily:"inherit",opacity:selectedIds.length>0?1:0.4}}>
-                          フォルダに追加
+                          フォルダに追加{selectedIds.length>0?` (${selectedIds.length})`:""}
                         </button>
                       </div>
-                    </>) : (
+                    ) : (
                       <button onClick={()=>setSelectMode(true)}
-                        style={{marginLeft:"auto",fontSize:13,color:"var(--text2)",background:"none",border:"1px solid var(--border)",borderRadius:8,padding:"5px 12px",cursor:"pointer",fontFamily:"inherit"}}>
+                        style={{fontSize:13,color:"var(--text2)",background:"none",border:"1px solid var(--border)",borderRadius:8,padding:"5px 12px",cursor:"pointer",fontFamily:"inherit"}}>
                         整理する
                       </button>
                     )}
                   </div>
-                  <div style={{display:"flex",gap:8,padding:"0 16px 20px",alignItems:"flex-start"}}>
-                    {[left,right].map((col,ci)=>(
-                      <div key={ci} style={{display:"flex",flexDirection:"column",gap:24,flex:1,minWidth:0}}>
-                        {col.map((e,i)=>{
-                          const h = ci===0 ? leftH[i%leftH.length] : rightH[i%rightH.length];
-                          const selected = selectedIds.includes(e.id);
-                          return (
-                            <div key={e.id} className="m-cell"
-                              onClick={()=> selectMode ? toggleSelect(e.id) : setSelArc(e)}
-                              style={{position:"relative"}}>
-                              <div className="m-cell-img" style={{height:h,background:e.color||"var(--red-bg)",
-                                outline: selected?"2.5px solid var(--red)":"none",borderRadius:8}}>
-                                {e.photos&&e.photos.length>0
-                                  ? <img src={e.photos[0]} style={{width:"100%",height:"100%",objectFit:"cover",display:"block",borderRadius:8}}/>
-                                  : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:e.hasImg?44:32,opacity:e.hasImg?1:0.3}}>{e.emoji}</div>
-                                }
-                                {selectMode && (
-                                  <div style={{position:"absolute",top:6,right:6,width:20,height:20,borderRadius:"50%",
-                                    background:selected?"var(--red)":"rgba(255,255,255,0.8)",
-                                    border:"2px solid "+(selected?"var(--red)":"var(--gray-400)"),
-                                    display:"flex",alignItems:"center",justifyContent:"center"}}>
-                                    {selected && <span style={{color:"#fff",fontSize:12,fontWeight:700}}>✓</span>}
-                                  </div>
-                                )}
-                              </div>
-                              <div className="m-cell-label">{e.spot}</div>
+                  <div style={{display:"flex",flexDirection:"column",gap:12}}>
+                    {allFolders.map(f=>(
+                      <div key={f.id} className="list-card" onClick={()=>setSelGroup({title:f.title,items:f.items})}>
+                        <div style={{position:"absolute",top:0,left:0,right:0,bottom:0,display:"flex",gap:2,overflow:"hidden",borderRadius:8}}>
+                          {(f.items.length>0?f.items:[{emoji:"📁",color:"var(--gray-100)"}]).slice(0,3).map((e,i)=>(
+                            <div key={i} style={{flex:1,background:e.color||"var(--red-bg)",display:"flex",
+                              alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
+                              {e.photos&&e.photos.length>0
+                                ? <img src={e.photos[0]} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+                                : <span style={{fontSize:24,opacity:0.7}}>{e.emoji}</span>
+                              }
                             </div>
-                          );
-                        })}
-                      </div>
-                    ))}
-                  </div>
-                </>);
-            })()}
-
-            {/* list view */}
-            {viewMode==="list" && (()=>{
-              // フォルダに紐付いていないarchivesを日付別に自動グループ
-              const folderedIds = folders.flatMap(f=>f.ids);
-              const unfoldered = archives.filter(e=>!folderedIds.includes(e.id));
-              const dateGroups = unfoldered.reduce((acc,e)=>{
-                const day = e.date.slice(0,10);
-                const dow = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][new Date(day).getDay()];
-                const key = `${day} (${dow})`;
-                if(!acc[key]) acc[key]=[];
-                acc[key].push(e);
-                return acc;
-              },{});
-              const autoGroups = Object.entries(dateGroups).map(([title,items])=>({title,items,isAuto:true}));
-              const allGroups = [
-                ...folders.map(f=>({
-                  title:f.title,
-                  items:archives.filter(e=>f.ids.includes(e.id)),
-                  isAuto:false, folderId:f.id
-                })),
-                ...autoGroups
-              ];
-              return (
-                <div className="list-view">
-                  {/* フォルダ作成ボタン */}
-                  <button onClick={()=>setShowFolderModal(true)}
-                    style={{display:"flex",alignItems:"center",gap:8,padding:"10px 14px",
-                      background:"none",border:"1.5px dashed var(--border)",borderRadius:8,
-                      cursor:"pointer",color:"var(--text2)",fontSize:13,fontFamily:"inherit",
-                      width:"100%",marginBottom:4}}>
-                    <span style={{fontSize:18,lineHeight:1}}>＋</span> 新しいフォルダを作成
-                  </button>
-                  {allGroups.length===0 && (
-                    <div style={{padding:"32px 16px",textAlign:"center",color:"var(--text3)",fontSize:13}}>
-                      まだチェックインがありません
-                    </div>
-                  )}
-                  {allGroups.map((group,gi)=>(
-                    <div key={gi} className="list-card" onClick={()=>setSelGroup(group)}>
-                      <div style={{position:"absolute",top:0,left:0,right:0,bottom:0,display:"flex",gap:2}}>
-                        {(group.items.length>0?group.items:[{emoji:"📁",color:"var(--gray-100)"}]).slice(0,3).map((e,i)=>(
-                          <div key={i} style={{flex:1,background:e.color||"var(--red-bg)",display:"flex",
-                            alignItems:"center",justifyContent:"center",fontSize:24,opacity:0.7}}>{e.emoji}</div>
-                        ))}
-                      </div>
-                      <div className="list-card-label">
-                        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                          <span style={{fontWeight:700}}>{group.title}</span>
-                          <span style={{fontSize:11,color:"var(--text3)"}}>{group.items.length} stamps</span>
+                          ))}
+                        </div>
+                        <div className="list-card-label">
+                          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                            <span style={{fontWeight:700}}>{f.title}</span>
+                            <span style={{fontSize:11,color:"var(--text3)"}}>{f.items.length} stamps</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                    <button onClick={()=>setShowFolderModal(true)}
+                      style={{display:"flex",alignItems:"center",gap:8,padding:"14px",
+                        background:"none",border:"1.5px dashed var(--border)",borderRadius:8,
+                        cursor:"pointer",color:"var(--text2)",fontSize:13,fontFamily:"inherit",width:"100%"}}>
+                      <span style={{fontSize:18,lineHeight:1}}>＋</span> 新しいフォルダを作成
+                    </button>
+                  </div>
                 </div>
               );
             })()}
