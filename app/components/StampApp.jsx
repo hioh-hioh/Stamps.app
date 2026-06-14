@@ -1820,12 +1820,14 @@ const searchGeo = async (q) => {
                 console.log("DEBUG photos:", allPhotos);
                 return allPhotos.length>0 ? (
                   <>
-                    <div style={{display:"flex",overflowX:"scroll",scrollSnapType:"x mandatory",scrollbarWidth:"none",borderRadius:8,height:220,margin:"12px 16px",WebkitOverflowScrolling:"touch"}}>
-                      {allPhotos.map((url,i)=>(
-                        <div key={i} style={{flexShrink:0,minWidth:"100%",height:"100%",scrollSnapAlign:"start",overflow:"hidden",borderRadius:8}}>
-                          <img src={url} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
-                        </div>
-                      ))}
+                    <div style={{position:"relative",height:220,margin:"12px 16px",borderRadius:8,overflow:"hidden"}}>
+                      <div style={{display:"flex",overflowX:"scroll",scrollbarWidth:"none",height:"100%",scrollSnapType:"x mandatory"}}>
+                        {allPhotos.map((url,i)=>(
+                          <div key={i} style={{flexShrink:0,width:"358px",height:"100%",scrollSnapAlign:"start"}}>
+                            <img src={url} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                     <div style={{display:"flex",justifyContent:"center",gap:6,marginTop:8}}>
                       {allPhotos.map((_,i)=>(
