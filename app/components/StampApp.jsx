@@ -1802,7 +1802,7 @@ const searchGeo = async (q) => {
                   <button className={`vtbtn ${ciLimited?"on":""}`} onClick={()=>setCiLimited(true)}>ON</button>
                   <button className={`vtbtn ${!ciLimited?"on":""}`} onClick={()=>setCiLimited(false)}>OFF</button>
                 </div>
-              </div>
+              </div>}
               {ciLimited && (
                 <div className="limited-dates" style={{marginTop:"-8px"}}>
                   <div className="limited-date-field">
@@ -1846,7 +1846,7 @@ const searchGeo = async (q) => {
                 <button className="submit-btn" onClick={submit} style={{marginTop:40,marginBottom:120,marginLeft:16,marginRight:16,width:"calc(100% - 32px)"}}>チェックイン</button>
               )}
           </>}
-        </div>}
+        </div>
 
 
         {/* ════ DETAIL OVERLAY ════ */}
