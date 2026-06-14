@@ -1732,6 +1732,7 @@ const searchGeo = async (q) => {
               <div className="ov-name">{selSpot.name}</div>
               <div className="ov-sub">{selSpot.category}　{selSpot.area}</div>
               <span className="change-loc" style={{color:"var(--text3)"}}>位置情報を変更</span>
+              {!(showSpotEdit && isCheckedIn(selSpot)) && (
               <div className="input-card">
                 <textarea placeholder="最新情報" value={ciText} onChange={e=>setCiText(e.target.value)}/>
                 {ciPhotos.length > 0 && (
@@ -1773,7 +1774,7 @@ const searchGeo = async (q) => {
                       }}/>
                   </label>
                 </div>
-              </div>
+              </div>)}
               {/* スポット情報入力 */}
               {showSpotEdit && (
                 <div style={{width:"100%",boxSizing:"border-box"}}>
@@ -1794,17 +1795,8 @@ const searchGeo = async (q) => {
                   </div>
                 </div>
               )}
-              {isCheckedIn(selSpot) && !showSpotEdit && (
-                <div style={{padding:"0 16px",marginBottom:8}}>
-                  <button onClick={()=>setShowSpotEdit(true)}
-                    style={{fontSize:13,color:"var(--text2)",background:"none",border:"1px solid var(--border)",
-                      borderRadius:8,padding:"6px 14px",cursor:"pointer",fontFamily:"inherit"}}>
-                    📝 スポット情報を修正する
-                  </button>
-                </div>
-              )}
               {/* 期間限定設定 */}
-              <div className="vis-row" style={{marginBottom:"-8px"}}>
+              {!(showSpotEdit && isCheckedIn(selSpot)) && <div className="vis-row" style={{marginBottom:"-8px"}}>
                 <label>期間限定</label>
                 <div className="vis-tog">
                   <button className={`vtbtn ${ciLimited?"on":""}`} onClick={()=>setCiLimited(true)}>ON</button>
@@ -1827,13 +1819,13 @@ const searchGeo = async (q) => {
                 </div>
               )}
               </div>
-              <div className="vis-row" style={{paddingLeft:16,paddingRight:16,width:"100%",boxSizing:"border-box",marginTop:"-4px"}}>
+              {!(showSpotEdit && isCheckedIn(selSpot)) && <div className="vis-row" style={{paddingLeft:16,paddingRight:16,width:"100%",boxSizing:"border-box",marginTop:"-4px"}}>
                 <label>公開範囲</label>
                 <div className="vis-tog">
                   <button className={`vtbtn ${ciVis==="public"?"on":""}`} onClick={()=>setCiVis("public")}>公開する</button>
                   <button className={`vtbtn ${ciVis==="private"?"on":""}`} onClick={()=>setCiVis("private")}>自分だけ</button>
                 </div>
-              </div>
+              </div>}
               {showSpotEdit && isCheckedIn(selSpot) ? (
                 <button className="submit-btn" onClick={async()=>{
                   if(ciHours||ciLocation){
@@ -1854,7 +1846,7 @@ const searchGeo = async (q) => {
                 <button className="submit-btn" onClick={submit} style={{marginTop:40,marginBottom:120,marginLeft:16,marginRight:16,width:"calc(100% - 32px)"}}>チェックイン</button>
               )}
           </>}
-        </div>
+        </div>}
 
 
         {/* ════ DETAIL OVERLAY ════ */}
