@@ -1173,11 +1173,15 @@ const searchGeo = async (q) => {
   const openDetail = (spot) => { setSelSpot(spot); setOverlay("detail"); };
   const closeOv = () => setOverlay(null);
 
-  const submit = () => {
+  const submit = async () => {
     const now = new Date();
     const ds = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,"0")}/${String(now.getDate()).padStart(2,"0")}`;
     const ts = `${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
-    setArchives(a=>[{id:Date.now(),spot:selSpot.name,sub:`${selSpot.category}　${selSpot.area}`,date:`${ds} ${ts}`,note:ciText||"チェックイン！",emoji:"🏮",hasImg:ciPhotos.length>0,photos:ciPhotos.map(p=>p.url),color:"#E1F5EE",category:ciCat||"観光",tags:[],limited:ciLimited,dateFrom:ciDateFrom,dateTo:ciDateTo,lat:selSpot.lat,lng:selSpot.lng},...a]);
+
+    // 写真をSupabase Storageにアップロード
+    const photoUrls = ciPhotos.map(p => p.url);
+
+    setArchives(a=>[{id:Date.now(),spot:selSpot.name,sub:`${selSpot.category}　${selSpot.area}`,date:`${ds} ${ts}`,note:ciText||"チェックイン！",emoji:"🏮",hasImg:photoUrls.length>0,photos:photoUrls,color:"#E1F5EE",category:ciCat||"観光",tags:[],limited:ciLimited,dateFrom:ciDateFrom,dateTo:ciDateTo,lat:selSpot.lat,lng:selSpot.lng},...a]);
     setCheckins(c=>c+1);
     setOverlay(null); setSelSpot(null); setCiPhotos([]);
     showToast("チェックイン完了！","ok");
@@ -1700,7 +1704,9 @@ const searchGeo = async (q) => {
                     <input type="file" accept="image/*" multiple style={{display:"none"}}
                       onChange={e=>{
                         Array.from(e.target.files).forEach(f=>{
-                          setCiPhotos(ps=>[...ps,{url:URL.createObjectURL(f),file:f}]);
+                          const reader = new FileReader();
+                          reader.onload = ev => setCiPhotos(ps=>[...ps,{url:ev.target.result,file:f}]);
+                          reader.readAsDataURL(f);
                         });
                         e.target.value="";
                       }}/>
@@ -1710,7 +1716,9 @@ const searchGeo = async (q) => {
                     <input type="file" accept="image/*" capture="environment" style={{display:"none"}}
                       onChange={e=>{
                         const f=e.target.files[0]; if(!f) return;
-                        setCiPhotos(ps=>[...ps,{url:URL.createObjectURL(f),file:f}]);
+                        const reader = new FileReader();
+                        reader.onload = ev => setCiPhotos(ps=>[...ps,{url:ev.target.result,file:f}]);
+                        reader.readAsDataURL(f);
                         e.target.value="";
                       }}/>
                   </label>
