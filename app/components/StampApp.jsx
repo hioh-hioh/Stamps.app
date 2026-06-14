@@ -104,12 +104,12 @@ body{font-family:'Noto Sans JP',sans-serif;background:#E8E8E4}
 
 /* ── NAV ── */
 .bnav{
-  position:absolute;bottom:0;left:0;right:0;
-  width:393px;
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:min(390px, 100%);
   display:flex;align-items:flex-start;
   background:var(--white);
   border-top:1px solid var(--border);
-  padding:12px 0 28px;z-index:999
+  padding:12px 0;padding-bottom:calc(12px + env(safe-area-inset-bottom));z-index:999
 }
 .nbtn{
   flex:1;display:flex;flex-direction:column;align-items:center;
