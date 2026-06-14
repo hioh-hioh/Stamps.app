@@ -1706,7 +1706,17 @@ const searchGeo = async (q) => {
                       onChange={e=>{
                         Array.from(e.target.files).forEach(f=>{
                           const reader = new FileReader();
-                          reader.onload = ev => setCiPhotos(ps=>[...ps,{url:ev.target.result,file:f}]);
+                          reader.onload = ev => {
+                            const img = new Image();
+                            img.onload = () => {
+                              const canvas = document.createElement("canvas");
+                              canvas.width = img.width;
+                              canvas.height = img.height;
+                              canvas.getContext("2d").drawImage(img,0,0);
+                              setCiPhotos(ps=>[...ps,{url:canvas.toDataURL("image/jpeg",0.85),file:f}]);
+                            };
+                            img.src = ev.target.result;
+                          };
                           reader.readAsDataURL(f);
                         });
                         e.target.value="";
@@ -1718,7 +1728,17 @@ const searchGeo = async (q) => {
                       onChange={e=>{
                         const f=e.target.files[0]; if(!f) return;
                         const reader = new FileReader();
-                        reader.onload = ev => setCiPhotos(ps=>[...ps,{url:ev.target.result,file:f}]);
+                        reader.onload = ev => {
+                          const img = new Image();
+                          img.onload = () => {
+                            const canvas = document.createElement("canvas");
+                            canvas.width = img.width;
+                            canvas.height = img.height;
+                            canvas.getContext("2d").drawImage(img,0,0);
+                            setCiPhotos(ps=>[...ps,{url:canvas.toDataURL("image/jpeg",0.85),file:f}]);
+                          };
+                          img.src = ev.target.result;
+                        };
                         reader.readAsDataURL(f);
                         e.target.value="";
                       }}/>
