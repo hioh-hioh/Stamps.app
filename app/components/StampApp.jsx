@@ -1816,10 +1816,11 @@ const searchGeo = async (q) => {
               </div>
               {/* ── hero画像 ── */}
               {(()=>{
-                const allPhotos = spotPosts.flatMap(p=>p.photos||[]);
+                const allPhotos = spotPosts.flatMap(p=>p.photos||[]).filter(Boolean);
+                console.log("DEBUG photos:", allPhotos);
                 return allPhotos.length>0 ? (
                   <>
-                    <div style={{display:"flex",overflowX:"auto",scrollSnapType:"x mandatory",scrollbarWidth:"none",borderRadius:8,height:220,margin:"12px 16px"}}>
+                    <div style={{display:"flex",overflowX:"scroll",scrollSnapType:"x mandatory",scrollbarWidth:"none",borderRadius:8,height:220,margin:"12px 16px",WebkitOverflowScrolling:"touch"}}>
                       {allPhotos.map((url,i)=>(
                         <div key={i} style={{flexShrink:0,minWidth:"100%",height:"100%",scrollSnapAlign:"start",overflow:"hidden",borderRadius:8}}>
                           <img src={url} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
