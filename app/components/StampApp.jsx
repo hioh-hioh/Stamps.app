@@ -1856,38 +1856,6 @@ const searchGeo = async (q) => {
                   <Ic.Back/>
                 </button>
               </div>
-              {/* ── hero画像 ── */}
-              {(()=>{
-                const allPhotos = spotPosts.flatMap(p=>p.photos||[]).filter(Boolean);
-                console.log("DEBUG photos:", allPhotos);
-                return allPhotos.length>0 ? (
-                  <>
-                    <div style={{position:"relative",height:220,margin:"12px 16px",borderRadius:8,overflow:"hidden"}}>
-                      <div style={{display:"flex",overflowX:"scroll",scrollbarWidth:"none",height:"100%",scrollSnapType:"x mandatory"}}>
-                        {allPhotos.map((url,i)=>(
-                          <div key={i} style={{flexShrink:0,width:"358px",height:"100%",scrollSnapAlign:"start"}}>
-                            <img src={url} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    <div style={{display:"flex",justifyContent:"center",gap:6,marginTop:8}}>
-                      {allPhotos.map((_,i)=>(
-                        <div key={i} style={{width:6,height:6,borderRadius:"50%",background:i===0?"rgba(28,27,31,1)":"rgba(28,27,31,0.3)"}}/>
-                      ))}
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="detail-hero" style={{height:220,borderRadius:8,margin:"12px 16px"}}>
-                      <div style={{position:"absolute",inset:0,background:"var(--red-bg)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:80}}>🏮</div>
-                    </div>
-                    <div style={{display:"flex",justifyContent:"center",gap:6,marginTop:8}}>
-                      <div style={{width:6,height:6,borderRadius:"50%",background:"rgba(28,27,31,1)"}}/>
-                    </div>
-                  </>
-                );
-              })()}
               <div className="ov-body" style={{paddingTop:16}}>
                 {/* タイトル＋ブックマーク */}
 <div style={{display:"flex",alignItems:"flex-start",gap:28,alignSelf:"stretch",width:"100%"}}>
@@ -1954,7 +1922,7 @@ const searchGeo = async (q) => {
                   }
                 </div>
 
-                <button className="submit-btn" style={{marginTop:24}} onClick={()=>setOverlay("form")}>チェックインする</button>
+                <button className="submit-btn" style={{marginTop:40}} onClick={()=>setOverlay("form")}>チェックインする</button>
                 <button onClick={()=>{setShowSpotEdit(true);setOverlay("form");}}
                   style={{background:"none",border:"none",color:"var(--text3)",fontSize:13,cursor:"pointer",fontFamily:"inherit",display:"block",margin:"8px auto 0",textDecoration:"underline"}}>
                   スポット情報を修正する
