@@ -2297,8 +2297,8 @@ const searchGeo = async (q) => {
                     <div key={e.id} className="group-cell" onClick={()=>setSelArc(e)}>
                       <div className="group-cell-img"
                         style={{height:leftHeights[i%leftHeights.length],background:e.color||"var(--gray-100)"}}>
-                        {e.hasImg
-                          ? <span style={{fontSize:44}}>{e.emoji}</span>
+                        {e.photos&&e.photos.length>0
+                          ? <img src={e.photos[0]} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
                           : <span style={{fontSize:32,opacity:0.3}}>{e.emoji}</span>
                         }
                       </div>
@@ -2311,8 +2311,8 @@ const searchGeo = async (q) => {
                     <div key={e.id} className="group-cell" onClick={()=>setSelArc(e)}>
                       <div className="group-cell-img"
                         style={{height:rightHeights[i%rightHeights.length],background:e.color||"var(--gray-100)"}}>
-                        {e.hasImg
-                          ? <span style={{fontSize:44}}>{e.emoji}</span>
+                        {e.photos&&e.photos.length>0
+                          ? <img src={e.photos[0]} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
                           : <span style={{fontSize:32,opacity:0.3}}>{e.emoji}</span>
                         }
                       </div>
