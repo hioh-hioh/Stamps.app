@@ -1107,7 +1107,7 @@ export default function App() {
   const [showSaved, setShowSaved]   = useState(false);
   const [hasPrev, setHasPrev]     = useState(false);
   const [ciPhotos, setCiPhotos] = useState([]);
-  const [checkins, setCheckins]   = useState(200);
+  const [checkins, setCheckins]   = useState(0);
   const [viewMode, setViewMode]   = useState("grid"); // "grid"|"list"
   const [selArc, setSelArc]       = useState(null);
   const [selGroup, setSelGroup]   = useState(null); // {title, items[]}
@@ -1672,7 +1672,7 @@ const searchGeo = async (q) => {
                 <div className="stats">
                   <div className="stat"><span className="snum">{archives.length}</span><span className="slbl">ポスト</span></div>
                   <div className="stat"><span className="snum">{checkins}</span><span className="slbl">チェックイン</span></div>
-                  <div className="stat"><span className="snum">120</span><span className="slbl">いいね</span></div>
+                  <div className="stat"><span className="snum">0</span><span className="slbl">いいね</span></div>
                 </div>
               </div>
               <div className="prof-info">
