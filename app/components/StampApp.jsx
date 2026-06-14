@@ -516,7 +516,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:#E8E8E4}
 .detail-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 
 /* ══════ MYPAGE ══════ */
-.mypage-screen{flex:1;overflow-y:auto;padding-bottom:88px;background:var(--white);height:calc(844px - 68px)}
+.mypage-screen{flex:1;overflow-y:auto;padding-bottom:120px;background:var(--white);height:calc(844px - 68px)}
 .profile-hd{padding:28px 16px 0}
 .prof-row{display:flex;align-items:center;gap:15px;align-self:stretch}
 .avatar{
