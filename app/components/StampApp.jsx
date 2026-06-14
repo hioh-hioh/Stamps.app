@@ -2210,40 +2210,37 @@ const searchGeo = async (q) => {
                 <h3>新しいフォルダを作成</h3>
                 <button onClick={()=>{setShowFolderModal(false);setFolderName("");setFolderPhotos([]);}}>×</button>
               </div>
-              <div className="modal-body">
+              <div className="modal-body" style={{paddingBottom:40}}>
                 <label className="modal-field-label">FOLDER NAME</label>
                 <input className="modal-input" placeholder="フォルダ名を入力..."
                   value={folderName} onChange={e=>setFolderName(e.target.value)}
                   autoFocus/>
-                <label className="modal-field-label">PHOTOS</label>
-                <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:24}}>
-                  {folderPhotos.map((p,i)=>(
-                    <div key={i} style={{width:76,height:76,borderRadius:8,
-                      background:p.color,display:"flex",alignItems:"center",
-                      justifyContent:"center",fontSize:28,position:"relative",flexShrink:0}}>
-                      {p.emoji}
-                      <button onClick={()=>setFolderPhotos(fp=>fp.filter((_,fi)=>fi!==i))}
-                        style={{position:"absolute",top:-6,right:-6,width:18,height:18,
-                          borderRadius:"50%",background:"var(--gray-800)",color:"#fff",
-                          border:"none",cursor:"pointer",fontSize:11,
-                          display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
-                    </div>
-                  ))}
-                  <button onClick={()=>setFolderPhotos(fp=>[...fp,{emoji:"🏮",color:"var(--red-bg)"}])}
-                    style={{width:76,height:76,border:"1.5px dashed var(--border)",
-                      borderRadius:8,background:"var(--gray-50)",cursor:"pointer",
-                      display:"flex",flexDirection:"column",alignItems:"center",
-                      justifyContent:"center",gap:4,color:"var(--text3)",
-                      fontFamily:"inherit",fontSize:11,flexShrink:0}}>
-                    <span style={{fontSize:22}}>＋</span>
-                    <span>追加</span>
-                  </button>
+                <label className="modal-field-label">チェックインを選択してフォルダに追加</label>
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:6,marginBottom:24,maxHeight:200,overflowY:"auto"}}>
+                  {archives.map(e=>{
+                    const selected = folderPhotos.some(p=>p.id===e.id);
+                    return (
+                      <div key={e.id} onClick={()=>setFolderPhotos(fp=>
+                        selected ? fp.filter(p=>p.id!==e.id) : [...fp,e]
+                      )} style={{position:"relative",cursor:"pointer",borderRadius:8,overflow:"hidden",
+                        height:76,background:e.color||"var(--gray-100)",
+                        outline:selected?"2.5px solid var(--red)":"none"}}>
+                        {e.photos&&e.photos.length>0
+                          ? <img src={e.photos[0]} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+                          : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24}}>{e.emoji}</div>
+                        }
+                        {selected && <div style={{position:"absolute",top:4,right:4,width:16,height:16,borderRadius:"50%",background:"var(--red)",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                          <span style={{color:"#fff",fontSize:10,fontWeight:700}}>✓</span>
+                        </div>}
+                      </div>
+                    );
+                  })}
                 </div>
                 <div className="modal-actions">
                   <button className="modal-cancel" onClick={()=>{setShowFolderModal(false);setFolderName("");setFolderPhotos([]);}}>キャンセル</button>
                   <button className="modal-ok" onClick={()=>{
                     if(!folderName.trim()) return;
-                    setFolders(f=>[...f,{id:Date.now(),title:folderName.trim(),type:"custom",ids:[]}]);
+                    setFolders(f=>[...f,{id:Date.now(),title:folderName.trim(),type:"custom",ids:folderPhotos.map(p=>p.id)}]);
                     setFolderName(""); setFolderPhotos([]); setShowFolderModal(false);
                   }}>作成する</button>
                 </div>
