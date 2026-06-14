@@ -1561,16 +1561,6 @@ const searchGeo = async (q) => {
               </div>
             </div>
 
-            {/* view toggle */}
-            <div className="view-tabs">
-              <button className={`vtab ${viewMode==="grid"?"on":""}`} onClick={()=>setViewMode("grid")}>
-                <Ic.Grid active={viewMode==="grid"}/>
-              </button>
-              <button className={`vtab ${viewMode==="list"?"on":""}`} onClick={()=>setViewMode("list")}>
-                <Ic.List active={viewMode==="list"}/>
-              </button>
-            </div>
-
             {/* grid view */}
             {viewMode==="grid" && (()=>{
               const leftH  = [180,150,200,160,190,155,170,145];
