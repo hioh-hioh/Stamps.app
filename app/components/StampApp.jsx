@@ -1886,12 +1886,18 @@ const searchGeo = async (q) => {
                   const photos = spotPosts.flatMap(a=>a.photos||[]).filter(Boolean);
                   return photos.length>0 ? (
                     <div style={{width:"100%",marginBottom:16}}>
-                      <div style={{fontSize:12,color:"var(--text3)",marginBottom:6}}>投稿された写真</div>
-                      <div style={{display:"flex",gap:6,overflowX:"auto",scrollbarWidth:"none"}}>
-                        {photos.map((url,i)=>(
-                          <img key={i} src={url} style={{width:80,height:80,borderRadius:8,objectFit:"cover",flexShrink:0}}/>
+                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:4}}>
+                        {(showAllPosts ? photos : photos.slice(0,3)).map((url,i)=>(
+                          <img key={i} src={url} style={{width:"100%",aspectRatio:"1",borderRadius:8,objectFit:"cover",display:"block"}}/>
                         ))}
                       </div>
+                      {photos.length>3 && (
+                        <button onClick={()=>setShowAllPosts(v=>!v)}
+                          style={{background:"none",border:"none",color:"var(--text3)",fontSize:13,
+                            cursor:"pointer",fontFamily:"inherit",textDecoration:"underline",padding:"6px 0 0"}}>
+                          {showAllPosts ? "閉じる" : `View more (${photos.length-3}件)`}
+                        </button>
+                      )}
                     </div>
                   ) : null;
                 })()}
