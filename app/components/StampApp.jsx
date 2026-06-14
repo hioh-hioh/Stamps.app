@@ -1111,14 +1111,7 @@ export default function App() {
   const [viewMode, setViewMode]   = useState("grid"); // "grid"|"list"
   const [selArc, setSelArc]       = useState(null);
   const [selGroup, setSelGroup]   = useState(null); // {title, items[]}
-  const [archives, setArchives]   = useState([
-    {id:1, spot:"渋谷ちかみち総合インフォメーション", sub:"観光案内所　東京都渋谷区", date:"2025/11/17 12:17", note:"周辺に4つほどスタンプがあります。状態もとても良く、可愛く押せました〜！", emoji:"🏮", hasImg:true,  color:"#E1F5EE", category:"観光",   tags:["渋谷","観光"]},
-    {id:2, spot:"渋谷駅",                             sub:"鉄道駅　東京都渋谷区",     date:"2025/11/16 10:30", note:"今日は渋谷からスタンプ集め開始！",                                       emoji:"🚉", hasImg:false, color:"#EBF0F5", category:"駅スタンプ", tags:["渋谷","駅"]},
-    {id:3, spot:"渋谷ヒカリエ",                       sub:"商業施設　東京都渋谷区",   date:"2025/11/15 14:00", note:"3Fインフォメーション横。スタンプ状態良好！",                             emoji:"🏬", hasImg:true,  color:"#F5F0EB", category:"商業施設", tags:["渋谷","商業施設"]},
-    {id:4, spot:"代官山蔦屋書店",                     sub:"書店　東京都渋谷区",       date:"2025/11/14 11:20", note:"1号館入口付近。可愛いスタンプが押せました！",                           emoji:"📚", hasImg:false, color:"#EBF5E1", category:"書店",   tags:["代官山","書店"]},
-    {id:5, spot:"渋谷公園",                           sub:"公園　東京都渋谷区",       date:"2025/11/13 09:45", note:"天気がいいな〜 スタンプもきれいに押せた",                               emoji:"🌳", hasImg:true,  color:"#E1F5E1", category:"公園",   tags:["渋谷","公園"]},
-    {id:6, spot:"渋谷スクランブルスクエア",           sub:"商業施設　東京都渋谷区",   date:"2025/11/12 16:30", note:"展望台近くに設置。景色も最高！",                                         emoji:"🌆", hasImg:false, color:"#F0EBF5", category:"商業施設", tags:["渋谷","展望台"]},
-  ]);
+  const [archives, setArchives]   = useState([]);
   const [catSel, setCatSel]       = useState("All");
   const [searchQ, setSearchQ]     = useState("");
   const [newCiOpen, setNewCiOpen] = useState(false);
@@ -1326,11 +1319,7 @@ const searchGeo = async (q) => {
             {/* Timeline */}
             {(()=>{
               // モックタイムラインデータ
-              const TIMELINE_MOCK = [
-                { id:201, spot:"渋谷ちかみち総合インフォメーション", category:"観光案内所", area:"東京都渋谷区", date:"2025/11/17 12:17", dateKey:"2025/11/17", dateLabel:"2025/11/17 (Mon)", emoji:"🏮", color:"#E1F5EE", note:"今日は渋谷からスタンプ集め開始！", hasImg:true },
-                { id:202, spot:"渋谷公園", category:"公園", area:"東京都渋谷区", date:"2025/11/17 12:17", dateKey:"2025/11/17", dateLabel:"2025/11/17 (Mon)", emoji:"🌳", color:"#E1F5E1", note:"天気がいいな〜", hasImg:false },
-                { id:203, spot:"渋谷駅", category:"鉄道駅", area:"東京都渋谷区", date:"2025/11/16 10:00", dateKey:"2025/11/16", dateLabel:"2025/11/16 (Sun)", emoji:"🚉", color:"#EBF0F5", note:"今日は渋谷からスタンプ集め開始！", hasImg:true },
-              ];
+              const TIMELINE_MOCK = [];
 
               // archivesをタイムライン形式に変換してマージ
               const arcItems = archives.map(a=>({
