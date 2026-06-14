@@ -1300,9 +1300,7 @@ const searchGeo = async (q) => {
                               if(matchSpot){ setSelSpot(matchSpot); setOverlay("detail"); }
                             }}>
                             {/* スタンプアイコン */}
-                            <div style={{width:40,height:40,borderRadius:"50%",background:item.color,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0}}>
-                              {item.emoji}
-                            </div>
+                            <div style={{width:12,height:12,borderRadius:"50%",background:"#E8452A",flexShrink:0,marginTop:6}}/>
                             {/* 内容 */}
                             <div style={{flex:1,minWidth:0}}>
                               <div style={{fontWeight:700,fontSize:15,color:"rgba(28,27,31,1)",marginBottom:2}}>
