@@ -1801,7 +1801,7 @@ const searchGeo = async (q) => {
             // このスポットへのチェックイン一覧
             const spotPosts = archives.filter(a=>a.spot===selSpot.name);
             // モックレビューも投稿カード形式に変換
-            const mockPosts = selSpot.reviews.filter(r=>r.text).map((r,i)=>({
+            const mockPosts = (selSpot.reviews||[]).filter(r=>r.text).map((r,i)=>({
               id:`mock-${i}`, spot:selSpot.name, note:r.text,
               date:"2025/11/01 10:00", hasImg:false, emoji:"🏮",
               color:"var(--red-bg)", user:r.user||"Anonymous"
