@@ -1388,7 +1388,7 @@ const searchGeo = async (q) => {
                         const matchSpot = MAP_SPOTS.find(s=>s.name===item.spot);
                         return (
                           <div key={item.id}
-                            style={{display:"flex",gap:12,padding:"0 16px",cursor:"pointer",alignItems:"flex-start"}}
+                            style={{display:"flex",gap:12,padding:"0 16px",cursor:"pointer",alignItems:"stretch"}}
                             onClick={()=>{
                               if(matchSpot){ setSelSpot(matchSpot); setOverlay("detail"); }
                             }}>
