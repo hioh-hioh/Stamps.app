@@ -772,7 +772,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:#E8E8E4}
   background:var(--white);width:100%;
   border-radius:20px 20px 0 0;
   padding:0 0 40px;
-  box-shadow:0 -4px 24px rgba(0,0,0,.08)
+  box-shadow:0 -4px 24px rgba(0,0,0,.08);
+  max-height:80vh;overflow-y:auto
 }
 .modal-sheet-hd{
   display:flex;align-items:center;justify-content:space-between;
