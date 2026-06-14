@@ -1603,7 +1603,7 @@ const searchGeo = async (q) => {
                       style={{display:"flex",alignItems:"center",gap:8,padding:"14px",
                         background:"none",border:"1.5px dashed var(--border)",borderRadius:8,
                         cursor:"pointer",color:"var(--text2)",fontSize:13,fontFamily:"inherit",width:"100%"}}>
-                      <span style={{fontSize:18,lineHeight:1}}>＋</span> フォルダを追加
+                      <span style={{fontSize:18,lineHeight:1,width:"100%"}}>＋</span> 
                     </button>
                   </div>
                 </div>
