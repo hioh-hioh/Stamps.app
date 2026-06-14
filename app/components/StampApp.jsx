@@ -1861,11 +1861,11 @@ const searchGeo = async (q) => {
 <div style={{display:"flex",alignItems:"center",width:"100%"}}>
   <div className="ov-name" style={{flex:1,margin:0,textAlign:"center"}}>{selSpot.name}</div>
 </div>
-<div className="ov-sub" style={{display:"flex",gap:8,marginTop:4,justifyContent:"flex-start"}}>
+<div className="ov-sub" style={{display:"flex",gap:8,marginTop:-4,justifyContent:"flex-start"}}>
   <span>{selSpot.category}</span>
   <span>{selSpot.area}</span>
 </div>
-                <div style={{display:"flex",padding:"12px",flexDirection:"column",alignItems:"flex-start",gap:8,alignSelf:"stretch",borderRadius:4,background:"#F6F6F6"}}>
+                <div style={{display:"flex",padding:"12px",flexDirection:"column",alignItems:"flex-start",gap:8,alignSelf:"stretch",borderRadius:4,background:"#F6F6F6",marginTop:16}}>
                   <div className="mrow"><Ic.Clock/> {selSpot.hours}</div>
                   <div className="mrow"><Ic.Pin/> {selSpot.location}</div>
                 </div>
@@ -1917,7 +1917,7 @@ const searchGeo = async (q) => {
                   }
                 </div>
 
-                <div style={{display:"flex",gap:8,alignItems:"center",marginTop:40}}>
+                <div style={{display:"flex",gap:8,alignItems:"center",marginTop:40,width:"100%"}}>
                   <button className="submit-btn" style={{flex:1,margin:0}} onClick={()=>setOverlay("form")}>チェックインする</button>
                   <button className="bookmark-btn" onClick={()=>toggleSave(selSpot)}
                     style={{flexShrink:0,width:44,height:44,borderRadius:12,border:"1px solid var(--border)",background:"#fff",display:"flex",alignItems:"center",justifyContent:"center"}}>
