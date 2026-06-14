@@ -1773,7 +1773,7 @@ const searchGeo = async (q) => {
               </div>
               {/* スポット情報入力 */}
               {showSpotEdit && (
-                <div style={{padding:"0 16px",width:"100%",boxSizing:"border-box"}}>
+                <div style={{width:"100%",boxSizing:"border-box"}}>
                   {!isCheckedIn(selSpot) && (
                     <div style={{fontSize:13,color:"var(--red)",fontWeight:700,marginBottom:12,textAlign:"left"}}>
                       🎉 初めてのチェックイン！スポット情報を登録しましょう
