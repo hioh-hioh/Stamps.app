@@ -1438,7 +1438,6 @@ const searchGeo = async (q) => {
                   ))}
                 );
             })()}
-          ) : null}
           </div>
         {/* ════ MAP ════ */}
         {tab==="map" && (
