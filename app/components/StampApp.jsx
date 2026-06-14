@@ -1101,6 +1101,7 @@ export default function App() {
   const [mapFilter, setMapFilter]   = useState("all"); // "all"|"saved"|"checkedin"
   const [showSaved, setShowSaved]   = useState(false);
   const [hasPrev, setHasPrev]     = useState(false);
+  const [ciPhotos, setCiPhotos] = useState([]);
   const [checkins, setCheckins]   = useState(200);
   const [viewMode, setViewMode]   = useState("grid"); // "grid"|"list"
   const [selArc, setSelArc]       = useState(null);
@@ -1176,9 +1177,9 @@ const searchGeo = async (q) => {
     const now = new Date();
     const ds = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,"0")}/${String(now.getDate()).padStart(2,"0")}`;
     const ts = `${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
-    setArchives(a=>[{id:Date.now(),spot:selSpot.name,sub:`${selSpot.category}　${selSpot.area}`,date:`${ds} ${ts}`,note:ciText||"チェックイン！",emoji:"🏮",hasImg:hasPrev,color:"#E1F5EE",category:ciCat||"観光",tags:[],limited:ciLimited,dateFrom:ciDateFrom,dateTo:ciDateTo,lat:selSpot.lat,lng:selSpot.lng},...a]);
+    setArchives(a=>[{id:Date.now(),spot:selSpot.name,sub:`${selSpot.category}　${selSpot.area}`,date:`${ds} ${ts}`,note:ciText||"チェックイン！",emoji:"🏮",hasImg:ciPhotos.length>0,color:"#E1F5EE",category:ciCat||"観光",tags:[],limited:ciLimited,dateFrom:ciDateFrom,dateTo:ciDateTo,lat:selSpot.lat,lng:selSpot.lng},...a]);
     setCheckins(c=>c+1);
-    setOverlay(null); setSelSpot(null);
+    setOverlay(null); setSelSpot(null); setCiPhotos([]);
     showToast("チェックイン完了！","ok");
   };
 
@@ -1677,15 +1678,36 @@ const searchGeo = async (q) => {
               <span className="change-loc" style={{color:"var(--text3)"}}>位置情報を変更</span>
               <div className="input-card">
                 <textarea placeholder="最新情報" value={ciText} onChange={e=>setCiText(e.target.value)}/>
-                {hasPrev && (
-                  <div className="prev-wrap">
-                    <div style={{width:90,height:70,background:"var(--red-bg)",borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",fontSize:28}}>🏮</div>
-                    <button className="prev-rm" onClick={()=>setHasPrev(false)}>×</button>
+                {ciPhotos.length > 0 && (
+                  <div className="prev-wrap" style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+                    {ciPhotos.map((p,i)=>(
+                      <div key={i} style={{position:"relative"}}>
+                        <img src={p.url} style={{width:90,height:70,borderRadius:8,objectFit:"cover",display:"block"}}/>
+                        <button className="prev-rm" onClick={()=>setCiPhotos(ps=>ps.filter((_,pi)=>pi!==i))}>×</button>
+                      </div>
+                    ))}
                   </div>
                 )}
                 <div className="media-row">
-                  <button className="mbtn" onClick={()=>setHasPrev(true)}><Ic.Photo/></button>
-                  <button className="mbtn" onClick={()=>setHasPrev(true)}><Ic.Camera/></button>
+                  <label className="mbtn" style={{cursor:"pointer"}}>
+                    <Ic.Photo/>
+                    <input type="file" accept="image/*" multiple style={{display:"none"}}
+                      onChange={e=>{
+                        Array.from(e.target.files).forEach(f=>{
+                          setCiPhotos(ps=>[...ps,{url:URL.createObjectURL(f),file:f}]);
+                        });
+                        e.target.value="";
+                      }}/>
+                  </label>
+                  <label className="mbtn" style={{cursor:"pointer"}}>
+                    <Ic.Camera/>
+                    <input type="file" accept="image/*" capture="environment" style={{display:"none"}}
+                      onChange={e=>{
+                        const f=e.target.files[0]; if(!f) return;
+                        setCiPhotos(ps=>[...ps,{url:URL.createObjectURL(f),file:f}]);
+                        e.target.value="";
+                      }}/>
+                  </label>
                 </div>
               </div>
               {/* 期間限定設定 */}
