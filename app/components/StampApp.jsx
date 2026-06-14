@@ -1393,7 +1393,7 @@ const searchGeo = async (q) => {
                               if(matchSpot){ setSelSpot(matchSpot); setOverlay("detail"); }
                             }}>
                             {/* ドット＋縦線 */}
-                            <div style={{display:"flex",flexDirection:"column",alignItems:"center",flexShrink:0,width:12,paddingTop:2}}>
+                            <div style={{display:"flex",flexDirection:"column",alignItems:"center",flexShrink:0,width:12,paddingTop:3}}>
                               <div style={{width:2,background:"transparent",height:8,flexShrink:0}}/>
                               <div style={{width:12,height:12,borderRadius:"50%",background:"#E8452A",flexShrink:0}}/>
                               {ii < group.items.length-1
