@@ -1824,7 +1824,7 @@ const searchGeo = async (q) => {
                 </div>
               )}
               </div>
-              <div className="vis-row" style={{paddingLeft:16,paddingRight:16,width:"100%",boxSizing:"border-box",marginTop:"-40px"}}>
+              <div className="vis-row" style={{paddingLeft:16,paddingRight:16,width:"100%",boxSizing:"border-box",marginTop:"-4px"}}>
                 <label>公開範囲</label>
                 <div className="vis-tog">
                   <button className={`vtbtn ${ciVis==="public"?"on":""}`} onClick={()=>setCiVis("public")}>公開する</button>
