@@ -1860,11 +1860,14 @@ const searchGeo = async (q) => {
                           {post.note && <p className="spot-post-text">{post.note}</p>}
                           {post.hasImg && (
                             <div className="spot-post-imgs">
-                              {[0].map((_,ii)=>(
+                              {(post.photos&&post.photos.length>0 ? post.photos : [null]).map((url,ii)=>(
                                 <div key={ii} className="spot-post-img"
                                   style={{background:post.color||"var(--red-bg)"}}
                                   onClick={()=>setPhotoViewer({posts:allPosts,postIdx:pi,imgIdx:ii})}>
-                                  <span style={{fontSize:36}}>{post.emoji}</span>
+                                  {url
+                                    ? <img src={url} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+                                    : <span style={{fontSize:36}}>{post.emoji}</span>
+                                  }
                                 </div>
                               ))}
                             </div>
