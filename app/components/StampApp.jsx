@@ -225,7 +225,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:#E8E8E4}
 .saved-empty{padding:32px 16px;text-align:center;color:var(--text3);font-size:13px}
 
 .fab{
-  position:absolute;bottom:90px;right:20px;
+  position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));right:max(20px, calc(50vw - 175px));
   width:52px;height:52px;border-radius:50%;
   background:var(--red);color:var(--white);
   border:none;cursor:pointer;font-size:26px;
