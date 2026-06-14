@@ -1703,7 +1703,7 @@ const searchGeo = async (q) => {
                     {allFolders.map(f=>(
                       <div key={f.id} className="list-card" onClick={()=>setSelGroup({title:f.title,items:f.items})}>
                         <div style={{position:"absolute",top:0,left:0,right:0,bottom:0,display:"flex",gap:2,overflow:"hidden",borderRadius:8}}>
-                          {(f.items.length>0?f.items:[{emoji:"📁",color:"var(--gray-100)"}]).slice(0,3).map((e,i)=>(
+                          {(f.items.filter(e=>e.photos&&e.photos.length>0).slice(0,3).length>0?f.items.filter(e=>e.photos&&e.photos.length>0).slice(0,3):[{emoji:"📁",color:"var(--gray-100)"}]).map((e,i)=>(
                             <div key={i} style={{flex:1,background:e.color||"var(--red-bg)",display:"flex",
                               alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
                               {e.photos&&e.photos.length>0
