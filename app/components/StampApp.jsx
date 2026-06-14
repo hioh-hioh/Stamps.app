@@ -1,6 +1,7 @@
 'use client'
 import { Marker as MapMarker } from 'react-map-gl/mapbox'
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from '../../lib/supabase'
 import MapView from './MapView'
 import Map from 'react-map-gl/mapbox'
 // ══════════════════════════════════════════════
@@ -1121,6 +1122,7 @@ export default function App() {
   const [geoResults, setGeoResults] = useState([]);
 const [geoLoading, setGeoLoading] = useState(false);
 const [sessionToken] = useState(()=>crypto.randomUUID());
+const [user, setUser] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
   const [locLoading, setLocLoading] = useState(false);
   const [photoViewer, setPhotoViewer] = useState(null);
@@ -1137,7 +1139,15 @@ const [sessionToken] = useState(()=>crypto.randomUUID());
   const [folderPhotos, setFolderPhotos] = useState([]); // mock photo list
   const [toast, setToast]         = useState({msg:"",type:""});
   const [toastOn, setToastOn]     = useState(false);
-
+useEffect(()=>{
+    supabase.auth.getSession().then(({data:{session}})=>{
+      setUser(session?.user ?? null);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_,session)=>{
+      setUser(session?.user ?? null);
+    });
+    return () => subscription.unsubscribe();
+  },[]);
   const showToast = (msg, type="") => {
     setToast({msg,type}); setToastOn(true);
     setTimeout(()=>setToastOn(false), 2200);
@@ -1492,6 +1502,22 @@ const searchGeo = async (q) => {
         {/* ════ MYPAGE ════ */}
         {tab==="mypage" && (
           <div className="mypage-screen">
+            {!user && (
+              <div style={{padding:"8px 16px 0",textAlign:"right"}}>
+            <button onClick={()=>supabase.auth.signInWithOAuth({provider:"google"})}
+              style={{background:"none",border:"none",color:"var(--red)",fontSize:12,cursor:"pointer",fontFamily:"inherit"}}>
+              Googleでログイン
+            </button>
+          </div>
+            )}
+            {user && (
+              <div style={{padding:"8px 16px 0",textAlign:"right"}}>
+                <button onClick={()=>supabase.auth.signOut()}
+                  style={{background:"none",border:"none",color:"var(--text3)",fontSize:12,cursor:"pointer",fontFamily:"inherit"}}>
+                  ログアウト
+                </button>
+              </div>
+            )}
             <div className="profile-hd">
               <div className="prof-row">
                 <div className="avatar"><Ic.User s={36}/></div>
