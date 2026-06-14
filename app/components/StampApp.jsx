@@ -1146,6 +1146,7 @@ useEffect(()=>{
       setUser(session?.user ?? null);
       if(session?.user) loadCheckins(session.user.id);
     });
+    loadSpots();
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_,session)=>{
       setUser(session?.user ?? null);
       if(session?.user){ loadCheckins(session.user.id); loadProfile(session.user.id); }
@@ -1184,6 +1185,10 @@ useEffect(()=>{
     const { data } = await supabase.from("profiles").select("*").eq("id", userId).single();
     if(data) setProfile({ name: data.name||"", location: data.location||"", bio: data.bio||"" });
   };
+  const loadSpots = async () => {
+    const { data } = await supabase.from("spots").select("*");
+    if(data) window.__spotsCache = Object.fromEntries(data.map(s=>[s.name, s]));
+  };
   const showToast = (msg, type="") => {
     setToast({msg,type}); setToastOn(true);
     setTimeout(()=>setToastOn(false), 2200);
@@ -1203,7 +1208,11 @@ const searchGeo = async (q) => {
     }
   };
   const openForm = (spot) => { setSelSpot(spot); setCiText(""); setHasPrev(false); setCiCat(""); setCiLimited(false); setCiDateFrom(""); setCiDateTo(""); setCiHours(spot.hours||""); setCiLocation(""); setShowSpotEdit(!isCheckedIn(spot)); setOverlay("form"); };
-  const openDetail = (spot) => { setSelSpot(spot); setOverlay("detail"); };
+  const openDetail = (spot) => {
+    const cached = window.__spotsCache?.[spot.name];
+    setSelSpot(cached ? {...spot, hours:cached.hours||spot.hours, location:cached.location||spot.location} : spot);
+    setOverlay("detail");
+  };
   const closeOv = () => setOverlay(null);
 
   const submit = async () => {
