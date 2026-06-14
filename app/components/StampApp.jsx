@@ -1881,7 +1881,20 @@ const searchGeo = async (q) => {
                   <div className="mrow"><Ic.Clock/> {selSpot.hours}</div>
                   <div className="mrow"><Ic.Pin/> {selSpot.location}</div>
                 </div>
-
+                {/* 投稿済み写真一覧 */}
+                {(()=>{
+                  const photos = spotPosts.flatMap(a=>a.photos||[]).filter(Boolean);
+                  return photos.length>0 ? (
+                    <div style={{width:"100%",marginBottom:16}}>
+                      <div style={{fontSize:12,color:"var(--text3)",marginBottom:6}}>投稿された写真</div>
+                      <div style={{display:"flex",gap:6,overflowX:"auto",scrollbarWidth:"none"}}>
+                        {photos.map((url,i)=>(
+                          <img key={i} src={url} style={{width:80,height:80,borderRadius:8,objectFit:"cover",flexShrink:0}}/>
+                        ))}
+                      </div>
+                    </div>
+                  ) : null;
+                })()}
                 {/* 投稿一覧 */}
                 <div className="spot-posts" style={{display:"flex",flexDirection:"column",alignItems:"flex-start",gap:16,alignSelf:"stretch"}}>
                   <div style={{fontSize:13,fontWeight:700,color:"var(--text)",marginBottom:12,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
