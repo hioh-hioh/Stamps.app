@@ -1858,17 +1858,15 @@ const searchGeo = async (q) => {
               </div>
               <div className="ov-body" style={{paddingTop:16}}>
                 {/* タイトル＋ブックマーク */}
-<div style={{display:"flex",alignItems:"flex-start",gap:28,alignSelf:"stretch",width:"100%"}}>
-  <div style={{flex:1}}>
-    <div className="ov-name">{selSpot.name}</div>
-    <div className="ov-sub" style={{display:"flex",gap:8,marginTop:4}}>
-      <span>{selSpot.category}</span>
-      <span>{selSpot.area}</span>
-    </div>
-  </div>
-  <button className="bookmark-btn" onClick={()=>toggleSave(selSpot)}>
+<div style={{display:"flex",alignItems:"center",gap:8,alignSelf:"stretch",width:"100%"}}>
+  <div className="ov-name" style={{flex:1,margin:0}}>{selSpot.name}</div>
+  <button className="bookmark-btn" onClick={()=>toggleSave(selSpot)} style={{flexShrink:0}}>
     <BookmarkSVG active={isSaved(selSpot)} size={20}/>
   </button>
+</div>
+<div className="ov-sub" style={{display:"flex",gap:8,marginTop:4}}>
+  <span>{selSpot.category}</span>
+  <span>{selSpot.area}</span>
 </div>
                 <div style={{display:"flex",padding:"12px",flexDirection:"column",alignItems:"flex-start",gap:8,alignSelf:"stretch",borderRadius:4,background:"#F6F6F6"}}>
                   <div className="mrow"><Ic.Clock/> {selSpot.hours}</div>
