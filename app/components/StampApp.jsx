@@ -1176,7 +1176,7 @@ const searchGeo = async (q) => {
     const now = new Date();
     const ds = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,"0")}/${String(now.getDate()).padStart(2,"0")}`;
     const ts = `${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
-    setArchives(a=>[{id:Date.now(),spot:selSpot.name,sub:`${selSpot.category}　${selSpot.area}`,date:`${ds} ${ts}`,note:ciText||"チェックイン！",emoji:"🏮",hasImg:hasPrev,color:"#E1F5EE",category:ciCat||"観光",tags:[],limited:ciLimited,dateFrom:ciDateFrom,dateTo:ciDateTo},...a]);
+    setArchives(a=>[{id:Date.now(),spot:selSpot.name,sub:`${selSpot.category}　${selSpot.area}`,date:`${ds} ${ts}`,note:ciText||"チェックイン！",emoji:"🏮",hasImg:hasPrev,color:"#E1F5EE",category:ciCat||"観光",tags:[],limited:ciLimited,dateFrom:ciDateFrom,dateTo:ciDateTo,lat:selSpot.lat,lng:selSpot.lng},...a]);
     setCheckins(c=>c+1);
     setOverlay(null); setSelSpot(null);
     showToast("チェックイン完了！","ok");
@@ -1339,7 +1339,10 @@ const searchGeo = async (q) => {
           <div className="map-screen">
             <div className="map-canvas">
   <MapView>
-    {MAP_SPOTS
+    {[...MAP_SPOTS, ...archives
+        .filter(a => a.lat && a.lng && !MAP_SPOTS.find(s=>s.name===a.spot))
+        .map(a=>({id:"arc-"+a.id, name:a.spot, lat:a.lat, lng:a.lng, category:a.category||"", area:"", checkins:0, hours:"", location:"", reviews:[], comment:a.note||"", stampUpdatedAt:null, stampUpdatedBy:null}))
+      ]
       .filter(s=>{
         if(mapFilter==="saved") return isSaved(s);
         if(mapFilter==="checkedin") return isCheckedIn(s);
