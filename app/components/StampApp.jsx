@@ -1295,14 +1295,21 @@ const searchGeo = async (q) => {
                         const matchSpot = MAP_SPOTS.find(s=>s.name===item.spot);
                         return (
                           <div key={item.id}
-                            style={{display:"flex",gap:12,padding:"12px 16px",cursor:"pointer"}}
+                            style={{display:"flex",gap:12,padding:"0 16px",cursor:"pointer"}}
                             onClick={()=>{
                               if(matchSpot){ setSelSpot(matchSpot); setOverlay("detail"); }
                             }}>
-                            {/* スタンプアイコン */}
-                            <div style={{width:12,height:12,borderRadius:"50%",background:"#E8452A",flexShrink:0,marginTop:6}}/>
+                            {/* ドット＋縦線 */}
+                            <div style={{display:"flex",flexDirection:"column",alignItems:"center",flexShrink:0,width:12}}>
+                              <div style={{height:12,flexShrink:0}}/>
+                              <div style={{width:12,height:12,borderRadius:"50%",background:"#E8452A",flexShrink:0}}/>
+                              {ii < group.items.length-1
+                                ? <div style={{width:2,flex:1,background:"#E8D0CC",minHeight:12}}/>
+                                : <div style={{flex:1}}/>
+                              }
+                            </div>
                             {/* 内容 */}
-                            <div style={{flex:1,minWidth:0}}>
+                            <div style={{flex:1,minWidth:0,paddingTop:6,paddingBottom:16}}>
                               <div style={{fontWeight:700,fontSize:15,color:"rgba(28,27,31,1)",marginBottom:2}}>
                                 {item.spot}
                               </div>
