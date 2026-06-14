@@ -1149,12 +1149,42 @@ const [user, setUser] = useState(null);
 useEffect(()=>{
     supabase.auth.getSession().then(({data:{session}})=>{
       setUser(session?.user ?? null);
+      if(session?.user) loadCheckins(session.user.id);
     });
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_,session)=>{
       setUser(session?.user ?? null);
+      if(session?.user) loadCheckins(session.user.id);
+      else setArchives([]);
     });
     return () => subscription.unsubscribe();
   },[]);
+
+  const loadCheckins = async (userId) => {
+    const { data, error } = await supabase
+      .from("checkins")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
+    if(error || !data) return;
+    setArchives(data.map(d=>({
+      id: d.id,
+      spot: d.spot_name,
+      sub: `${d.category||""}　${d.area||""}`,
+      date: d.created_at?.slice(0,16).replace("T"," ").replace(/-/g,"/"),
+      note: d.note||"",
+      emoji: d.emoji||"🏮",
+      hasImg: (d.photo_urls||[]).length>0,
+      photos: d.photo_urls||[],
+      color: d.color||"#E1F5EE",
+      category: d.category||"",
+      tags: [],
+      limited: d.limited||false,
+      dateFrom: d.date_from||"",
+      dateTo: d.date_to||"",
+      lat: d.lat,
+      lng: d.lng,
+    })));
+  };
   const showToast = (msg, type="") => {
     setToast({msg,type}); setToastOn(true);
     setTimeout(()=>setToastOn(false), 2200);
@@ -1178,17 +1208,61 @@ const searchGeo = async (q) => {
   const closeOv = () => setOverlay(null);
 
   const submit = async () => {
-    const now = new Date();
-    const ds = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,"0")}/${String(now.getDate()).padStart(2,"0")}`;
-    const ts = `${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
+    if(!user){ showToast("ログインが必要です"); return; }
 
     // 写真をSupabase Storageにアップロード
-    const photoUrls = ciPhotos.map(p => p.url);
+    const photoUrls = [];
+    for(const p of ciPhotos){
+      const ext = p.file?.name?.split(".").pop() || "jpg";
+      const path = `checkins/${user.id}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+      const { error } = await supabase.storage.from("photos").upload(path, p.file);
+      if(!error){
+        const { data } = supabase.storage.from("photos").getPublicUrl(path);
+        photoUrls.push(data.publicUrl);
+      }
+    }
 
-    setArchives(a=>[{id:Date.now(),spot:selSpot.name,sub:`${selSpot.category}　${selSpot.area}`,date:`${ds} ${ts}`,note:ciText||"チェックイン！",emoji:"🏮",hasImg:photoUrls.length>0,photos:photoUrls,color:"#E1F5EE",category:ciCat||"観光",tags:[],limited:ciLimited,dateFrom:ciDateFrom,dateTo:ciDateTo,lat:selSpot.lat,lng:selSpot.lng},...a]);
-    setCheckins(c=>c+1);
+    // Supabaseに保存
+    const { data, error } = await supabase.from("checkins").insert({
+      user_id: user.id,
+      spot_name: selSpot.name,
+      spot_id: String(selSpot.id||""),
+      category: selSpot.category||"",
+      area: selSpot.area||"",
+      lat: selSpot.lat,
+      lng: selSpot.lng,
+      note: ciText||"チェックイン！",
+      photo_urls: photoUrls,
+      emoji: "🏮",
+      color: "#E1F5EE",
+      limited: ciLimited,
+      date_from: ciDateFrom||null,
+      date_to: ciDateTo||null,
+    }).select().single();
+
+    if(!error && data){
+      setArchives(a=>[{
+        id: data.id,
+        spot: data.spot_name,
+        sub: `${data.category}　${data.area}`,
+        date: data.created_at?.slice(0,16).replace("T"," ").replace(/-/g,"/"),
+        note: data.note,
+        emoji: data.emoji,
+        hasImg: photoUrls.length>0,
+        photos: photoUrls,
+        color: data.color,
+        category: data.category,
+        tags: [],
+        limited: data.limited,
+        dateFrom: data.date_from||"",
+        dateTo: data.date_to||"",
+        lat: data.lat,
+        lng: data.lng,
+      },...a]);
+      setCheckins(c=>c+1);
+    }
     setOverlay(null); setSelSpot(null); setCiPhotos([]);
-    showToast("チェックイン完了！","ok");
+    showToast(error?"保存に失敗しました":"チェックイン完了！", error?"":"ok");
   };
 
   const switchTab = (t) => { setTab(t); setOverlay(null); setSelSpot(null); };
