@@ -2238,6 +2238,8 @@ const searchGeo = async (q) => {
                   lng: result.geometry.location.lng,
                   category: result.types?.[0] || "場所",
                   area: result.address_components?.find(c=>c.types.includes("locality"))?.long_name || "",
+                  creator_name: profile.name || user?.email || "",
+                  created_by: user?.id || "",
                 };
                 spot.checkins = spot.checkins ?? 0;
                 spot.hours = spot.hours ?? "";
@@ -2349,7 +2351,7 @@ const searchGeo = async (q) => {
             const items = selGroup.items.length > 0 ? selGroup.items : archives;
             const leftHeights  = [180,150,200,160,190,155];
             const rightHeights = [155,195,160,185,150,200];
-            const imgItems = items.filter(e=>e.photos&&e.photos.length>0);
+            const imgItems = items.filter(e=>e.hasImg||( e.photos&&e.photos.length>0));
             const left  = imgItems.filter((_,i)=>i%2===0);
             const right = imgItems.filter((_,i)=>i%2===1);
             return <>
