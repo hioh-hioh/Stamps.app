@@ -571,13 +571,11 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   background:var(--gray-100);border-radius:8px;
   padding:0;cursor:pointer;overflow:hidden;
   height:120px;position:relative;
-  display:flex;align-items:flex-end
 }
 .list-card-label{
-  position:relative;z-index:2;
-  padding:12px 16px 160px;font-size:14px;font-weight:700;color:var(--text);
-  background:linear-gradient(to top,rgba(255,255,255,.9) 70%,transparent);
-  width:100%
+  position:absolute;bottom:0;left:0;right:0;z-index:2;
+  padding:8px 12px;font-size:13px;font-weight:700;color:#fff;
+  background:linear-gradient(to top,rgba(0,0,0,.6),transparent);
 }
 
 /* Archive overlay */
@@ -1291,7 +1289,7 @@ const searchGeo = async (q) => {
     showToast(error?"保存に失敗しました":"チェックイン完了！", error?"":"ok");
   };
 
-  const switchTab = (t) => { setTab(t); setOverlay(null); setSelSpot(null); };
+  const switchTab = (t) => { setTab(t); setOverlay(null); setSelSpot(null); setSelGroup(null); };
   const toggleSave = (spot) => {
     setSavedSpots(s=>
       s.find(x=>x.id===spot.id)
@@ -1726,32 +1724,31 @@ const searchGeo = async (q) => {
               return (
                 <div style={{padding:"20px 16px 100px"}}>
                   <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
-                    {allFolders.map(f=>(
-                      <div key={f.id} className="list-card" onClick={()=>setSelGroup({title:f.title,items:f.items})}>
-                        <div style={{position:"absolute",top:0,left:0,right:0,bottom:0,display:"flex",gap:2,overflow:"hidden",borderRadius:8}}>
-                          {(f.items.filter(e=>e.photos&&e.photos.length>0).slice(0,3).length>0?f.items.filter(e=>e.photos&&e.photos.length>0).slice(0,3):[{emoji:"📁",color:"var(--gray-100)"}]).map((e,i)=>(
-                            <div key={i} style={{flex:1,background:e.color||"var(--red-bg)",display:"flex",
-                              alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
-                              {e.photos&&e.photos.length>0
-                                ? <img src={e.photos[0]} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
-                                : <span style={{fontSize:24,opacity:0.7}}>{e.emoji}</span>
-                              }
-                            </div>
-                          ))}
-                        </div>
-                        <div className="list-card-label">
-                          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                            <span style={{fontWeight:700}}>{f.title}</span>
-                            <span style={{fontSize:11,color:"var(--text3)"}}>{f.items.length} stamps</span>
+                    {allFolders.map(f=>{
+                      const thumb = f.items.find(e=>e.photos&&e.photos.length>0);
+                      return (
+                        <div key={f.id} onClick={()=>setSelGroup({title:f.title,items:f.items})}
+                          style={{borderRadius:8,overflow:"hidden",cursor:"pointer",position:"relative",height:120,background:"#444"}}>
+                          {thumb ? (
+                            <img src={thumb.photos[0]}
+                              style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
+                          ) : (
+                            <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:32}}>📁</div>
+                          )}
+                          <div style={{position:"absolute",bottom:0,left:0,right:0,
+                            padding:"20px 8px 8px",
+                            background:"linear-gradient(to top,rgba(0,0,0,.7),transparent)"}}>
+                            <div style={{color:"#fff",fontWeight:700,fontSize:13}}>{f.title}</div>
+                            <div style={{color:"rgba(255,255,255,.7)",fontSize:11}}>{f.items.length} stamps</div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                     <button onClick={()=>setShowFolderModal(true)}
-                      style={{display:"flex",alignItems:"center",gap:8,padding:"14px",
-                        background:"none",border:"1.5px dashed var(--border)",borderRadius:8,
-                        cursor:"pointer",color:"var(--text2)",fontSize:13,fontFamily:"inherit",width:"100%"}}>
-                      <span style={{fontSize:18,lineHeight:1,width:"100%",marginTop:2}}>＋</span>
+                      style={{display:"flex",alignItems:"center",justifyContent:"center",
+                        height:120,background:"none",border:"1.5px dashed var(--border)",borderRadius:8,
+                        cursor:"pointer",color:"var(--text2)",fontSize:24,fontFamily:"inherit"}}>
+                      ＋
                     </button>
                   </div>
                 </div>
