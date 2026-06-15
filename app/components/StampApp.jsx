@@ -1243,7 +1243,7 @@ const searchGeo = async (q) => {
       area: selSpot.area||"",
       lat: selSpot.lat,
       lng: selSpot.lng,
-      note: ciText||"チェックイン！",
+      note: ciText||"",
       photo_urls: photoUrls,
       emoji: "",
       color: "#E1F5EE",
