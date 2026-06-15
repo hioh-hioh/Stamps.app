@@ -1699,16 +1699,12 @@ const searchGeo = async (q) => {
                     ? <img src={profile.avatar_url} style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:"50%"}}/>
                     : <Ic.User s={36}/>}
                 </div>
-                <div className="stats">
-                  <div className="stat"><span className="snum">{archives.length}</span><span className="slbl">ポスト</span></div>
-                  <div className="stat"><span className="snum">{checkins}</span><span className="slbl">チェックイン</span></div>
-                  <div className="stat"><span className="snum">0</span><span className="slbl">いいね</span></div>
                 </div>
-              </div>
               <div className="prof-info">
                 <div style={{flex:1}}>
                   <div className="prof-name">{profile.name}</div>
-                  <div className="prof-bio">{profile.location}<br/>{profile.bio}</div>
+                  <div className="prof-bio">{profile.bio}</div>
+                  <div style={{fontSize:11,color:"var(--text3)",marginTop:6}}>Post: {archives.filter(a=>a.note||a.photos?.length>0).length}　Checkin: {archives.length}</div>
                 </div>
                 <button className="edit-btn" onClick={()=>{
                   setEditDraft({name:profile.name,location:profile.location,bio:profile.bio,avatar_url:profile.avatar_url||""});
