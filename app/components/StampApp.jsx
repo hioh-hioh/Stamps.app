@@ -1149,7 +1149,7 @@ useEffect(()=>{
     loadSpots();
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_,session)=>{
       setUser(session?.user ?? null);
-      if(session?.user){ loadCheckins(session.user.id); loadProfile(session.user.id); }
+      if(session?.user && session.user.id !== user?.id){ loadCheckins(session.user.id); loadProfile(session.user.id); }
       else setArchives([]);
     });
     return () => subscription.unsubscribe();
