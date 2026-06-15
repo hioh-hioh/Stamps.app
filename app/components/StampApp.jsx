@@ -1760,7 +1760,7 @@ const searchGeo = async (q) => {
                   zoom: 15,
                 }}
                 style={{ width: '100%', height: '100%' }}
-                mapStyle="mapbox://styles/mapbox/streets-v12"
+                mapStyle="mapbox://styles/kthhtm/cmptvkv4f006501su5hqm3cp2"
                 interactive={false}
               >
                 <div style={{position:"absolute",left:"50%",top:"50%",transform:"translate(-50%,-100%)"}}>
