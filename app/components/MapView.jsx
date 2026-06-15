@@ -61,7 +61,7 @@ export default function MapView({ children }) {
         zoom: 14,
       }}
       style={{ width: '100%', height: '100%' }}
-      mapStyle="mapbox://styles/kthhtm/cmptvkv4f006501su5hqm3cp2"
+      mapStyle="mapbox://styles/mapbox/streets-v12"
     >
       <FlyToRegistrar />
       <LocateButton />
