@@ -1247,7 +1247,7 @@ const searchGeo = async (q) => {
       lng: selSpot.lng,
       note: ciText||"チェックイン！",
       photo_urls: photoUrls,
-      emoji: "🏮",
+      emoji: "",
       color: "#E1F5EE",
       limited: ciLimited,
       date_from: ciDateFrom||null,
@@ -1745,6 +1745,7 @@ const searchGeo = async (q) => {
                             <span style={{fontSize:11,color:"var(--text3)"}}>{f.items.length} stamps</span>
                           </div>
                         </div>
+                      </div>
                       </div>
                     ))}
                     <button onClick={()=>setShowFolderModal(true)}
