@@ -8,7 +8,7 @@ import Map from 'react-map-gl/mapbox'
 // ══════════════════════════════════════════════
 // DATA
 // ══════════════════════════════════════════════
-const MAP_SPOTS = [
+const MAP_SPOTS = [];//
   { id:1, name:"渋谷ちかみち総合インフォメーション", stampUpdatedAt:"2026-04-15", stampUpdatedBy:{name:"masa", avatar:null}, category:"観光案内所", area:"東京都渋谷区", checkins:15403, comment:"周辺に4つほどスタンプがあります。状態もとても良く、可愛く押せました〜！", hours:"10:00-20:00", location:"入口入って左側荷物設置", x:48, y:28, lat:35.6591, lng:139.7019, reviews:[{text:"周辺に4つほどスタンプがあります。状態もとても良く、可愛く押せました〜！",user:null},{text:"インクの状態とてもよかったです。",user:null}] },
   { id:2, name:"渋谷駅", stampUpdatedAt:"2025-10-01", stampUpdatedBy:{name:"yuki", avatar:null}, category:"鉄道駅", area:"東京都渋谷区", checkins:22100, comment:"ハチ公口改札前に設置。朝は混むので夕方がおすすめです。", hours:"終日", location:"ハチ公口改札前", x:26, y:46, lat:35.6580, lng:139.7016, reviews:[{text:"ハチ公口改札前。朝は混むので夕方がおすすめです。",user:null}] },
   { id:3, name:"渋谷ヒカリエ", stampUpdatedAt:"2026-03-20", stampUpdatedBy:{name:"taro", avatar:null}, category:"商業施設", area:"東京都渋谷区", checkins:8742, comment:"3Fインフォメーション横。営業時間内のみ。", hours:"11:00-21:00", location:"3Fインフォメーション横", x:72, y:52, lat:35.6590, lng:139.7033, reviews:[{text:"3Fインフォメーション横。営業時間内のみ。",user:null}] },
@@ -1103,6 +1103,7 @@ export default function App() {
   const [ciLocation, setCiLocation] = useState("");
   const [showSpotEdit, setShowSpotEdit] = useState(false);
   const [showAllPosts, setShowAllPosts] = useState(false);
+  const [dbSpots, setDbSpots] = useState([]);
   const [savedSpots, setSavedSpots] = useState([]);
   const [mapFilter, setMapFilter]   = useState("all"); // "all"|"saved"|"checkedin"
   const [showSaved, setShowSaved]   = useState(false);
@@ -1461,8 +1462,8 @@ const searchGeo = async (q) => {
           <div className="map-screen">
             <div className="map-canvas">
   <MapView>
-    {[...MAP_SPOTS, ...archives
-        .filter(a => a.lat && a.lng && !MAP_SPOTS.find(s=>s.name===a.spot))
+    {[...MAP_SPOTS, ...dbSpots.filter(s=>!MAP_SPOTS.find(m=>m.name===s.name)), ...archives
+        .filter(a => a.lat && a.lng && !MAP_SPOTS.find(s=>s.name===a.spot) && !dbSpots.find(s=>s.name===a.spot))
         .map(a=>({id:"arc-"+a.id, name:a.spot, lat:a.lat, lng:a.lng, category:a.category||"", area:"", checkins:0, hours:"", location:"", reviews:[], comment:a.note||"", stampUpdatedAt:null, stampUpdatedBy:null}))
       ]
       .filter(s=>{
@@ -1480,7 +1481,6 @@ const searchGeo = async (q) => {
           <MapMarker key={s.id} longitude={s.lng} latitude={s.lat} anchor="bottom"
             onClick={()=>{setSelSpot(s);setShowSaved(false);}}>
             <div style={{position:"relative",cursor:"pointer"}}>
-              {isStampUpdated(s) && <div className="pin-update-dot"/>}
               {checked ? <CheckedPinSVG width={selSpot?.id===s.id?36:27} height={selSpot?.id===s.id?43:32}/> : <PinSVG color={pinColor} width={selSpot?.id===s.id?36:24} height={selSpot?.id===s.id?43:29}/>}
             </div>
           </MapMarker>
