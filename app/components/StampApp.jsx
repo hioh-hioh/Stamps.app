@@ -8,14 +8,7 @@ import Map from 'react-map-gl/mapbox'
 // ══════════════════════════════════════════════
 // DATA
 // ══════════════════════════════════════════════
-const MAP_SPOTS = [];//
-  { id:1, name:"渋谷ちかみち総合インフォメーション", stampUpdatedAt:"2026-04-15", stampUpdatedBy:{name:"masa", avatar:null}, category:"観光案内所", area:"東京都渋谷区", checkins:15403, comment:"周辺に4つほどスタンプがあります。状態もとても良く、可愛く押せました〜！", hours:"10:00-20:00", location:"入口入って左側荷物設置", x:48, y:28, lat:35.6591, lng:139.7019, reviews:[{text:"周辺に4つほどスタンプがあります。状態もとても良く、可愛く押せました〜！",user:null},{text:"インクの状態とてもよかったです。",user:null}] },
-  { id:2, name:"渋谷駅", stampUpdatedAt:"2025-10-01", stampUpdatedBy:{name:"yuki", avatar:null}, category:"鉄道駅", area:"東京都渋谷区", checkins:22100, comment:"ハチ公口改札前に設置。朝は混むので夕方がおすすめです。", hours:"終日", location:"ハチ公口改札前", x:26, y:46, lat:35.6580, lng:139.7016, reviews:[{text:"ハチ公口改札前。朝は混むので夕方がおすすめです。",user:null}] },
-  { id:3, name:"渋谷ヒカリエ", stampUpdatedAt:"2026-03-20", stampUpdatedBy:{name:"taro", avatar:null}, category:"商業施設", area:"東京都渋谷区", checkins:8742, comment:"3Fインフォメーション横。営業時間内のみ。", hours:"11:00-21:00", location:"3Fインフォメーション横", x:72, y:52, lat:35.6590, lng:139.7033, reviews:[{text:"3Fインフォメーション横。営業時間内のみ。",user:null}] },
-  { id:4, name:"代官山蔦屋書店", stampUpdatedAt:"2025-12-01", stampUpdatedBy:{name:"hana", avatar:null}, category:"書店", area:"東京都渋谷区", checkins:5200, comment:"1号館入口付近。スタンプ状態良好！", hours:"10:00-22:00", location:"1号館入口", x:40, y:60, lat:35.6488, lng:139.7027, reviews:[{text:"1号館入口付近。スタンプ状態良好！",user:null}] },
-  { id:5, name:"恵比寿ガーデンプレイス", stampUpdatedAt:"2026-05-10", stampUpdatedBy:{name:"masa", avatar:null}, category:"商業施設", area:"東京都渋谷区", checkins:6300, comment:"センター広場近くに設置。", hours:"11:00-20:00", location:"センター広場", x:62, y:70, lat:35.6465, lng:139.7152, reviews:[{text:"センター広場近くに設置。",user:null}] },
-  { id:6, name:"中目黒駅", category:"鉄道駅", area:"東京都目黒区", checkins:4800, comment:"改札外コンコースに設置。", hours:"終日", location:"改札外コンコース", x:20, y:72, lat:35.6444, lng:139.6987, stampUpdatedAt:"2026-05-01", stampUpdatedBy:{name:"yuki", avatar:null}, reviews:[{text:"改札外コンコースに設置。",user:null}] },
-];
+const MAP_SPOTS = [];
 
 // 2点間の距離計算（km）
 function calcDist(lat1,lng1,lat2,lng2){
