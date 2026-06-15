@@ -1746,7 +1746,6 @@ const searchGeo = async (q) => {
                           </div>
                         </div>
                       </div>
-                      </div>
                     ))}
                     <button onClick={()=>setShowFolderModal(true)}
                       style={{display:"flex",alignItems:"center",gap:8,padding:"14px",
