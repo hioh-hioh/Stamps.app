@@ -2330,16 +2330,6 @@ const searchGeo = async (q) => {
                 onChange={e=>setEditDraft(d=>({...d,name:e.target.value}))}/>
             </div>
 
-            {/* 居住地 */}
-            <div className="pe-field">
-              <label className="pe-label">LOCATION</label>
-              <input className="pe-input" placeholder="例：東京都在住"
-                value={editDraft.location}
-                onChange={e=>setEditDraft(d=>({...d,location:e.target.value}))}/>
-            </div>
-
-            <div className="pe-divider"/>
-
             {/* 自己紹介 */}
             <div className="pe-field">
               <label className="pe-label">BIO</label>
