@@ -1257,6 +1257,7 @@ const searchGeo = async (q) => {
       }, { onConflict:"id" });
       // selSpotに即時反映
       setSelSpot(s=>s ? {...s, hours:ciHours||s.hours, location:ciLocation||s.location} : s);
+      await loadSpots();
     }
 
     if(!error && data){
