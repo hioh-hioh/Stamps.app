@@ -1188,7 +1188,18 @@ useEffect(()=>{
   };
   const loadSpots = async () => {
     const { data } = await supabase.from("spots").select("*");
-    if(data) window.__spotsCache = Object.fromEntries(data.map(s=>[s.name, s]));
+    if(data){
+      window.__spotsCache = Object.fromEntries(data.map(s=>[s.name, s]));
+      setDbSpots(data.map(s=>({
+        id: s.id, name: s.name, lat: s.lat, lng: s.lng,
+        category: s.category||"", area: s.area||"",
+        hours: s.hours||"", location: s.location||"",
+        creator_name: s.creator_name||"", created_by: s.created_by||"",
+        spot_created_at: s.created_at||"",
+        checkins: 0, reviews: [], comment: "",
+        stampUpdatedAt: null, stampUpdatedBy: null,
+      })).filter(s=>s.lat&&s.lng));
+    }
   };
   const showToast = (msg, type="") => {
     setToast({msg,type}); setToastOn(true);
@@ -1211,7 +1222,7 @@ const searchGeo = async (q) => {
   const openForm = (spot) => { setSelSpot(spot); setCiText(""); setHasPrev(false); setCiCat(""); setCiLimited(false); setCiDateFrom(""); setCiDateTo(""); setCiHours(spot.hours||""); setCiLocation(""); setShowSpotEdit(!isCheckedIn(spot)); setOverlay("form"); };
   const openDetail = (spot) => {
     const cached = window.__spotsCache?.[spot.name];
-    setSelSpot(cached ? {...spot, hours:cached.hours||spot.hours, location:cached.location||spot.location} : spot);
+    setSelSpot(cached ? {...spot, hours:cached.hours||spot.hours, location:cached.location||spot.location, creator_name:cached.creator_name||"", spot_created_at:cached.created_at||""} : spot);
     setOverlay("detail");
   };
   const closeOv = () => setOverlay(null);
@@ -1991,7 +2002,18 @@ const searchGeo = async (q) => {
                   }
                 </div>
 
-                <div style={{display:"flex",gap:8,alignItems:"center",marginTop:40,width:"100%"}}>
+                {(selSpot.creator_name||selSpot.spot_created_at) && (
+                  <div style={{display:"flex",alignItems:"center",gap:10,padding:"12px 0",borderTop:"1px solid var(--gray-50)",marginTop:40,width:"100%"}}>
+                    <div style={{width:32,height:32,borderRadius:"50%",background:"var(--gray-100)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                      <Ic.User s={16}/>
+                    </div>
+                    <div style={{fontSize:13,color:"var(--text2)"}}>
+                      <span style={{fontWeight:600,color:"var(--text)"}}>{selSpot.creator_name}</span>
+                      {selSpot.spot_created_at && <span style={{color:"var(--text3)",marginLeft:6}}>{selSpot.spot_created_at.slice(0,10).replace(/-/g,"/")}に作成</span>}
+                    </div>
+                  </div>
+                )}
+                <div style={{display:"flex",gap:8,alignItems:"center",marginTop:8,width:"100%"}}>
                   <button className="submit-btn" style={{flex:1,margin:0}} onClick={()=>setOverlay("form")}>チェックインする</button>
                   <button className="bookmark-btn" onClick={()=>toggleSave(selSpot)}
                     style={{flexShrink:0,width:44,height:44,borderRadius:12,border:"1px solid var(--border)",background:"#fff",display:"flex",alignItems:"center",justifyContent:"center"}}>
