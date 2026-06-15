@@ -1,4 +1,5 @@
 'use client'
+'use client'
 import { Marker as MapMarker } from 'react-map-gl/mapbox'
 import { useState, useEffect } from "react";
 import { supabase } from '../../lib/supabase'
