@@ -231,7 +231,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 .fab:active{transform:scale(.94)}
 
 /* ══════ HOME ══════ */
-.home-screen{flex:1;overflow-y:auto;padding-bottom:80px;background:var(--white);overscroll-behavior:contain}
+.home-screen{flex:1;overflow-y:auto;padding-bottom:120px;background:var(--white);overscroll-behavior:contain}
 .home-search{
   display:flex;align-items:center;gap:10px;margin:0;
   background:var(--white);padding:16px 16px 12px;
@@ -575,7 +575,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 }
 .list-card-label{
   position:relative;z-index:2;
-  padding:12px 16px;font-size:14px;font-weight:700;color:var(--text);
+  padding:12px 16px 160px;font-size:14px;font-weight:700;color:var(--text);
   background:linear-gradient(to top,rgba(255,255,255,.9) 70%,transparent);
   width:100%
 }
@@ -699,7 +699,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 
 .arc-overlay{
   position:absolute;top:0;left:0;right:0;bottom:0;background:var(--white);
-  z-index:300;overflow-y:auto;
+  z-index:320;overflow-y:auto;
   display:none
 }
 .arc-overlay.open{display:block}
@@ -1123,10 +1123,10 @@ const [user, setUser] = useState(null);
   const [locLoading, setLocLoading] = useState(false);
   const [photoViewer, setPhotoViewer] = useState(null);
   const [profile, setProfile] = useState({
-    name:"NameNameName", location:"東京都在住", bio:"スタンプ収集歴5年"
+    name:"", location:"", bio:"", avatar_url:""
   });
   const [profileEditOpen, setProfileEditOpen] = useState(false);
-  const [editDraft, setEditDraft] = useState({name:"",location:"",bio:""}); // {posts:[], postIdx:0, imgIdx:0}
+  const [editDraft, setEditDraft] = useState({name:"",location:"",bio:"",avatar_url:""}); // {posts:[], postIdx:0, imgIdx:0}
   const [folders, setFolders]       = useState([]);
   const [showFolderModal, setShowFolderModal] = useState(false);
   const [folderName, setFolderName]   = useState("");
@@ -1178,7 +1178,7 @@ useEffect(()=>{
   };
   const loadProfile = async (userId) => {
     const { data } = await supabase.from("profiles").select("*").eq("id", userId).single();
-    if(data) setProfile({ name: data.name||"", location: data.location||"", bio: data.bio||"" });
+    if(data) setProfile({ name: data.name||"", location: data.location||"", bio: data.bio||"", avatar_url: data.avatar_url||"" });
   };
   const loadSpots = async () => {
     const { data } = await supabase.from("spots").select("*");
@@ -1410,8 +1410,19 @@ const searchGeo = async (q) => {
                             </div>
                             {/* 内容 */}
                             <div style={{flex:1,minWidth:0,paddingTop:6,paddingBottom:16}}>
-                              <div style={{fontWeight:700,fontSize:15,color:"rgba(28,27,31,1)",marginBottom:2}}>
-                                {item.spot}
+                              <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:2}}>
+                                <div style={{fontWeight:700,fontSize:15,color:"rgba(28,27,31,1)"}}>{item.spot}</div>
+                                {item.id && !String(item.id).startsWith("mock") && (
+                                  <button onClick={async(e)=>{
+                                    e.stopPropagation();
+                                    if(!confirm("削除しますか？")) return;
+                                    const {supabase} = await import("../../lib/supabase");
+                                    await supabase.from("checkins").delete().eq("id", item.id);
+                                    setArchives(a=>a.filter(x=>x.id!==item.id));
+                                  }} style={{background:"none",border:"none",cursor:"pointer",color:"var(--text3)",padding:"0 4px",fontSize:18,lineHeight:1,flexShrink:0,marginTop:3}}>
+                                    •••
+                                  </button>
+                                )}
                               </div>
                               <div style={{fontSize:12,color:"var(--text3)",marginBottom:8,display:"flex",gap:8}}>
                                 {item.category && <span>{item.category}</span>}
@@ -1683,7 +1694,11 @@ const searchGeo = async (q) => {
               </div>
             <div className="profile-hd">
               <div className="prof-row">
-                <div className="avatar"><Ic.User s={36}/></div>
+                <div className="avatar">
+                  {profile.avatar_url
+                    ? <img src={profile.avatar_url} style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:"50%"}}/>
+                    : <Ic.User s={36}/>}
+                </div>
                 <div className="stats">
                   <div className="stat"><span className="snum">{archives.length}</span><span className="slbl">ポスト</span></div>
                   <div className="stat"><span className="snum">{checkins}</span><span className="slbl">チェックイン</span></div>
@@ -1696,7 +1711,7 @@ const searchGeo = async (q) => {
                   <div className="prof-bio">{profile.location}<br/>{profile.bio}</div>
                 </div>
                 <button className="edit-btn" onClick={()=>{
-                  setEditDraft({name:profile.name,location:profile.location,bio:profile.bio});
+                  setEditDraft({name:profile.name,location:profile.location,bio:profile.bio,avatar_url:profile.avatar_url||""});
                   setProfileEditOpen(true);
                 }}><Ic.Edit/></button>
               </div>
@@ -2041,16 +2056,28 @@ const searchGeo = async (q) => {
               <h2>チェックイン記録</h2>
             </div>
             {selArc.photos && selArc.photos.length > 0 ? (
-              <div style={{display:"flex",gap:6,overflowX:"auto",padding:"0 16px"}}>
+              <div style={{marginTop:16,display:"flex",gap:6,overflowX:"auto"}}>
                 {selArc.photos.map((url,i)=>(
-                  <img key={i} src={url} style={{width:"100%",maxWidth:340,height:220,borderRadius:8,objectFit:"cover",flexShrink:0,display:"block"}}/>
+                  <img key={i} src={url} style={{width:"100vw",flexShrink:0,height:260,objectFit:"cover",display:"block"}}/>
                 ))}
               </div>
             ) : (
               <div className="arc-img">{selArc.emoji}</div>
             )}
             <div className="arc-body">
-              <div className="arc-spot">{selArc.spot}</div>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                <div className="arc-spot">{selArc.spot}</div>
+                <button onClick={async()=>{
+                  if(!confirm("このチェックインを削除しますか？")) return;
+                  const {supabase} = await import("../../lib/supabase");
+                  await supabase.from("checkins").delete().eq("id", selArc.id);
+                  setArchives(a=>a.filter(e=>e.id!==selArc.id));
+                  setSelArc(null);
+                  showToast("削除しました");
+                }} style={{background:"none",border:"none",cursor:"pointer",color:"var(--text3)",padding:4}}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                </button>
+              </div>
               <div className="arc-sub">{selArc.sub}</div>
               <div className="arc-date">{selArc.date}</div>
               {selArc.limited && (
@@ -2266,11 +2293,37 @@ const searchGeo = async (q) => {
           <div className="pe-body">
             {/* アバター */}
             <div className="pe-avatar-area">
-              <div className="pe-avatar">
-                <Ic.User s={40}/>
-                <div className="pe-avatar-edit">＋</div>
-              </div>
-              <span className="pe-change-photo">写真を変更</span>
+              <label style={{cursor:"pointer"}}>
+                <div className="pe-avatar">
+                  {editDraft.avatar_url
+                    ? <img src={editDraft.avatar_url} style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:"50%"}}/>
+                    : <Ic.User s={40}/>}
+                  <div className="pe-avatar-edit">＋</div>
+                </div>
+                <input type="file" accept="image/*" style={{display:"none"}} onChange={async(e)=>{
+                  const file = e.target.files[0];
+                  if(!file||!user) return;
+                  const path = `avatars/${user.id}/${Date.now()}.${file.name.split(".").pop()}`;
+                  const { error } = await supabase.storage.from("photos").upload(path, file);
+                  if(!error){
+                    const { data } = supabase.storage.from("photos").getPublicUrl(path);
+                    setEditDraft(d=>({...d, avatar_url: data.publicUrl}));
+                  }
+                }}/>
+              </label>
+              <label style={{cursor:"pointer",fontSize:13,color:"var(--red)"}}>
+                写真を変更
+                <input type="file" accept="image/*" style={{display:"none"}} onChange={async(e)=>{
+                  const file = e.target.files[0];
+                  if(!file||!user) return;
+                  const path = `avatars/${user.id}/${Date.now()}.${file.name.split(".").pop()}`;
+                  const { error } = await supabase.storage.from("photos").upload(path, file);
+                  if(!error){
+                    const { data } = supabase.storage.from("photos").getPublicUrl(path);
+                    setEditDraft(d=>({...d, avatar_url: data.publicUrl}));
+                  }
+                }}/>
+              </label>
             </div>
 
             {/* 名前 */}
