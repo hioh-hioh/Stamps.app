@@ -1198,7 +1198,8 @@ useEffect(()=>{
   };
   const loadSpots = async () => {
     const { data } = await supabase.from("spots").select("*");
-    const { data: ciData } = await supabase.from("checkins").select("spot_name,lat,lng").not("lat","is",null);
+    const { data: ciData, error: ciError } = await supabase.from("checkins").select("spot_name,lat,lng").not("lat","is",null);
+    console.log("ciData:", ciData, "ciError:", ciError);
     const spotsFromCi = (ciData||[])
       .filter(c=>c.lat&&c.lng)
       .reduce((acc,c)=>{
