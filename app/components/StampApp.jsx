@@ -231,7 +231,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 .fab:active{transform:scale(.94)}
 
 /* ══════ HOME ══════ */
-.home-screen{flex:1;overflow-y:auto;padding-bottom:120px;background:var(--white);overscroll-behavior:contain}
+.home-screen{flex:1;overflow-y:auto;padding-top:16px;padding-bottom:120px;background:var(--white);overscroll-behavior:contain}
 .home-search{
   display:flex;align-items:center;gap:10px;margin:0;
   background:var(--white);padding:16px 16px 12px;
