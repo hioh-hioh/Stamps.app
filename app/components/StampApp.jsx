@@ -1155,7 +1155,7 @@ const [creatorAvatar, setCreatorAvatar] = useState("");
 useEffect(()=>{
     supabase.auth.getSession().then(({data:{session}})=>{
       setUser(session?.user ?? null);
-      if(session?.user) loadCheckins(session.user.id);
+      if(session?.user){ loadCheckins(session.user.id); loadProfile(session.user.id); }
     });
     loadSpots();
     if(navigator.geolocation){
