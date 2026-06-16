@@ -1151,7 +1151,7 @@ useEffect(()=>{
       setUser(session?.user ?? null);
       if(session?.user) loadCheckins(session.user.id);
     });
-    loadSpots().then(()=>loadPublicPins());
+    loadSpots();
     if(navigator.geolocation){
       navigator.geolocation.getCurrentPosition(
         pos=>setUserLocation({lat:pos.coords.latitude,lng:pos.coords.longitude}),
@@ -1198,18 +1198,25 @@ useEffect(()=>{
   };
   const loadSpots = async () => {
     const { data } = await supabase.from("spots").select("*");
-    if(data){
-      window.__spotsCache = Object.fromEntries(data.map(s=>[s.name, s]));
-      setDbSpots(data.map(s=>({
-        id: s.id, name: s.name, lat: s.lat, lng: s.lng,
-        category: s.category||"", area: s.area||"",
-        hours: s.hours||"", location: s.location||"",
-        creator_name: s.creator_name||"", created_by: s.created_by||"",
-        spot_created_at: s.created_at||"",
-        checkins: 0, reviews: [], comment: "",
-        stampUpdatedAt: null, stampUpdatedBy: null,
-      })));
-    }
+    const { data: ciData } = await supabase.from("checkins").select("spot_name,lat,lng").not("lat","is",null);
+    const spotsFromCi = (ciData||[])
+      .filter(c=>c.lat&&c.lng)
+      .reduce((acc,c)=>{
+        if(!acc.find(s=>s.name===c.spot_name)) acc.push({id:"pub-"+c.spot_name, name:c.spot_name, lat:c.lat, lng:c.lng, category:"", area:"", checkins:0, hours:"", location:"", reviews:[], comment:"", stampUpdatedAt:null, stampUpdatedBy:null});
+        return acc;
+      },[]);
+    const spotsFromDb = (data||[]).map(s=>({
+      id: s.id, name: s.name, lat: s.lat, lng: s.lng,
+      category: s.category||"", area: s.area||"",
+      hours: s.hours||"", location: s.location||"",
+      creator_name: s.creator_name||"", created_by: s.created_by||"",
+      spot_created_at: s.created_at||"",
+      checkins: 0, reviews: [], comment: "",
+      stampUpdatedAt: null, stampUpdatedBy: null,
+    }));
+    if(data) window.__spotsCache = Object.fromEntries(data.map(s=>[s.name, s]));
+    const merged = [...spotsFromDb, ...spotsFromCi.filter(c=>!spotsFromDb.find(s=>s.name===c.name))];
+    setDbSpots(merged);
   };
   const loadPublicPins = async () => {
     const { data } = await supabase.from("checkins").select("spot_name,lat,lng").not("lat","is",null);
