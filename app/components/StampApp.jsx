@@ -1319,7 +1319,7 @@ const searchGeo = async (q) => {
       date_to: ciDateTo||null,
     }).select().single();
     // スポット情報を更新（毎回category/areaは保存。hours/locationは入力時のみ。creator_nameは未設定時のみ）
-    await supabase.from("spots").upsert({
+    const { error: spotsErr } = await supabase.from("spots").upsert({
       id: String(selSpot.id||selSpot.name),
       name: selSpot.name,
       category: selSpot.category||"",
@@ -1330,6 +1330,7 @@ const searchGeo = async (q) => {
       lat: selSpot.lat||null,
       lng: selSpot.lng||null,
     }, { onConflict:"id" });
+    console.log("spotsErr:", spotsErr, "creator_name送信値:", !selSpot.creator_name ? (profile.name || user?.email || "") : "(スキップ)");
     if(ciHours||ciLocation){
       // selSpotに即時反映
       setSelSpot(s=>s ? {...s, hours:ciHours||s.hours, location:ciLocation||s.location} : s);
