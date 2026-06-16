@@ -1328,6 +1328,10 @@ const searchGeo = async (q) => {
     }
     setOverlay(null); setSelSpot(null); setCiPhotos([]);
     showToast(error?"保存に失敗しました":"チェックイン完了！", error?"":"ok");
+    if(!error && selSpot?.lat && selSpot?.lng){
+      setTab("map");
+      setTimeout(()=>{ if(window.__mapboxFlyTo) window.__mapboxFlyTo(selSpot.lng, selSpot.lat); }, 100);
+    }
   };
 
   const switchTab = (t) => { setTab(t); setOverlay(null); setSelSpot(null); setSelGroup(null); };
