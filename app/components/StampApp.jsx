@@ -429,8 +429,8 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 .limited-toggle-row label{font-size:14px;color:var(--text);display:flex;align-items:center;gap:6px}
 .limited-badge{
   display:flex;align-items:center;justify-content:center;gap:10px;
-  padding:8px 12px;border-radius:100px;
-  background:#F0F0F0;color:#E65100;
+  padding:4px 10px;border-radius:100px;
+  background:rgba(240,240,240,0.1);color:#E65100;
   font-size:11px;font-weight:700;letter-spacing:.02em
 }
 .toggle-switch{
@@ -489,7 +489,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   background:var(--gray-50);border-radius:var(--r-md);
   padding:14px;margin-top:20px;display:flex;flex-direction:column;gap:10px
 }
-.mrow{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text2)}
+.mrow{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text2)}
 .mic{color:var(--red);flex-shrink:0}
 
 .reviews{margin-top:20px}
