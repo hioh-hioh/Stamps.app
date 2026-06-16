@@ -1737,9 +1737,9 @@ const searchGeo = async (q) => {
                           )}
                           <div style={{position:"absolute",bottom:0,left:0,right:0,
                             padding:"20px 8px 8px",
-                            background:"linear-gradient(to top,rgba(0,0,0,.15),transparent)"}}>
+                            background:"linear-gradient(to top,rgba(0,0,0,.2),transparent)"}}>
                             <div style={{color:"#fff",fontWeight:700,fontSize:13}}>{f.title}</div>
-                            <div style={{color:"rgba(255,255,255,.7)",fontSize:11}}>{f.items.length} stamps</div>
+                            <div style={{color:"rgba(255,255,255,.7)",fontSize:11}}>{f.items.filter(e=>e.photos&&e.photos.length>0).length} stamps</div>
                           </div>
                         </div>
                       );
