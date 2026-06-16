@@ -1508,7 +1508,7 @@ const searchGeo = async (q) => {
                       <div style={{width:64,height:64,borderRadius:8,background:"var(--gray-100)",flexShrink:0,overflow:"hidden",display:"flex",alignItems:"center",justifyContent:"center"}}>
                         {latestPhoto
                           ? <img src={latestPhoto} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
-                          : <span style={{fontSize:28}}>📍</span>}
+                          : <span style={{fontSize:28}}></span>}
                       </div>
                       <div style={{flex:1,minWidth:0}}>
                         <div style={{fontWeight:600,fontSize:14,color:"var(--text)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{s.name}</div>
