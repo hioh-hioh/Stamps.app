@@ -1501,7 +1501,7 @@ const searchGeo = async (q) => {
                               {item.hasImg && (
                                 <div style={{display:"flex",gap:6,marginTop:4,overflowX:"auto"}}>
                                   {(item.photos&&item.photos.length>0) ? item.photos.map((url,i)=>(
-                                    <img key={i} src={url} style={{width:"100%",maxWidth:280,height:180,borderRadius:8,objectFit:"cover",flexShrink:0,display:"block"}}/>
+                                    <img key={i} src={url} style={{width:"100%",maxWidth:280,height:180,borderRadius:8,objectFit:"contain",flexShrink:0,display:"block",background:"var(--gray-100)"}}/>
                                   )) : (
                                     <div style={{width:"100%",height:180,borderRadius:8,background:item.color,display:"flex",alignItems:"center",justifyContent:"center",fontSize:48}}>
                                       {item.emoji}
