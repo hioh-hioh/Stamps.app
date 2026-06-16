@@ -1512,7 +1512,8 @@ const searchGeo = async (q) => {
                       </div>
                       <div style={{flex:1,minWidth:0}}>
                         <div style={{fontWeight:600,fontSize:14,color:"var(--text)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{s.name}</div>
-                        <div style={{fontSize:12,color:"var(--text3)",marginTop:2}}>{s.location||s.area||""}</div>
+                        {s.location&&<div style={{fontSize:12,color:"var(--text3)",marginTop:2}}>{s.location}</div>}
+                        {s.hours&&<div style={{fontSize:12,color:"var(--text3)",marginTop:1}}>{s.hours}</div>}
                       </div>
                       <div style={{fontSize:12,color:"var(--text2)",flexShrink:0}}>
                         {s.dist!=null ? fmtDist(s.dist) : ""}
