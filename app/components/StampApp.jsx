@@ -1469,6 +1469,50 @@ const searchGeo = async (q) => {
             })()}
           </div>
         )}
+        {/* ════ LIST ════ */}
+        {tab==="list" && (()=>{
+          const areas = [...new Set(dbSpots.map(s=>s.area).filter(Boolean))];
+          const [listArea, setListArea] = [catSel, setCatSel];
+          const filtered = dbSpots
+            .filter(s=> listArea==="All" || s.area===listArea || s.category===listArea)
+            .map(s=>{
+              const dist = userLocation ? calcDist(userLocation.lat, userLocation.lng, s.lat, s.lng) : null;
+              return {...s, dist};
+            })
+            .sort((a,b)=> a.dist!=null && b.dist!=null ? a.dist-b.dist : 0);
+          return (
+            <div style={{display:"flex",flexDirection:"column",height:"100%",overflow:"hidden"}}>
+              <div style={{padding:"12px 16px 8px",borderBottom:"1px solid var(--border)",overflowX:"auto",display:"flex",gap:8,scrollbarWidth:"none"}}>
+                {["All",...areas].map(a=>(
+                  <button key={a} onClick={()=>setCatSel(a)}
+                    className={`cat-pill ${listArea===a?"on":""}`}>
+                    {a}
+                  </button>
+                ))}
+              </div>
+              <div style={{flex:1,overflowY:"auto",padding:"8px 16px 120px"}}>
+                {filtered.length===0 && <div style={{color:"var(--text3)",textAlign:"center",marginTop:40}}>スポットがありません</div>}
+                {filtered.map(s=>(
+                  <div key={s.id} onClick={()=>openForm(s)}
+                    style={{display:"flex",alignItems:"center",gap:12,padding:"12px 0",borderBottom:"1px solid var(--gray-50)",cursor:"pointer"}}>
+                    <div style={{width:64,height:64,borderRadius:8,background:"var(--gray-100)",flexShrink:0,overflow:"hidden",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                      {s.photo_url
+                        ? <img src={s.photo_url} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+                        : <span style={{fontSize:28}}>📍</span>}
+                    </div>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{fontWeight:600,fontSize:14,color:"var(--text)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{s.name}</div>
+                      <div style={{fontSize:12,color:"var(--text3)",marginTop:2}}>{s.category}　{s.area}</div>
+                    </div>
+                    <div style={{fontSize:12,color:"var(--text2)",flexShrink:0}}>
+                      {s.dist!=null ? fmtDist(s.dist) : ""}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
         {/* ════ MAP ════ */}
         {tab==="map" && (
           <div className="map-screen">
