@@ -430,7 +430,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 .limited-badge{
   display:flex;align-items:center;justify-content:center;gap:10px;
   padding:4px 10px;border-radius:100px;
-  background:rgba(240,240,240,0.1);color:#E65100;
+  background:rgba(240,240,240,0.85);color:#E65100;
   font-size:11px;font-weight:700;letter-spacing:.02em
 }
 .toggle-switch{
@@ -2089,7 +2089,7 @@ const searchGeo = async (q) => {
                       {limitedPost && (
                         <div style={{position:"absolute",left:12,bottom:12,display:"flex",alignItems:"center",gap:6}}>
                           <span className="limited-badge">LIMITED</span>
-                          {limitedPost.dateFrom && <span style={{fontSize:12,color:"#fff",textShadow:"0 1px 2px rgba(0,0,0,.6)"}}>{limitedPost.dateFrom} → {limitedPost.dateTo||"未定"}</span>}
+                          {limitedPost.dateFrom && <span style={{fontSize:12,color:"#fff"}}>{limitedPost.dateFrom} → {limitedPost.dateTo||"未定"}</span>}
                         </div>
                       )}
                       {photos.length>1 && (
