@@ -1318,7 +1318,7 @@ const searchGeo = async (q) => {
       date_from: ciDateFrom||null,
       date_to: ciDateTo||null,
     }).select().single();
-    // スポット情報を更新（毎回category/areaは保存。hours/locationは入力時のみ）
+    // スポット情報を更新（毎回category/areaは保存。hours/locationは入力時のみ。creator_nameは未設定時のみ）
     await supabase.from("spots").upsert({
       id: String(selSpot.id||selSpot.name),
       name: selSpot.name,
@@ -1326,6 +1326,7 @@ const searchGeo = async (q) => {
       area: selSpot.area||"",
       ...(ciHours ? {hours: ciHours} : {}),
       ...(ciLocation ? {location: ciLocation} : {}),
+      ...(!selSpot.creator_name ? {creator_name: profile.name || user?.email || "", created_by: user?.id || ""} : {}),
       lat: selSpot.lat||null,
       lng: selSpot.lng||null,
     }, { onConflict:"id" });
