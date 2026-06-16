@@ -1543,7 +1543,7 @@ const searchGeo = async (q) => {
                 {filtered.map(s=>{
                   const latestPhoto = archives.find(a=>a.spot===s.name&&a.photos?.length>0)?.photos?.[0] || window.__publicPhotos?.[s.name];
                   return (
-                    <div key={s.id} onClick={()=>openForm(s)}
+                    <div key={s.id} onClick={()=>{setSelSpot(s); setOverlay("detail");}}
                       style={{display:"flex",alignItems:"center",gap:12,padding:"12px 0",borderBottom:"1px solid var(--gray-50)",cursor:"pointer"}}>
                       <div style={{width:64,height:64,borderRadius:8,background:"var(--gray-100)",flexShrink:0,overflow:"hidden",display:"flex",alignItems:"center",justifyContent:"center"}}>
                         {latestPhoto
