@@ -96,6 +96,9 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   display:flex;flex-direction:column;
   border-radius:0;box-shadow:var(--sh-lg)
 }
+@media (max-width:600px){
+  .frame{width:100%;height:100dvh;box-shadow:none}
+}
 
 /* ── NAV ── */
 .bnav{
