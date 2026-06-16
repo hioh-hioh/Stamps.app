@@ -1258,6 +1258,30 @@ const searchGeo = async (q) => {
   };
   const closeOv = () => setOverlay(null);
 
+  const resizeImage = (file) => new Promise((resolve)=>{
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = ev => {
+      img.onload = () => {
+        const maxSize = 1600;
+        let { width, height } = img;
+        if(width>maxSize||height>maxSize){
+          if(width>height){ height=Math.round(height*maxSize/width); width=maxSize; }
+          else{ width=Math.round(width*maxSize/height); height=maxSize; }
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width=width; canvas.height=height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img,0,0,width,height);
+        canvas.toBlob(blob=>{
+          const newFile = new File([blob], file.name.replace(/\.\w+$/,".jpg"), {type:"image/jpeg"});
+          resolve({url:canvas.toDataURL("image/jpeg",0.9), file:newFile});
+        }, "image/jpeg", 0.9);
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
   const submit = async () => {
     if(!user){ showToast("ログインが必要です"); return; }
 
@@ -1882,28 +1906,23 @@ const searchGeo = async (q) => {
                   <label className="mbtn" style={{cursor:"pointer"}}>
                     <Ic.Photo/>
                     <input type="file" accept="image/*" multiple style={{display:"none"}}
-                      onChange={e=>{
-                        Array.from(e.target.files).forEach(f=>{
-                          const reader = new FileReader();
-                          reader.onload = ev => {
-                            setCiPhotos(ps=>[...ps,{url:ev.target.result,file:f}]);
-                          };
-                          reader.readAsDataURL(f);
-                        });
+                      onChange={async e=>{
+                        const files = Array.from(e.target.files);
                         e.target.value="";
+                        for(const f of files){
+                          const resized = await resizeImage(f);
+                          setCiPhotos(ps=>[...ps,resized]);
+                        }
                       }}/>
                   </label>
                   <label className="mbtn" style={{cursor:"pointer"}}>
                     <Ic.Camera/>
                     <input type="file" accept="image/*" capture="environment" style={{display:"none"}}
-                      onChange={e=>{
+                      onChange={async e=>{
                         const f=e.target.files[0]; if(!f) return;
-                        const reader = new FileReader();
-                        reader.onload = ev => {
-                          setCiPhotos(ps=>[...ps,{url:ev.target.result,file:f}]);
-                        };
-                        reader.readAsDataURL(f);
                         e.target.value="";
+                        const resized = await resizeImage(f);
+                        setCiPhotos(ps=>[...ps,resized]);
                       }}/>
                   </label>
                 </div>
