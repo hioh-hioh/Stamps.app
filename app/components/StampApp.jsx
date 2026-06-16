@@ -1142,6 +1142,7 @@ const [user, setUser] = useState(null);
   });
   const [profileEditOpen, setProfileEditOpen] = useState(false);
   const [editDraft, setEditDraft] = useState({name:"",location:"",bio:"",avatar_url:""}); // {posts:[], postIdx:0, imgIdx:0}
+const [creatorAvatar, setCreatorAvatar] = useState("");
   const [folders, setFolders]       = useState([]);
   const [showFolderModal, setShowFolderModal] = useState(false);
   const [folderName, setFolderName]   = useState("");
@@ -1170,6 +1171,12 @@ useEffect(()=>{
     });
     return () => subscription.unsubscribe();
   },[]);
+
+  useEffect(()=>{
+    if(!selSpot?.created_by){ setCreatorAvatar(""); return; }
+    supabase.from("profiles").select("avatar_url").eq("id", selSpot.created_by).single()
+      .then(({data})=> setCreatorAvatar(data?.avatar_url||""));
+  },[selSpot?.created_by]);
 
   const loadCheckins = async (userId) => {
     const { data, error } = await supabase
@@ -1258,7 +1265,7 @@ const searchGeo = async (q) => {
   const openForm = (spot) => { setSelSpot(spot); setCiText(""); setHasPrev(false); setCiCat(""); setCiLimited(false); setCiDateFrom(""); setCiDateTo(""); setCiHours(spot.hours||""); setCiLocation(""); setShowSpotEdit(!isCheckedIn(spot)); setOverlay("form"); };
   const openDetail = (spot) => {
     const cached = window.__spotsCache?.[spot.name];
-    setSelSpot(cached ? {...spot, hours:cached.hours||spot.hours, location:cached.location||spot.location, creator_name:cached.creator_name||"", spot_created_at:cached.created_at||""} : spot);
+    setSelSpot(cached ? {...spot, hours:cached.hours||spot.hours, location:cached.location||spot.location, creator_name:cached.creator_name||"", spot_created_at:cached.created_at||"", created_by:cached.created_by||""} : spot);
     setOverlay("detail");
   };
   const closeOv = () => setOverlay(null);
@@ -2151,8 +2158,8 @@ const searchGeo = async (q) => {
 
                 {(selSpot.creator_name||selSpot.spot_created_at) && (
                   <div style={{display:"flex",alignItems:"center",gap:10,padding:"12px 0",borderTop:"1px solid var(--gray-50)",marginTop:40,width:"100%"}}>
-                    <div style={{width:32,height:32,borderRadius:"50%",background:"var(--gray-100)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                      <Ic.User s={16}/>
+                    <div style={{width:32,height:32,borderRadius:"50%",background:"var(--gray-100)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,overflow:"hidden"}}>
+                      {creatorAvatar ? <img src={creatorAvatar} style={{width:"100%",height:"100%",objectFit:"cover"}}/> : <Ic.User s={16}/>}
                     </div>
                     <div style={{fontSize:13,color:"var(--text2)"}}>
                       <span style={{fontWeight:600,color:"var(--text)"}}>{selSpot.creator_name}</span>
