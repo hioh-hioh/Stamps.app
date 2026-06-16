@@ -2542,6 +2542,12 @@ const searchGeo = async (q) => {
             <div className="photo-viewer" onClick={()=>setPhotoViewer(null)}>
               <button className="photo-viewer-close" onClick={()=>setPhotoViewer(null)}>×</button>
               <div className="photo-viewer-img" onClick={e=>e.stopPropagation()}
+                onTouchStart={e=>{e.currentTarget._startX=e.touches[0].clientX;}}
+                onTouchEnd={e=>{
+                  const diff = e.changedTouches[0].clientX - e.currentTarget._startX;
+                  if(diff > 50 && imgIdx>0) setPhotoViewer({...photoViewer,imgIdx:imgIdx-1});
+                  if(diff < -50 && imgIdx<photoCount-1) setPhotoViewer({...photoViewer,imgIdx:imgIdx+1});
+                }}
                 style={{background:photoCount>0?"#000":(post.color||"var(--red-bg)"),display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
                 {photoCount>0
                   ? <img src={post.photos[imgIdx]} style={{width:"100%",height:"100%",objectFit:"contain"}}/>
