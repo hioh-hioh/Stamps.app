@@ -1152,13 +1152,7 @@ useEffect(()=>{
       if(session?.user) loadCheckins(session.user.id);
     });
     loadSpots();
-    const { data: allCheckins } = await supabase.from("checkins").select("spot_name,lat,lng").not("lat","is",null);
-    if(allCheckins) setDbSpots(prev=>{
-      const extra = allCheckins
-        .filter(c=>c.lat&&c.lng&&!prev.find(s=>s.name===c.spot_name))
-        .map(c=>({id:"pub-"+c.spot_name, name:c.spot_name, lat:c.lat, lng:c.lng, category:"", area:"", checkins:0, hours:"", location:"", reviews:[], comment:"", stampUpdatedAt:null, stampUpdatedBy:null}));
-      return [...prev, ...extra];
-    });
+    loadPublicPins();
     if(navigator.geolocation){
       navigator.geolocation.getCurrentPosition(
         pos=>setUserLocation({lat:pos.coords.latitude,lng:pos.coords.longitude}),
@@ -1217,6 +1211,15 @@ useEffect(()=>{
         stampUpdatedAt: null, stampUpdatedBy: null,
       })));
     }
+  };
+  const loadPublicPins = async () => {
+    const { data } = await supabase.from("checkins").select("spot_name,lat,lng").not("lat","is",null);
+    if(data) setDbSpots(prev=>{
+      const extra = data
+        .filter(c=>c.lat&&c.lng&&!prev.find(s=>s.name===c.spot_name))
+        .map(c=>({id:"pub-"+c.spot_name, name:c.spot_name, lat:c.lat, lng:c.lng, category:"", area:"", checkins:0, hours:"", location:"", reviews:[], comment:"", stampUpdatedAt:null, stampUpdatedBy:null}));
+      return [...prev, ...extra];
+    });
   };
   const showToast = (msg, type="") => {
     setToast({msg,type}); setToastOn(true);
