@@ -1202,7 +1202,7 @@ useEffect(()=>{
         spot_created_at: s.created_at||"",
         checkins: 0, reviews: [], comment: "",
         stampUpdatedAt: null, stampUpdatedBy: null,
-      )));
+      })));
     }
   };
   const showToast = (msg, type="") => {
