@@ -7,7 +7,7 @@ export async function GET(request) {
     return Response.json({ result: null });
   }
 
-  const res = await fetch(`https://places.googleapis.com/v1/places/${placeId}`, {
+  const res = await fetch(`https://places.googleapis.com/v1/places/${placeId}?languageCode=ja&regionCode=JP`, {
     headers: {
       "X-Goog-Api-Key": key,
       "X-Goog-FieldMask": "displayName,formattedAddress,location,types,addressComponents",
