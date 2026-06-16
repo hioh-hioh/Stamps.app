@@ -2020,7 +2020,7 @@ const searchGeo = async (q) => {
             const allPosts = [...spotPosts, ...mockPosts];
             return <>
               {/* ── ヘッダー: 戻るボタン左上 ── */}
-              <div style={{display:"flex",alignItems:"center",padding:"14px 16px 0",position:"sticky",top:0,background:"var(--white)",zIndex:10}}>
+              <div style={{display:"flex",alignItems:"center",padding:"14px 16px 12px",position:"sticky",top:0,background:"var(--white)",zIndex:10}}>
                 <button className="ov-back" style={{position:"static",background:"none",border:"none",cursor:"pointer",color:"var(--text2)",display:"flex",padding:0}} onClick={closeOv}>
                   <Ic.Back/>
                 </button>
