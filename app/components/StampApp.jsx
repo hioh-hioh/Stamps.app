@@ -1155,7 +1155,7 @@ const [creatorAvatar, setCreatorAvatar] = useState("");
 useEffect(()=>{
     supabase.auth.getSession().then(({data:{session}})=>{
       setUser(session?.user ?? null);
-      if(session?.user){ loadCheckins(session.user.id); loadProfile(session.user.id); }
+      if(session?.user){ loadCheckins(session.user.id); loadProfile(session.user.id); loadFolders(session.user.id); }
     });
     loadSpots();
     if(navigator.geolocation){
@@ -1166,7 +1166,7 @@ useEffect(()=>{
     }
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_,session)=>{
       setUser(session?.user ?? null);
-      if(session?.user && session.user.id !== user?.id){ loadCheckins(session.user.id); loadProfile(session.user.id); }
+      if(session?.user && session.user.id !== user?.id){ loadCheckins(session.user.id); loadProfile(session.user.id); loadFolders(session.user.id); }
       else setArchives([]);
     });
     return () => subscription.unsubscribe();
@@ -1207,6 +1207,10 @@ useEffect(()=>{
   const loadProfile = async (userId) => {
     const { data } = await supabase.from("profiles").select("*").eq("id", userId).single();
     if(data) setProfile({ name: data.name||"", location: data.location||"", bio: data.bio||"", avatar_url: data.avatar_url||"" });
+  };
+  const loadFolders = async (userId) => {
+    const { data } = await supabase.from("folders").select("*").eq("user_id", userId);
+    if(data) setFolders(data.map(f=>({id:f.id, title:f.title, type:"custom", ids:f.checkin_ids||[]})));
   };
   const loadSpots = async () => {
     const { data } = await supabase.from("spots").select("*");
@@ -2667,9 +2671,12 @@ const searchGeo = async (q) => {
                 </div>
                 <div className="modal-actions">
                   <button className="modal-cancel" onClick={()=>{setShowFolderModal(false);setFolderName("");setFolderPhotos([]);}}>キャンセル</button>
-                  <button className="modal-ok" onClick={()=>{
+                  <button className="modal-ok" onClick={async ()=>{
                     if(!folderName.trim()) return;
-                    setFolders(f=>[...f,{id:Date.now(),title:folderName.trim(),type:"custom",ids:folderPhotos.map(p=>p.id)}]);
+                    const { data, error } = await supabase.from("folders").insert({
+                      user_id: user.id, title: folderName.trim(), checkin_ids: folderPhotos.map(p=>p.id)
+                    }).select().single();
+                    if(!error && data) setFolders(f=>[...f,{id:data.id,title:data.title,type:"custom",ids:data.checkin_ids||[]}]);
                     setFolderName(""); setFolderPhotos([]); setShowFolderModal(false);
                   }}>作成する</button>
                 </div>
