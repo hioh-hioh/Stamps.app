@@ -1276,6 +1276,8 @@ const searchGeo = async (q) => {
         name: selSpot.name,
         hours: ciHours||"",
         location: ciLocation||"",
+        lat: selSpot.lat||null,
+        lng: selSpot.lng||null,
       }, { onConflict:"id" });
       // selSpotに即時反映
       setSelSpot(s=>s ? {...s, hours:ciHours||s.hours, location:ciLocation||s.location} : s);
