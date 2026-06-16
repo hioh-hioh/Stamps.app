@@ -2561,9 +2561,6 @@ const searchGeo = async (q) => {
             </div>
           );
         })()}
-            </div>
-          );
-        })()}
 {/* ════ FOLDER PICKER ════ */}
         {showFolderPicker && (
           <div className="modal-backdrop" onClick={()=>setShowFolderPicker(false)}>
