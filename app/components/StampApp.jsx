@@ -1318,20 +1318,22 @@ const searchGeo = async (q) => {
       date_from: ciDateFrom||null,
       date_to: ciDateTo||null,
     }).select().single();
-    // スポット情報を更新
+    // スポット情報を更新（毎回category/areaは保存。hours/locationは入力時のみ）
+    await supabase.from("spots").upsert({
+      id: String(selSpot.id||selSpot.name),
+      name: selSpot.name,
+      category: selSpot.category||"",
+      area: selSpot.area||"",
+      ...(ciHours ? {hours: ciHours} : {}),
+      ...(ciLocation ? {location: ciLocation} : {}),
+      lat: selSpot.lat||null,
+      lng: selSpot.lng||null,
+    }, { onConflict:"id" });
     if(ciHours||ciLocation){
-      await supabase.from("spots").upsert({
-        id: String(selSpot.id||selSpot.name),
-        name: selSpot.name,
-        hours: ciHours||"",
-        location: ciLocation||"",
-        lat: selSpot.lat||null,
-        lng: selSpot.lng||null,
-      }, { onConflict:"id" });
       // selSpotに即時反映
       setSelSpot(s=>s ? {...s, hours:ciHours||s.hours, location:ciLocation||s.location} : s);
-      await loadSpots();
     }
+    await loadSpots();
 
     if(!error && data){
       setArchives(a=>[{
