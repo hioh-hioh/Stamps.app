@@ -123,7 +123,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   padding:10px 14px;box-shadow:var(--sh-md)
 }
 .sbar input{
-  border:none;background:none;flex:1;font-size:15px;
+  border:none;background:none;flex:1;font-size:16px;
   font-family:inherit;color:var(--text);outline:none
 }
 .sbar input::placeholder{color:var(--text3)}
@@ -841,7 +841,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   padding:10px 14px;
 }
 .nearby-search-input input{
-  border:none;background:none;flex:1;font-size:14px;
+  border:none;background:none;flex:1;font-size:16px;
   font-family:inherit;color:var(--text);outline:none
 }
 .nearby-search-input input::placeholder{color:var(--text3)}
