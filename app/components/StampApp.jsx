@@ -1517,7 +1517,7 @@ const searchGeo = async (q) => {
           <div className="map-screen">
             <div className="map-canvas">
   <MapView>
-    {[...MAP_SPOTS, ...dbSpots.filter(s=>!MAP_SPOTS.find(m=>m.name===s.name)), ...archives
+    {[...MAP_SPOTS, ...dbSpots.filter(s=>s.lat&&s.lng&&!MAP_SPOTS.find(m=>m.name===s.name)), ...archives
         .filter(a => a.lat && a.lng && !MAP_SPOTS.find(s=>s.name===a.spot) && !dbSpots.find(s=>s.name===a.spot))
         .map(a=>({id:"arc-"+a.id, name:a.spot, lat:a.lat, lng:a.lng, category:a.category||"", area:"", checkins:0, hours:"", location:"", reviews:[], comment:a.note||"", stampUpdatedAt:null, stampUpdatedBy:null}))
       ]
