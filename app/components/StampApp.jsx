@@ -1500,23 +1500,26 @@ const searchGeo = async (q) => {
               </div>
               <div style={{flex:1,overflowY:"auto",padding:"8px 16px 120px"}}>
                 {filtered.length===0 && <div style={{color:"var(--text3)",textAlign:"center",marginTop:40}}>スポットがありません</div>}
-                {filtered.map(s=>(
-                  <div key={s.id} onClick={()=>openForm(s)}
-                    style={{display:"flex",alignItems:"center",gap:12,padding:"12px 0",borderBottom:"1px solid var(--gray-50)",cursor:"pointer"}}>
-                    <div style={{width:64,height:64,borderRadius:8,background:"var(--gray-100)",flexShrink:0,overflow:"hidden",display:"flex",alignItems:"center",justifyContent:"center"}}>
-                      {s.photo_url
-                        ? <img src={s.photo_url} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
-                        : <span style={{fontSize:28}}>📍</span>}
+                {filtered.map(s=>{
+                  const latestPhoto = archives.find(a=>a.spot===s.name&&a.photos?.length>0)?.photos?.[0];
+                  return (
+                    <div key={s.id} onClick={()=>openForm(s)}
+                      style={{display:"flex",alignItems:"center",gap:12,padding:"12px 0",borderBottom:"1px solid var(--gray-50)",cursor:"pointer"}}>
+                      <div style={{width:64,height:64,borderRadius:8,background:"var(--gray-100)",flexShrink:0,overflow:"hidden",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                        {latestPhoto
+                          ? <img src={latestPhoto} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+                          : <span style={{fontSize:28}}>📍</span>}
+                      </div>
+                      <div style={{flex:1,minWidth:0}}>
+                        <div style={{fontWeight:600,fontSize:14,color:"var(--text)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{s.name}</div>
+                        <div style={{fontSize:12,color:"var(--text3)",marginTop:2}}>{s.location||s.area||""}</div>
+                      </div>
+                      <div style={{fontSize:12,color:"var(--text2)",flexShrink:0}}>
+                        {s.dist!=null ? fmtDist(s.dist) : ""}
+                      </div>
                     </div>
-                    <div style={{flex:1,minWidth:0}}>
-                      <div style={{fontWeight:600,fontSize:14,color:"var(--text)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{s.name}</div>
-                      <div style={{fontSize:12,color:"var(--text3)",marginTop:2}}>{s.category}　{s.area}</div>
-                    </div>
-                    <div style={{fontSize:12,color:"var(--text2)",flexShrink:0}}>
-                      {s.dist!=null ? fmtDist(s.dist) : ""}
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           );
