@@ -2540,7 +2540,7 @@ const searchGeo = async (q) => {
                 <button className="arc-back" onClick={()=>setSelGroup(null)}><Ic.Back/></button>
                 <h2 style={{whiteSpace:"normal",overflow:"visible",textOverflow:"unset"}}>{selGroup.title}</h2>
               </div>
-              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,padding:"0 12px",margin:"14px 0"}}>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,padding:"0 12px",margin:"8px 0"}}>
                 <span className="group-count">{items.length} stamps</span>
                 {selGroup.id!=="all" && (
                   <button onClick={()=>{
