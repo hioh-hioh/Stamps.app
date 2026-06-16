@@ -1489,8 +1489,8 @@ const searchGeo = async (q) => {
                                 )}
                               </div>
                               <div style={{fontSize:12,color:"var(--text3)",marginBottom:8,display:"flex",gap:8}}>
-                                {item.category && <span>{item.category}</span>}
-                                {item.area && <span>{item.area}</span>}
+                                {item.category?.trim() && <span>{item.category}</span>}
+                                {item.area?.trim() && <span>{item.area}</span>}
                                 <span>{item.date?.slice(-5)}</span>
                               </div>
                               {item.note && (
