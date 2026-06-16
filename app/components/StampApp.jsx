@@ -1340,13 +1340,6 @@ const searchGeo = async (q) => {
         {/* ════ HOME ════ */}
         {tab==="home" && (
           <div className="home-screen">
-            {/* Sticky header */}
-            <div className="home-search">
-              <div className="home-search-box">
-                <Ic.Search/>
-                <input placeholder="Search Stamp / スタンプ検索" value={searchQ} onChange={e=>setSearchQ(e.target.value)}/>
-              </div>
-            </div>
 
             {/* Timeline */}
             {(()=>{
@@ -1490,14 +1483,6 @@ const searchGeo = async (q) => {
             .sort((a,b)=> a.dist!=null && b.dist!=null ? a.dist-b.dist : 0);
           return (
             <div style={{display:"flex",flexDirection:"column",height:"100%",overflow:"hidden"}}>
-              <div style={{padding:"12px 16px 8px",borderBottom:"1px solid var(--border)",overflowX:"auto",display:"flex",gap:8,scrollbarWidth:"none"}}>
-                {["All",...areas].map(a=>(
-                  <button key={a} onClick={()=>setCatSel(a)}
-                    className={`cat-pill ${listArea===a?"on":""}`}>
-                    {a}
-                  </button>
-                ))}
-              </div>
               <div style={{flex:1,overflowY:"auto",padding:"8px 16px 120px"}}>
                 {filtered.length===0 && <div style={{color:"var(--text3)",textAlign:"center",marginTop:40}}>スポットがありません</div>}
                 {filtered.map(s=>{
