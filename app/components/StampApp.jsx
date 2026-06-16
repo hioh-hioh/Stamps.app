@@ -1148,6 +1148,7 @@ const [creatorAvatar, setCreatorAvatar] = useState("");
   const [folderName, setFolderName]   = useState("");
   const [folderPhotos, setFolderPhotos] = useState([]); // mock photo list
   const [editingFolderId, setEditingFolderId] = useState(null);
+  const [folderMenuOpen, setFolderMenuOpen] = useState(null);
   const [selectMode, setSelectMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
   const [showFolderPicker, setShowFolderPicker] = useState(false);
@@ -1898,6 +1899,23 @@ const searchGeo = async (q) => {
                           ) : (
                             <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:32}}>📁</div>
                           )}
+                          {f.id!=="all" && (
+                            <div style={{position:"absolute",top:6,right:6}} onClick={e=>e.stopPropagation()}>
+                              <button onClick={()=>setFolderMenuOpen(m=>m===f.id?null:f.id)}
+                                style={{background:"rgba(0,0,0,.4)",border:"none",borderRadius:"50%",width:24,height:24,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",color:"#fff",fontSize:16,lineHeight:1}}>⋯</button>
+                              {folderMenuOpen===f.id && (
+                                <div style={{position:"absolute",top:28,right:0,background:"#fff",borderRadius:8,boxShadow:"0 2px 8px rgba(0,0,0,.2)",overflow:"hidden",zIndex:5}}>
+                                  <button onClick={async()=>{
+                                    if(!confirm("このフォルダを削除しますか？")) return;
+                                    await supabase.from("folders").delete().eq("id", f.id);
+                                    setFolders(fs=>fs.filter(fo=>fo.id!==f.id));
+                                    setFolderMenuOpen(null);
+                                    showToast("フォルダを削除しました");
+                                  }} style={{background:"none",border:"none",padding:"10px 16px",color:"var(--red)",fontSize:13,cursor:"pointer",whiteSpace:"nowrap",fontFamily:"inherit"}}>削除</button>
+                                </div>
+                              )}
+                            </div>
+                          )}
                           <div style={{position:"absolute",bottom:0,left:0,right:0,
                             padding:"20px 8px 8px",
                             background:"linear-gradient(to top,rgba(0,0,0,.5),transparent)"}}>
@@ -2518,20 +2536,24 @@ const searchGeo = async (q) => {
             const left  = imgItems.filter((_,i)=>i%2===0);
             const right = imgItems.filter((_,i)=>i%2===1);
             return <>
-              <div className="group-hd">
-                <button className="arc-back" onClick={()=>setSelGroup(null)}><Ic.Back/></button>
-                <h2>{selGroup.title}</h2>
-                <span className="group-count">{items.length} stamps</span>
-                {selGroup.id!=="all" && (
-                  <button onClick={()=>{
-                    const folder = folders.find(f=>f.id===selGroup.id);
-                    if(!folder) return;
-                    setFolderName(folder.title);
-                    setFolderPhotos(archives.filter(a=>folder.ids.includes(a.id)));
-                    setEditingFolderId(folder.id);
-                    setShowFolderModal(true);
-                  }} style={{marginLeft:"auto",background:"none",border:"none",color:"var(--text2)",fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>編集</button>
-                )}
+              <div className="group-hd" style={{flexDirection:"column",alignItems:"stretch",gap:6}}>
+                <div style={{display:"flex",alignItems:"center",gap:12}}>
+                  <button className="arc-back" onClick={()=>setSelGroup(null)}><Ic.Back/></button>
+                  <h2 style={{whiteSpace:"normal",overflow:"visible",textOverflow:"unset"}}>{selGroup.title}</h2>
+                </div>
+                <div style={{display:"flex",alignItems:"center",gap:12,paddingLeft:40}}>
+                  <span className="group-count">{items.length} stamps</span>
+                  {selGroup.id!=="all" && (
+                    <button onClick={()=>{
+                      const folder = folders.find(f=>f.id===selGroup.id);
+                      if(!folder) return;
+                      setFolderName(folder.title);
+                      setFolderPhotos(archives.filter(a=>folder.ids.includes(a.id)));
+                      setEditingFolderId(folder.id);
+                      setShowFolderModal(true);
+                    }} style={{background:"none",border:"none",color:"var(--text2)",fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>編集</button>
+                  )}
+                </div>
               </div>
               <div className="group-masonry">
                 <div className="group-col">
