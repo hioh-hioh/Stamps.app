@@ -1152,6 +1152,13 @@ useEffect(()=>{
       if(session?.user) loadCheckins(session.user.id);
     });
     loadSpots();
+    const { data: allCheckins } = await supabase.from("checkins").select("spot_name,lat,lng").not("lat","is",null);
+    if(allCheckins) setDbSpots(prev=>{
+      const extra = allCheckins
+        .filter(c=>c.lat&&c.lng&&!prev.find(s=>s.name===c.spot_name))
+        .map(c=>({id:"pub-"+c.spot_name, name:c.spot_name, lat:c.lat, lng:c.lng, category:"", area:"", checkins:0, hours:"", location:"", reviews:[], comment:"", stampUpdatedAt:null, stampUpdatedBy:null}));
+      return [...prev, ...extra];
+    });
     if(navigator.geolocation){
       navigator.geolocation.getCurrentPosition(
         pos=>setUserLocation({lat:pos.coords.latitude,lng:pos.coords.longitude}),
