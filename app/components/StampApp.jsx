@@ -428,9 +428,9 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 }
 .limited-toggle-row label{font-size:14px;color:var(--text);display:flex;align-items:center;gap:6px}
 .limited-badge{
-  display:inline-flex;align-items:center;gap:3px;
-  padding:2px 8px;border-radius:20px;
-  background:#FFF3E0;color:#E65100;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:6px 10px;border-radius:100px;
+  background:#F0F0F0;color:#E65100;
   font-size:11px;font-weight:700;letter-spacing:.02em
 }
 .toggle-switch{
