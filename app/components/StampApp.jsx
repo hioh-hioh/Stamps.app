@@ -1152,6 +1152,12 @@ useEffect(()=>{
       if(session?.user) loadCheckins(session.user.id);
     });
     loadSpots();
+    if(navigator.geolocation){
+      navigator.geolocation.getCurrentPosition(
+        pos=>setUserLocation({lat:pos.coords.latitude,lng:pos.coords.longitude}),
+        ()=>{}
+      );
+    }
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_,session)=>{
       setUser(session?.user ?? null);
       if(session?.user && session.user.id !== user?.id){ loadCheckins(session.user.id); loadProfile(session.user.id); }
