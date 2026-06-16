@@ -1112,6 +1112,7 @@ export default function App() {
   const [showSaved, setShowSaved]   = useState(false);
   const [hasPrev, setHasPrev]     = useState(false);
   const [ciPhotos, setCiPhotos] = useState([]);
+  const [submitting, setSubmitting] = useState(false);
   const [checkins, setCheckins]   = useState(0);
   const [viewMode, setViewMode]   = useState("grid"); // "grid"|"list"
   const [selArc, setSelArc]       = useState(null);
@@ -1283,6 +1284,8 @@ const searchGeo = async (q) => {
     reader.readAsDataURL(file);
   });
   const submit = async () => {
+    if(submitting) return;
+    setSubmitting(true);
     if(!user){ showToast("ログインが必要です"); return; }
 
     // 写真をSupabase Storageにアップロード
@@ -1356,6 +1359,7 @@ const searchGeo = async (q) => {
       setTab("map");
       setTimeout(()=>{ if(window.__mapboxFlyTo) window.__mapboxFlyTo(selSpot.lng, selSpot.lat); }, 100);
     }
+    setSubmitting(false);
   };
 
   const switchTab = (t) => { setTab(t); setOverlay(null); setSelSpot(null); setSelGroup(null); };
@@ -1995,7 +1999,7 @@ const searchGeo = async (q) => {
                   保存する
                 </button>
               ) : (
-                <button className="submit-btn" onClick={submit} style={{marginTop:40,marginBottom:120,marginLeft:16,marginRight:16,width:"calc(100% - 32px)"}}>チェックイン</button>
+                <button className="submit-btn" onClick={submit} disabled={submitting} style={{marginTop:40,marginBottom:120,marginLeft:16,marginRight:16,width:"calc(100% - 32px)",opacity:submitting?0.5:1}}>{submitting?"送信中...":"チェックイン"}</button>
               )}
           </>}
         </div>
