@@ -2081,10 +2081,17 @@ const searchGeo = async (q) => {
                 {(()=>{
                   const photos = spotPosts.flatMap(a=>a.photos||[]).filter(Boolean);
                   if(photos.length===0) return null;
+                  const limitedPost = spotPosts.find(p=>p.limited);
                   return (
-                    <div style={{width:"100%",marginBottom:16}}>
+                    <div style={{width:"100%",marginBottom:16,position:"relative"}}>
                       <img src={photos[detailPhotoIdx||0]} style={{width:"100%",maxHeight:280,borderRadius:8,objectFit:"cover",display:"block",cursor:"pointer"}}
                         onClick={()=>setPhotoViewer({posts:[{id:"detail-photos",hasImg:true,photos,color:"#000"}],postIdx:0,imgIdx:detailPhotoIdx||0})}/>
+                      {limitedPost && (
+                        <div style={{position:"absolute",left:12,bottom:12,display:"flex",alignItems:"center",gap:6}}>
+                          <span className="limited-badge">LIMITED</span>
+                          {limitedPost.dateFrom && <span style={{fontSize:12,color:"#fff",textShadow:"0 1px 2px rgba(0,0,0,.6)"}}>{limitedPost.dateFrom} → {limitedPost.dateTo||"未定"}</span>}
+                        </div>
+                      )}
                       {photos.length>1 && (
                         <div style={{display:"flex",justifyContent:"center",gap:6,marginTop:8}}>
                           {photos.map((_,i)=>(
@@ -2098,12 +2105,6 @@ const searchGeo = async (q) => {
                   );
                 })()}
                 {/* タイトル＋ブックマーク */}
-{(()=>{ const limitedPost = spotPosts.find(p=>p.limited); return limitedPost && (
-  <div style={{display:"flex",justifyContent:"center",alignItems:"center",gap:6,marginBottom:4}}>
-    <span className="limited-badge">LIMITED</span>
-    {limitedPost.dateFrom && <span style={{fontSize:12,color:"var(--text3)"}}>{limitedPost.dateFrom} → {limitedPost.dateTo||"未定"}</span>}
-  </div>
-);})()}
 <div style={{display:"flex",alignItems:"center",width:"100%"}}>
   <div className="ov-name" style={{flex:1,margin:0,textAlign:"center"}}>{selSpot.name}</div>
 </div>
