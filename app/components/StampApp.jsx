@@ -2044,7 +2044,8 @@ const searchGeo = async (q) => {
                     <div style={{width:"100%",marginBottom:16,marginTop:20}}>
                       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
                         {(showAllPosts ? photos : photos.slice(0,3)).map((url,i)=>(
-                          <img key={i} src={url} style={{width:"100%",aspectRatio:"1",borderRadius:8,objectFit:"cover",display:"block"}}/>
+                          <img key={i} src={url} style={{width:"100%",aspectRatio:"1",borderRadius:8,objectFit:"cover",display:"block",cursor:"pointer"}}
+                            onClick={()=>setPhotoViewer({posts:[{photos}],postIdx:0,imgIdx:i})}/>
                         ))}
                       </div>
                       {photos.length>3 && (
