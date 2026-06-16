@@ -2128,6 +2128,12 @@ const searchGeo = async (q) => {
                               <h4>{post.user||"You"}</h4>
                               <p>{post.date}</p>
                             </div>
+                            {post.limited && (
+                              <div style={{display:"flex",alignItems:"center",gap:6}}>
+                                <span className="limited-badge">LIMITED</span>
+                                {post.dateFrom && <span style={{fontSize:12,color:"var(--text3)"}}>{post.dateFrom} → {post.dateTo||"未定"}</span>}
+                              </div>
+                            )}
                             {post.note && <p className="spot-post-text">{post.note}</p>}
                             {post.hasImg && (
                               <div className="spot-post-imgs">
