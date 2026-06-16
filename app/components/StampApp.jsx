@@ -2113,7 +2113,7 @@ const searchGeo = async (q) => {
   <span>{selSpot.area}</span>
 </div>
                 <div style={{display:"flex",padding:"12px",flexDirection:"column",alignItems:"flex-start",gap:8,alignSelf:"stretch",borderRadius:4,background:"#F6F6F6",marginTop:20}}>
-                  <div className="mrow"><Ic.Clock/> {selSpot.hours}</div>
+                  <div className="mrow"><span style={{display:"inline-flex",marginTop:2}}><Ic.Clock/></span> {selSpot.hours}</div>
                   <div className="mrow"><Ic.Pin/> {selSpot.location}</div>
                 </div>
                 {/* 投稿一覧 */}
