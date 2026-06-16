@@ -2536,27 +2536,31 @@ const searchGeo = async (q) => {
         {/* ════ PHOTO VIEWER ════ */}
         {photoViewer && (()=>{
           const post = photoViewer.posts[photoViewer.postIdx];
-          const total = photoViewer.posts.filter(p=>p.hasImg).length;
-          const viewablePosts = photoViewer.posts.filter(p=>p.hasImg);
-          const curIdx = viewablePosts.findIndex(p=>p.id===post.id);
+          const imgIdx = photoViewer.imgIdx||0;
+          const photoCount = post.photos?.length||0;
           return (
             <div className="photo-viewer" onClick={()=>setPhotoViewer(null)}>
               <button className="photo-viewer-close" onClick={()=>setPhotoViewer(null)}>×</button>
               <div className="photo-viewer-img" onClick={e=>e.stopPropagation()}
-                style={{background:post.photos?.length>0?"#000":(post.color||"var(--red-bg)"),display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
-                {post.photos?.length>0
-                  ? <img src={post.photos[photoViewer.imgIdx||0]} style={{width:"100%",height:"100%",objectFit:"contain"}}/>
+                style={{background:photoCount>0?"#000":(post.color||"var(--red-bg)"),display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
+                {photoCount>0
+                  ? <img src={post.photos[imgIdx]} style={{width:"100%",height:"100%",objectFit:"contain"}}/>
                   : <span style={{fontSize:80}}>{post.emoji}</span>}
               </div>
-              <div className="photo-viewer-nav" onClick={e=>e.stopPropagation()}>
-                <button className="photo-nav-btn" disabled={curIdx===0}
-                  onClick={()=>{const prev=viewablePosts[curIdx-1];if(prev)setPhotoViewer({...photoViewer,postIdx:photoViewer.posts.findIndex(p=>p.id===prev.id)});}}>‹</button>
-                <span className="photo-viewer-counter">{curIdx+1} / {total}</span>
-                <button className="photo-nav-btn" disabled={curIdx===total-1}
-                  onClick={()=>{const next=viewablePosts[curIdx+1];if(next)setPhotoViewer({...photoViewer,postIdx:photoViewer.posts.findIndex(p=>p.id===next.id)});}}>›</button>
-              </div>
+              {photoCount>1 && (
+                <div className="photo-viewer-nav" onClick={e=>e.stopPropagation()}>
+                  <button className="photo-nav-btn" disabled={imgIdx===0}
+                    onClick={()=>setPhotoViewer({...photoViewer,imgIdx:imgIdx-1})}>‹</button>
+                  <span className="photo-viewer-counter">{imgIdx+1} / {photoCount}</span>
+                  <button className="photo-nav-btn" disabled={imgIdx===photoCount-1}
+                    onClick={()=>setPhotoViewer({...photoViewer,imgIdx:imgIdx+1})}>›</button>
+                </div>
+              )}
               {post.note && <p className="photo-viewer-caption">{post.note}</p>}
               <p style={{color:"rgba(255,255,255,.5)",fontSize:11}}>{post.date}</p>
+            </div>
+          );
+        })()}
             </div>
           );
         })()}
