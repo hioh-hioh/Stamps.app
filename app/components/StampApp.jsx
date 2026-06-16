@@ -1151,8 +1151,7 @@ useEffect(()=>{
       setUser(session?.user ?? null);
       if(session?.user) loadCheckins(session.user.id);
     });
-    loadSpots();
-    loadPublicPins();
+    loadSpots().then(()=>loadPublicPins());
     if(navigator.geolocation){
       navigator.geolocation.getCurrentPosition(
         pos=>setUserLocation({lat:pos.coords.latitude,lng:pos.coords.longitude}),
