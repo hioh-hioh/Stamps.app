@@ -1702,7 +1702,7 @@ const searchGeo = async (q) => {
                 <div style={{flex:1}}>
                   <div className="prof-name">{profile.name}</div>
                   <div className="prof-bio">{profile.bio}</div>
-                  <div style={{fontSize:11,color:"var(--text3)",marginTop:6}}>Post: {archives.filter(a=>a.note||a.photos?.length>0).length}　Checkin: {archives.length}</div>
+                  <div style={{fontSize:11,color:"var(--text3)",marginTop:6}}>Post: {archives.filter(a=>a.photos?.length>0).length}　Checkin: {archives.length}</div>
                 </div>
                 <button className="edit-btn" onClick={()=>{
                   setEditDraft({name:profile.name,location:profile.location,bio:profile.bio,avatar_url:profile.avatar_url||""});
@@ -1737,7 +1737,7 @@ const searchGeo = async (q) => {
                           )}
                           <div style={{position:"absolute",bottom:0,left:0,right:0,
                             padding:"20px 8px 8px",
-                            background:"linear-gradient(to top,rgba(0,0,0,.2),transparent)"}}>
+                            background:"linear-gradient(to top,rgba(0,0,0,.5),transparent)"}}>
                             <div style={{color:"#fff",fontWeight:700,fontSize:13}}>{f.title}</div>
                             <div style={{color:"rgba(255,255,255,.7)",fontSize:11}}>{f.items.filter(e=>e.photos&&e.photos.length>0).length} stamps</div>
                           </div>
