@@ -33,14 +33,24 @@ export default async function SpotPage({ params }) {
   }
 
   const mainPhoto = posts.find(p => p.photo_urls?.length > 0)?.photo_urls?.[0];
+  const limitedPost = posts.find(p => p.limited);
 
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", padding: "24px 16px 60px", fontFamily: "sans-serif", color: "#1A1A18" }}>
       {mainPhoto && (
-        <img src={mainPhoto} alt={spot.name} style={{ width: "100%", maxHeight: 280, objectFit: "cover", borderRadius: 8, display: "block", marginBottom: 16 }} />
+        <div style={{ position: "relative", marginBottom: 16 }}>
+          <img src={mainPhoto} alt={spot.name} style={{ width: "100%", maxHeight: 280, objectFit: "cover", borderRadius: 8, display: "block" }} />
+          {limitedPost && (
+            <div style={{ position: "absolute", left: 12, bottom: 12, display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{ display: "inline-flex", alignItems: "center", padding: "4px 10px", borderRadius: 100, background: "rgba(240,240,240,0.85)", color: "#E65100", fontSize: 11, fontWeight: 700 }}>LIMITED</span>
+              {limitedPost.date_from && <span style={{ fontSize: 12, color: "#fff" }}>{limitedPost.date_from} → {limitedPost.date_to || "未定"}</span>}
+            </div>
+          )}
+        </div>
       )}
-      <h1 style={{ fontSize: 18, fontWeight: 700, textAlign: "center", margin: 0 }}>{spot.name}</h1>
-      <div style={{ display: "flex", gap: 8, justifyContent: "center", fontSize: 13, color: "#6B6B67", marginTop: 6 }}>
+
+      <div style={{ fontSize: 18, fontWeight: 700, color: "#1A1A18", textAlign: "center" }}>{spot.name}</div>
+      <div style={{ display: "flex", gap: 8, fontSize: 13, color: "#6B6B67", marginTop: -4 }}>
         <span>{spot.category}</span>
         <span>{spot.area}</span>
       </div>
@@ -50,32 +60,31 @@ export default async function SpotPage({ params }) {
         {spot.location && <div style={{ display: "flex", gap: 10, fontSize: 13, color: "#6B6B67" }}>📍 {spot.location}</div>}
       </div>
 
-      <div style={{ marginTop: 24 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 8 }}>投稿 ({posts.length})</div>
+      <div style={{ marginTop: 20 }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: "#1A1A18", marginBottom: 4 }}>投稿 ({posts.length})</div>
         {posts.length === 0 ? (
-          <div style={{ fontSize: 13, color: "#9B9B97", textAlign: "center", padding: "24px 0" }}>まだ投稿がありません</div>
+          <div style={{ padding: "24px 16px", textAlign: "center", color: "#9B9B97", fontSize: 13 }}>まだ投稿がありません</div>
         ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4px 12px" }}>
             {posts.map(p => {
-              const profile = profileMap[p.user_id];
-              const photo = p.photo_urls?.[0];
+              const author = profileMap[p.user_id];
+              const photos = p.photo_urls || [];
               return (
-                <a key={p.id} href={`/checkins/${p.id}`} style={{ textDecoration: "none", color: "inherit", background: "#F7F7F5", borderRadius: 8, padding: 12, display: "flex", flexDirection: "column", gap: 8 }}>
-                  <div style={{ width: 32, height: 32, borderRadius: "50%", overflow: "hidden", background: "#EBEBEB" }}>
-                    {profile?.avatar_url && <img src={profile.avatar_url} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
+                <a key={p.id} href={`/checkins/${p.id}`} style={{ textDecoration: "none", color: "inherit", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 8, background: "#F7F7F7", borderRadius: 8, padding: 12 }}>
+                  <div style={{ width: 32, height: 32, borderRadius: "50%", overflow: "hidden", background: "#D8D8D5", flexShrink: 0 }}>
+                    {author?.avatar_url && <img src={author.avatar_url} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
                   </div>
                   <div>
-                    <div style={{ fontSize: 13, fontWeight: 500 }}>{profile?.name || "ゲスト"}</div>
-                    <div style={{ fontSize: 11, color: "#9B9B97" }}>{new Date(p.created_at).toLocaleDateString("ja-JP")}</div>
+                    <h4 style={{ fontSize: 13, fontWeight: 500, color: "#1A1A18", margin: 0 }}>{author?.name || "ゲスト"}</h4>
+                    <p style={{ fontSize: 11, color: "#9B9B97", margin: "1px 0 0" }}>{new Date(p.created_at).toLocaleDateString("ja-JP")}</p>
                   </div>
-                  {p.limited && (
-                    <div style={{ display: "inline-flex", alignItems: "center", padding: "4px 10px", borderRadius: 100, background: "#F0F0F0", color: "#E65100", fontSize: 11, fontWeight: 700, alignSelf: "flex-start" }}>
-                      LIMITED
+                  {p.note && <p style={{ fontSize: 13, color: "#1A1A18", lineHeight: 1.6, margin: 0 }}>{p.note}</p>}
+                  {photos.length > 0 && (
+                    <div style={{ display: "flex", gap: 6, overflowX: "auto" }}>
+                      {photos.map((url, i) => (
+                        <img key={i} src={url} style={{ width: 100, height: 80, borderRadius: 8, objectFit: "cover", flexShrink: 0 }} />
+                      ))}
                     </div>
-                  )}
-                  {p.note && <div style={{ fontSize: 12 }}>{p.note}</div>}
-                  {photo && (
-                    <img src={photo} style={{ width: "100%", aspectRatio: "1", objectFit: "cover", borderRadius: 6, background: p.color || "#FEF0ED" }} />
                   )}
                 </a>
               );
