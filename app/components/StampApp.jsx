@@ -614,7 +614,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 
 /* Photo viewer overlay */
 .photo-viewer{
-  position:absolute;inset:0;background:rgba(0,0,0,.92);
+  position:fixed;inset:0;background:rgba(0,0,0,.92);
   z-index:500;display:flex;align-items:center;justify-content:center;
   flex-direction:column;gap:12px
 }
@@ -2045,7 +2045,7 @@ const searchGeo = async (q) => {
                       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
                         {(showAllPosts ? photos : photos.slice(0,3)).map((url,i)=>(
                           <img key={i} src={url} style={{width:"100%",aspectRatio:"1",borderRadius:8,objectFit:"cover",display:"block",cursor:"pointer"}}
-                            onClick={()=>setPhotoViewer({posts:[{photos}],postIdx:0,imgIdx:i})}/>
+                            onClick={()=>setPhotoViewer({posts:[{id:"detail-photos",hasImg:true,photos,color:"#000"}],postIdx:0,imgIdx:i})}/>
                         ))}
                       </div>
                       {photos.length>3 && (
@@ -2502,8 +2502,10 @@ const searchGeo = async (q) => {
             <div className="photo-viewer" onClick={()=>setPhotoViewer(null)}>
               <button className="photo-viewer-close" onClick={()=>setPhotoViewer(null)}>×</button>
               <div className="photo-viewer-img" onClick={e=>e.stopPropagation()}
-                style={{background:post.color||"var(--red-bg)"}}>
-                <span style={{fontSize:80}}>{post.emoji}</span>
+                style={{background:post.photos?.length>0?"#000":(post.color||"var(--red-bg)"),display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
+                {post.photos?.length>0
+                  ? <img src={post.photos[photoViewer.imgIdx||0]} style={{width:"100%",height:"100%",objectFit:"contain"}}/>
+                  : <span style={{fontSize:80}}>{post.emoji}</span>}
               </div>
               <div className="photo-viewer-nav" onClick={e=>e.stopPropagation()}>
                 <button className="photo-nav-btn" disabled={curIdx===0}
