@@ -1147,6 +1147,7 @@ const [creatorAvatar, setCreatorAvatar] = useState("");
   const [showFolderModal, setShowFolderModal] = useState(false);
   const [folderName, setFolderName]   = useState("");
   const [folderPhotos, setFolderPhotos] = useState([]); // mock photo list
+  const [editingFolderId, setEditingFolderId] = useState(null);
   const [selectMode, setSelectMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
   const [showFolderPicker, setShowFolderPicker] = useState(false);
@@ -1889,7 +1890,7 @@ const searchGeo = async (q) => {
                     {allFolders.map(f=>{
                       const thumb = f.items.find(e=>e.photos&&e.photos.length>0);
                       return (
-                        <div key={f.id} onClick={()=>setSelGroup({title:f.title,items:f.items})}
+                        <div key={f.id} onClick={()=>setSelGroup({id:f.id,title:f.title,items:f.items})}
                           style={{borderRadius:8,overflow:"hidden",cursor:"pointer",position:"relative",height:120,background:"#444"}}>
                           {thumb ? (
                             <img src={thumb.photos[0]}
@@ -2521,6 +2522,16 @@ const searchGeo = async (q) => {
                 <button className="arc-back" onClick={()=>setSelGroup(null)}><Ic.Back/></button>
                 <h2>{selGroup.title}</h2>
                 <span className="group-count">{items.length} stamps</span>
+                {selGroup.id!=="all" && (
+                  <button onClick={()=>{
+                    const folder = folders.find(f=>f.id===selGroup.id);
+                    if(!folder) return;
+                    setFolderName(folder.title);
+                    setFolderPhotos(archives.filter(a=>folder.ids.includes(a.id)));
+                    setEditingFolderId(folder.id);
+                    setShowFolderModal(true);
+                  }} style={{marginLeft:"auto",background:"none",border:"none",color:"var(--text2)",fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>編集</button>
+                )}
               </div>
               <div className="group-masonry">
                 <div className="group-col">
@@ -2637,11 +2648,11 @@ const searchGeo = async (q) => {
 
         {/* ════ FOLDER MODAL ════ */}
         {showFolderModal && (
-          <div className="modal-backdrop" onClick={()=>setShowFolderModal(false)}>
+          <div className="modal-backdrop" onClick={()=>{setShowFolderModal(false);setFolderName("");setFolderPhotos([]);setEditingFolderId(null);}}>
             <div className="modal-sheet" onClick={e=>e.stopPropagation()}>
               <div className="modal-sheet-hd">
-                <h3>新しいフォルダを作成</h3>
-                <button onClick={()=>{setShowFolderModal(false);setFolderName("");setFolderPhotos([]);}}>×</button>
+                <h3>{editingFolderId ? "フォルダを編集" : "新しいフォルダを作成"}</h3>
+                <button onClick={()=>{setShowFolderModal(false);setFolderName("");setFolderPhotos([]);setEditingFolderId(null);}}>×</button>
               </div>
               <div className="modal-body" style={{paddingBottom:40}}>
                 <label className="modal-field-label">FOLDER NAME</label>
@@ -2670,15 +2681,22 @@ const searchGeo = async (q) => {
                   })}
                 </div>
                 <div className="modal-actions">
-                  <button className="modal-cancel" onClick={()=>{setShowFolderModal(false);setFolderName("");setFolderPhotos([]);}}>キャンセル</button>
+                  <button className="modal-cancel" onClick={()=>{setShowFolderModal(false);setFolderName("");setFolderPhotos([]);setEditingFolderId(null);}}>キャンセル</button>
                   <button className="modal-ok" onClick={async ()=>{
                     if(!folderName.trim()) return;
-                    const { data, error } = await supabase.from("folders").insert({
-                      user_id: user.id, title: folderName.trim(), checkin_ids: folderPhotos.map(p=>p.id)
-                    }).select().single();
-                    if(!error && data) setFolders(f=>[...f,{id:data.id,title:data.title,type:"custom",ids:data.checkin_ids||[]}]);
-                    setFolderName(""); setFolderPhotos([]); setShowFolderModal(false);
-                  }}>作成する</button>
+                    if(editingFolderId){
+                      const ids = folderPhotos.map(p=>p.id);
+                      await supabase.from("folders").update({title:folderName.trim(), checkin_ids:ids}).eq("id", editingFolderId);
+                      setFolders(f=>f.map(fo=>fo.id===editingFolderId?{...fo,title:folderName.trim(),ids}:fo));
+                      setSelGroup(g=>g&&g.id===editingFolderId?{...g,title:folderName.trim(),items:folderPhotos}:g);
+                    } else {
+                      const { data, error } = await supabase.from("folders").insert({
+                        user_id: user.id, title: folderName.trim(), checkin_ids: folderPhotos.map(p=>p.id)
+                      }).select().single();
+                      if(!error && data) setFolders(f=>[...f,{id:data.id,title:data.title,type:"custom",ids:data.checkin_ids||[]}]);
+                    }
+                    setFolderName(""); setFolderPhotos([]); setShowFolderModal(false); setEditingFolderId(null);
+                  }}>{editingFolderId ? "保存する" : "作成する"}</button>
                 </div>
               </div>
             </div>
