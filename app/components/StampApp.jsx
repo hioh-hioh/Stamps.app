@@ -1202,7 +1202,7 @@ useEffect(()=>{
         spot_created_at: s.created_at||"",
         checkins: 0, reviews: [], comment: "",
         stampUpdatedAt: null, stampUpdatedBy: null,
-      })).filter(s=>s.lat&&s.lng));
+      )));
     }
   };
   const showToast = (msg, type="") => {
