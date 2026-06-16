@@ -1978,7 +1978,7 @@ const searchGeo = async (q) => {
                 <div style={{width:"100%",boxSizing:"border-box"}}>
                   {!isCheckedIn(selSpot) && (
                     <div style={{fontSize:13,color:"var(--red)",fontWeight:700,marginBottom:12,textAlign:"left"}}>
-                      🎉 初めてのチェックイン！スポット情報を登録しましょう
+                      初めてのチェックインスポットです！スポット情報を登録しましょう🎉
                     </div>
                   )}
                   <div style={{marginBottom:12}}>
