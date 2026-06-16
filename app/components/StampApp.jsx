@@ -2536,24 +2536,22 @@ const searchGeo = async (q) => {
             const left  = imgItems.filter((_,i)=>i%2===0);
             const right = imgItems.filter((_,i)=>i%2===1);
             return <>
-              <div className="group-hd" style={{flexDirection:"column",alignItems:"stretch",gap:6}}>
-                <div style={{display:"flex",alignItems:"center",gap:12}}>
-                  <button className="arc-back" onClick={()=>setSelGroup(null)}><Ic.Back/></button>
-                  <h2 style={{whiteSpace:"normal",overflow:"visible",textOverflow:"unset"}}>{selGroup.title}</h2>
-                </div>
-                <div style={{display:"flex",alignItems:"center",gap:12,paddingLeft:40}}>
-                  <span className="group-count">{items.length} stamps</span>
-                  {selGroup.id!=="all" && (
-                    <button onClick={()=>{
-                      const folder = folders.find(f=>f.id===selGroup.id);
-                      if(!folder) return;
-                      setFolderName(folder.title);
-                      setFolderPhotos(archives.filter(a=>folder.ids.includes(a.id)));
-                      setEditingFolderId(folder.id);
-                      setShowFolderModal(true);
-                    }} style={{background:"none",border:"none",color:"var(--text2)",fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>編集</button>
-                  )}
-                </div>
+              <div className="group-hd">
+                <button className="arc-back" onClick={()=>setSelGroup(null)}><Ic.Back/></button>
+                <h2 style={{whiteSpace:"normal",overflow:"visible",textOverflow:"unset"}}>{selGroup.title}</h2>
+              </div>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"flex-end",gap:12,padding:"10px 16px"}}>
+                <span className="group-count">{items.length} stamps</span>
+                {selGroup.id!=="all" && (
+                  <button onClick={()=>{
+                    const folder = folders.find(f=>f.id===selGroup.id);
+                    if(!folder) return;
+                    setFolderName(folder.title);
+                    setFolderPhotos(archives.filter(a=>folder.ids.includes(a.id)));
+                    setEditingFolderId(folder.id);
+                    setShowFolderModal(true);
+                  }} style={{background:"none",border:"none",color:"var(--text2)",fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>編集</button>
+                )}
               </div>
               <div className="group-masonry">
                 <div className="group-col">
