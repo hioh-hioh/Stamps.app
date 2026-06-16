@@ -1133,6 +1133,7 @@ const [user, setUser] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
   const [locLoading, setLocLoading] = useState(false);
   const [photoViewer, setPhotoViewer] = useState(null);
+  const [detailPhotoIdx, setDetailPhotoIdx] = useState(0);
   const [profile, setProfile] = useState({
     name:"", location:"", bio:"", avatar_url:""
   });
@@ -2025,6 +2026,26 @@ const searchGeo = async (q) => {
                 </button>
               </div>
               <div className="ov-body" style={{paddingTop:16}}>
+                {/* 投稿済み写真（メイン1枚＋ドット） */}
+                {(()=>{
+                  const photos = spotPosts.flatMap(a=>a.photos||[]).filter(Boolean);
+                  if(photos.length===0) return null;
+                  return (
+                    <div style={{width:"100%",marginBottom:16}}>
+                      <img src={photos[detailPhotoIdx||0]} style={{width:"100%",maxHeight:280,borderRadius:8,objectFit:"cover",display:"block",cursor:"pointer"}}
+                        onClick={()=>setPhotoViewer({posts:[{id:"detail-photos",hasImg:true,photos,color:"#000"}],postIdx:0,imgIdx:detailPhotoIdx||0})}/>
+                      {photos.length>1 && (
+                        <div style={{display:"flex",justifyContent:"center",gap:6,marginTop:8}}>
+                          {photos.map((_,i)=>(
+                            <button key={i} onClick={()=>setDetailPhotoIdx(i)}
+                              style={{width:6,height:6,borderRadius:"50%",border:"none",cursor:"pointer",
+                                background:(detailPhotoIdx||0)===i?"var(--red)":"var(--border)",padding:0}}/>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
                 {/* タイトル＋ブックマーク */}
 <div style={{display:"flex",alignItems:"center",width:"100%"}}>
   <div className="ov-name" style={{flex:1,margin:0,textAlign:"center"}}>{selSpot.name}</div>
@@ -2037,27 +2058,6 @@ const searchGeo = async (q) => {
                   <div className="mrow"><Ic.Clock/> {selSpot.hours}</div>
                   <div className="mrow"><Ic.Pin/> {selSpot.location}</div>
                 </div>
-                {/* 投稿済み写真一覧 */}
-                {(()=>{
-                  const photos = spotPosts.flatMap(a=>a.photos||[]).filter(Boolean);
-                  return photos.length>0 ? (
-                    <div style={{width:"100%",marginBottom:16,marginTop:20}}>
-                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
-                        {(showAllPosts ? photos : photos.slice(0,3)).map((url,i)=>(
-                          <img key={i} src={url} style={{width:"100%",aspectRatio:"1",borderRadius:8,objectFit:"cover",display:"block",cursor:"pointer"}}
-                            onClick={()=>setPhotoViewer({posts:[{id:"detail-photos",hasImg:true,photos,color:"#000"}],postIdx:0,imgIdx:i})}/>
-                        ))}
-                      </div>
-                      {photos.length>3 && (
-                        <button onClick={()=>setShowAllPosts(v=>!v)}
-                          style={{background:"none",border:"none",color:"var(--text3)",fontSize:13,
-                            cursor:"pointer",fontFamily:"inherit",textDecoration:"underline",padding:"6px 0 0"}}>
-                          {showAllPosts ? "閉じる" : `View more (${photos.length-3}件)`}
-                        </button>
-                      )}
-                    </div>
-                  ) : null;
-                })()}
                 {/* 投稿一覧 */}
                 <div className="spot-posts" style={{display:"flex",flexDirection:"column",alignItems:"flex-start",gap:12,alignSelf:"stretch"}}>
                   <div style={{fontSize:13,fontWeight:700,color:"var(--text)",marginBottom:4,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
