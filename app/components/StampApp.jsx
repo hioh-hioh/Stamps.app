@@ -1198,8 +1198,12 @@ useEffect(()=>{
   };
   const loadSpots = async () => {
     const { data } = await supabase.from("spots").select("*");
-    const { data: ciData, error: ciError } = await supabase.from("checkins").select("spot_name,lat,lng").not("lat","is",null);
-    console.log("ciData:", ciData, "ciError:", ciError);
+    const { data: ciData } = await supabase.from("checkins").select("spot_name,lat,lng,photo_urls").order("created_at",{ascending:false});
+    const photoMap = {};
+    (ciData||[]).forEach(c=>{
+      if(!photoMap[c.spot_name] && c.photo_urls && c.photo_urls.length>0) photoMap[c.spot_name] = c.photo_urls[0];
+    });
+    window.__publicPhotos = photoMap;
     const spotsFromCi = (ciData||[])
       .filter(c=>c.lat&&c.lng)
       .reduce((acc,c)=>{
@@ -1505,7 +1509,7 @@ const searchGeo = async (q) => {
               <div style={{flex:1,overflowY:"auto",padding:"8px 16px 120px"}}>
                 {filtered.length===0 && <div style={{color:"var(--text3)",textAlign:"center",marginTop:40}}>スポットがありません</div>}
                 {filtered.map(s=>{
-                  const latestPhoto = archives.find(a=>a.spot===s.name&&a.photos?.length>0)?.photos?.[0];
+                  const latestPhoto = archives.find(a=>a.spot===s.name&&a.photos?.length>0)?.photos?.[0] || window.__publicPhotos?.[s.name];
                   return (
                     <div key={s.id} onClick={()=>openForm(s)}
                       style={{display:"flex",alignItems:"center",gap:12,padding:"12px 0",borderBottom:"1px solid var(--gray-50)",cursor:"pointer"}}>
@@ -1669,8 +1673,8 @@ const searchGeo = async (q) => {
                     <div className="bsheet-top">
                       <div className="bsheet-thumb" style={{cursor:"pointer"}}
                         onClick={()=>setPhotoViewer({posts:allPhotoPosts,postIdx:0,imgIdx:0})}>
-                        {spotPosts.length>0 && spotPosts[0].photos?.length>0
-                          ? <img src={spotPosts[0].photos[0]} style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:8}}/>
+                        {(spotPosts.length>0 && spotPosts[0].photos?.length>0) || window.__publicPhotos?.[selSpot.name]
+                          ? <img src={(spotPosts.length>0 && spotPosts[0].photos?.[0]) || window.__publicPhotos?.[selSpot.name]} style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:8}}/>
                           : <div style={{width:"100%",height:"100%",background:"var(--red-bg)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:28}}>🏮</div>
                         }
                       </div>
