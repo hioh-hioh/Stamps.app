@@ -2020,6 +2020,10 @@ const searchGeo = async (q) => {
         {tab==="mypage" && (
           <div className="mypage-screen">
             {!user ? (
+              <>
+              <div style={{padding:"8px 16px 0"}}>
+                <img src="/logo.png" alt="Stamps." style={{height:24}}/>
+              </div>
               <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",height:"70vh",gap:16,padding:"0 32px",textAlign:"center"}}>
                 <div style={{fontSize:48}}>👤</div>
                 <div style={{fontSize:18,fontWeight:700,color:"var(--text)"}}>{t('myPageTitle')}</div>
@@ -2029,9 +2033,11 @@ const searchGeo = async (q) => {
                   {t('loginWithGoogle')}
                 </button>
               </div>
+              </>
             ) : (
               <>
-              <div style={{padding:"8px 16px 0",textAlign:"right"}}>
+              <div style={{padding:"8px 16px 0",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                <img src="/logo.png" alt="Stamps." style={{height:24}}/>
                 <button onClick={()=>supabase.auth.signOut()}
                   style={{background:"none",border:"none",color:"var(--text3)",fontSize:12,cursor:"pointer",fontFamily:"inherit"}}>
                   {t('logout')}
