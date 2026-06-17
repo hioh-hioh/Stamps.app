@@ -450,10 +450,10 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 }
 .toggle-switch input:checked ~ .toggle-thumb{transform:translateX(18px)}
 .limited-dates{
-  display:flex;align-items:center;gap:8px;justify-content:flex-end;background:var(--white);width:100%;
-  margin-top:12px;flex-wrap:wrap
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:8px;background:var(--white);width:100%;
+  margin-top:12px
 }
-.limited-date-field{display:flex;flex-direction:column;gap:4px;flex:1;min-width:120px}
+.limited-date-field{display:flex;flex-direction:column;gap:4px;min-width:0}
 .limited-date-label{font-size:11px;color:var(--text3);font-weight:500;letter-spacing:.03em}
 .limited-date-input{
   border:1px solid var(--border);border-radius:8px;
@@ -1588,7 +1588,7 @@ const searchGeo = async (q) => {
           return (
             <div style={{display:"flex",flexDirection:"column",height:"100%",overflow:"hidden"}}>
               <div style={{flex:1,overflowY:"auto",padding:"8px 16px 120px"}}>
-                <div style={{fontSize:13,fontWeight:700,color:"var(--text)",marginBottom:8}}>Total stamps {dbSpots.length.toLocaleString()}</div>
+                <div style={{fontSize:13,fontWeight:700,color:"var(--text)",marginTop:12,marginBottom:8}}>{dbSpots.length.toLocaleString()} Stamps.</div>
                 {filtered.length===0 && <div style={{color:"var(--text3)",textAlign:"center",marginTop:40}}>スポットがありません</div>}
                 {filtered.map(s=>{
                   const latestPhoto = archives.find(a=>a.spot===s.name&&a.photos?.length>0)?.photos?.[0] || window.__publicPhotos?.[s.name];
