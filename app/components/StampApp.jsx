@@ -1566,7 +1566,15 @@ const searchGeo = async (q) => {
     setSubmitting(false);
   };
 
-  const switchTab = (t) => { setTab(t); setOverlay(null); setSelSpot(null); setSelGroup(null); };
+  const switchTab = (t) => {
+    setTab(t); setOverlay(null); setSelSpot(null); setSelGroup(null);
+    setNearbyOpen(false); setNearbySearch("");
+    setNewCiOpen(false); setSpotSearch("");
+    setSelArc(null);
+    setProfileEditOpen(false);
+    setShowFolderModal(false);
+    setShowFolderPicker(false);
+  };
   const toggleSave = (spot) => {
     setSavedSpots(s=>
       s.find(x=>x.id===spot.id)
