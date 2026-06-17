@@ -1,8 +1,16 @@
 import { supabase } from '../../../lib/supabase';
 
+async function getSpot(id) {
+  let { data: spot } = await supabase.from("spots").select("*").eq("short_id", id).maybeSingle();
+  if (!spot) {
+    ({ data: spot } = await supabase.from("spots").select("*").eq("id", id).maybeSingle());
+  }
+  return spot;
+}
+
 export async function generateMetadata({ params }) {
   const { id } = await params;
-  const { data: spot } = await supabase.from("spots").select("*").eq("id", id).single();
+  const spot = await getSpot(id);
   if (!spot) return { title: "スポットが見つかりません | Stamps.app" };
   return {
     title: `${spot.name} | Stamps.app`,
@@ -12,7 +20,7 @@ export async function generateMetadata({ params }) {
 
 export default async function SpotPage({ params }) {
   const { id } = await params;
-  const { data: spot } = await supabase.from("spots").select("*").eq("id", id).single();
+  const spot = await getSpot(id);
 
   if (!spot) {
     return <div style={{ padding: 40, textAlign: "center" }}>スポットが見つかりませんでした</div>;
@@ -21,7 +29,7 @@ export default async function SpotPage({ params }) {
   const { data: checkins } = await supabase
     .from("checkins")
     .select("*")
-    .eq("spot_id", id)
+    .eq("spot_id", spot.id)
     .order("created_at", { ascending: false });
 
   const posts = checkins || [];
@@ -70,7 +78,7 @@ export default async function SpotPage({ params }) {
               const author = profileMap[p.user_id];
               const photos = p.photo_urls || [];
               return (
-                <a key={p.id} href={`/checkins/${p.id}`} style={{ textDecoration: "none", color: "inherit", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 8, background: "#F7F7F7", borderRadius: 8, padding: 12 }}>
+                <a key={p.id} href={`/checkins/${p.short_id || p.id}`} style={{ textDecoration: "none", color: "inherit", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 8, background: "#F7F7F7", borderRadius: 8, padding: 12 }}>
                   <div style={{ width: 32, height: 32, borderRadius: "50%", overflow: "hidden", background: "#D8D8D5", flexShrink: 0 }}>
                     {author?.avatar_url && <img src={author.avatar_url} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
                   </div>
