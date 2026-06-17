@@ -2346,7 +2346,7 @@ const searchGeo = async (q) => {
                       lat: result.geometry.location.lat,
                       lng: result.geometry.location.lng,
                       category: result.types?.[0] || "場所",
-                      area: result.address_components?.find(c=>c.types.includes("locality"))?.long_name || "",
+                      area: result.address_components?.find(c=>c.types?.includes("locality"))?.long_name || "",
                       checkins: 0, hours: "", location: result.formatted_address || "", reviews: [], comment: "",
                     };
                     const { supabase } = await import("../../lib/supabase");
@@ -2446,7 +2446,7 @@ const searchGeo = async (q) => {
                   lat: result.geometry.location.lat,
                   lng: result.geometry.location.lng,
                   category: result.types?.[0] || "場所",
-                  area: result.address_components?.find(c=>c.types.includes("locality"))?.long_name || "",
+                  area: result.address_components?.find(c=>c.types?.includes("locality"))?.long_name || "",
                   creator_name: profile.name || user?.email || "",
                   created_by: user?.id || "",
                 };
