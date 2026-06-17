@@ -2130,12 +2130,13 @@ const searchGeo = async (q) => {
               <div className="ov-body" style={{paddingTop:16}}>
                 {/* 投稿済み写真（メイン1枚＋ドット） */}
                 {(()=>{
-                  const photos = spotPosts.flatMap(a=>a.photos||[]).filter(Boolean);
-                  if(photos.length===0) return null;
-                  const limitedPost = spotPosts.find(p=>p.limited);
+                  const photoEntries = spotPosts.flatMap(a=>(a.photos||[]).filter(Boolean).map(url=>({url, limited:a.limited, dateFrom:a.dateFrom, dateTo:a.dateTo})));
+                  if(photoEntries.length===0) return null;
+                  const photos = photoEntries.map(e=>e.url);
+                  const current = photoEntries[detailPhotoIdx||0];
                   return (
                     <div style={{width:"100%",marginBottom:16,position:"relative"}}>
-                      <img src={photos[detailPhotoIdx||0]} style={{width:"100%",height:280,borderRadius:8,objectFit:"cover",display:"block",cursor:"pointer",background:"var(--gray-100)"}}
+                      <img src={current.url} style={{width:"100%",height:280,borderRadius:8,objectFit:"cover",display:"block",cursor:"pointer",background:"var(--gray-100)"}}
                         onTouchStart={e=>{e.currentTarget._startX=e.touches[0].clientX;}}
                         onTouchEnd={e=>{
                           const diff = e.changedTouches[0].clientX - e.currentTarget._startX;
@@ -2144,10 +2145,10 @@ const searchGeo = async (q) => {
                           if(diff < -50 && idx<photos.length-1) setDetailPhotoIdx(idx+1);
                         }}
                         onClick={()=>setPhotoViewer({posts:[{id:"detail-photos",hasImg:true,photos,color:"#000"}],postIdx:0,imgIdx:detailPhotoIdx||0})}/>
-                      {limitedPost && (
-                        <div style={{position:"absolute",left:12,bottom:28,display:"flex",alignItems:"center",gap:6}}>
+                      {current.limited && (
+                        <div style={{position:"absolute",left:12,bottom:24,display:"flex",alignItems:"center",gap:6}}>
                           <span className="limited-badge">LIMITED</span>
-                          {limitedPost.dateFrom && <span style={{fontSize:12,color:"#fff"}}>{limitedPost.dateFrom} → {limitedPost.dateTo||"未定"}</span>}
+                          {current.dateFrom && <span style={{fontSize:12,color:"#fff"}}>{current.dateFrom} → {current.dateTo||"未定"}</span>}
                         </div>
                       )}
                       {photos.length>1 && (
