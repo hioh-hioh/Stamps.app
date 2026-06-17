@@ -2636,7 +2636,6 @@ const searchGeo = async (q) => {
             {spotSearch.trim() === "" && (
               userLocation && dbSpots.length > 0 ? (
                 <>
-                  <div className="nearby-section-label">{t('nearbyLabel')}</div>
                   {[...dbSpots]
                     .map(s=>({...s, dist: calcDist(userLocation.lat,userLocation.lng,s.lat,s.lng)}))
                     .sort((a,b)=>a.dist-b.dist)
