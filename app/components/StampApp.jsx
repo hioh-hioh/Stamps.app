@@ -1313,7 +1313,7 @@ const [creatorAvatar, setCreatorAvatar] = useState("");
 useEffect(()=>{
     supabase.auth.getSession().then(({data:{session}})=>{
       setUser(session?.user ?? null);
-      if(session?.user){ loadCheckins(session.user.id); loadProfile(session.user.id); loadFolders(session.user.id); }
+      if(session?.user){ loadCheckins(session.user.id); loadProfile(session.user.id); loadFolders(session.user.id); loadSavedSpots(session.user.id); }
     });
     loadSpots();
     if(navigator.geolocation){
@@ -1324,7 +1324,7 @@ useEffect(()=>{
     }
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_,session)=>{
       setUser(session?.user ?? null);
-      if(session?.user && session.user.id !== user?.id){ loadCheckins(session.user.id); loadProfile(session.user.id); loadFolders(session.user.id); }
+      if(session?.user && session.user.id !== user?.id){ loadCheckins(session.user.id); loadProfile(session.user.id); loadFolders(session.user.id); loadSavedSpots(session.user.id); }
       else setArchives([]);
     });
     return () => subscription.unsubscribe();
@@ -1396,6 +1396,21 @@ useEffect(()=>{
   const loadFolders = async (userId) => {
     const { data } = await supabase.from("folders").select("*").eq("user_id", userId);
     if(data) setFolders(data.map(f=>({id:f.id, title:f.title, type:"custom", ids:f.checkin_ids||[]})));
+  };
+  const loadSavedSpots = async (userId) => {
+    const { data: saved } = await supabase.from("saved_spots").select("spot_id").eq("user_id", userId);
+    if(!saved || saved.length===0){ setSavedSpots([]); return; }
+    const ids = saved.map(d=>d.spot_id);
+    const { data: spotsData } = await supabase.from("spots").select("*").in("id", ids);
+    setSavedSpots((spotsData||[]).map(s=>({
+      id: s.id, name: s.name, lat: s.lat, lng: s.lng,
+      category: s.category||"", area: s.area||"",
+      hours: s.hours||"", location: s.location||"",
+      creator_name: s.creator_name||"", created_by: s.created_by||"",
+      spot_created_at: s.created_at||"",
+      checkins: 0, reviews: [], comment: "",
+      stampUpdatedAt: null, stampUpdatedBy: null,
+    })));
   };
   const loadSpots = async () => {
     const { data } = await supabase.from("spots").select("*");
@@ -1575,12 +1590,14 @@ const searchGeo = async (q) => {
     setShowFolderModal(false);
     setShowFolderPicker(false);
   };
-  const toggleSave = (spot) => {
+  const toggleSave = async (spot) => {
+    const already = savedSpots.some(x=>x.id===spot.id);
     setSavedSpots(s=>
-      s.find(x=>x.id===spot.id)
-        ? s.filter(x=>x.id!==spot.id)
-        : [...s, spot]
+      already ? s.filter(x=>x.id!==spot.id) : [...s, spot]
     );
+    if(!user) return;
+    if(already) await supabase.from("saved_spots").delete().eq("user_id", user.id).eq("spot_id", spot.id);
+    else await supabase.from("saved_spots").insert({user_id:user.id, spot_id:spot.id});
   };
   const isSaved = (spot) => savedSpots.some(x=>x.id===spot.id);
   const isCheckedIn = (spot) => archives.some(a=>a.spot===spot.name);
