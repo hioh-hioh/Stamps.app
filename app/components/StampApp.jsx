@@ -1993,7 +1993,6 @@ const searchGeo = async (q) => {
             <div className="ov-body">
               <div className="ov-name">{selSpot.name}</div>
               <div className="ov-sub">{selSpot.category}　{selSpot.area}</div>
-              <span className="change-loc" style={{color:"var(--text3)"}}>位置情報を変更</span>
               {!(showSpotEdit && isCheckedIn(selSpot)) && (
               <div className="input-card">
                 <textarea placeholder="最新情報" value={ciText} onChange={e=>setCiText(e.target.value)}/>
