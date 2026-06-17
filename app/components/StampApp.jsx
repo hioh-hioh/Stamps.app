@@ -2044,7 +2044,7 @@ const searchGeo = async (q) => {
               </div>
             <div className="profile-hd">
               <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",gap:15}}>
-                <div style={{flex:1,minWidth:0,paddingBottom:8}}>
+                <div style={{flex:1,minWidth:0,paddingBottom:4}}>
                   <div className="prof-name">{profile.name}</div>
                   <div className="prof-bio">{profile.bio}</div>
                   <div style={{fontSize:11,color:"var(--text3)",marginTop:6}}>Post: {archives.filter(a=>a.photos?.length>0).length}　Checkin: {archives.length}</div>
