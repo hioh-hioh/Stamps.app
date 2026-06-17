@@ -860,7 +860,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 .group-count{font-size:12px;color:var(--text3)}
 .group-masonry{
   display:flex;gap:8px;
-  padding:12px 16px;
+  padding:12px 16px 100px;
   align-items:flex-start
 }
 .group-col{display:flex;flex-direction:column;gap:8px;flex:1;min-width:0}
@@ -1678,7 +1678,7 @@ const searchGeo = async (q) => {
                             {/* ドット＋縦線 */}
                             <div style={{display:"flex",flexDirection:"column",alignItems:"center",flexShrink:0,width:12,paddingTop:3}}>
                               <div style={{width:2,background:"transparent",height:8,flexShrink:0}}/>
-                              <div style={{width:12,height:12,borderRadius:"50%",background:"#E8452A",flexShrink:0}}/>
+                              <div style={{width:9,height:9,borderRadius:"50%",background:"#E8452A",flexShrink:0}}/>
                               {ii < group.items.length-1
                                 ? <div style={{width:2,flex:1,background:"#EDEDEC",minHeight:16,marginTop:8}}/>
                                 : <div style={{height:8,flexShrink:0}}/>
@@ -1687,7 +1687,7 @@ const searchGeo = async (q) => {
                             {/* 内容 */}
                             <div style={{flex:1,minWidth:0,paddingTop:6,paddingBottom:16}}>
                               <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:2}}>
-                                <div style={{fontWeight:700,fontSize:15,color:"rgba(28,27,31,1)"}}>{item.spot}</div>
+                                <div style={{fontWeight:700,fontSize:14,color:"rgba(28,27,31,1)"}}>{item.spot}</div>
                                 {item.id && !String(item.id).startsWith("mock") && (
                                   <button onClick={async(e)=>{
                                     e.stopPropagation();
