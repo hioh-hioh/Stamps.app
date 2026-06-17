@@ -367,7 +367,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   background:var(--red);color:var(--white);
   border:none;cursor:pointer;font-size:26px;
   display:flex;align-items:center;justify-content:center;
-  line-height:1;padding:0 0 4px 0;
+  line-height:1;padding:3px 0 4px 0;
   box-shadow:var(--sh-md);z-index:50;transition:transform .15s
 }
 .fab:active{transform:scale(.94)}
@@ -1973,8 +1973,8 @@ const searchGeo = async (q) => {
                         )}
                         <p className="sheet-comment">{selSpot.comment}</p>
                         <div style={{display:"flex",gap:8,marginTop:10,alignItems:"center"}}>
-                          <button style={{padding:"4px 14px 6px",background:"var(--red)",color:"#fff",border:"none",borderRadius:8,fontSize:13,cursor:"pointer",fontFamily:"inherit",fontWeight:500}} onClick={()=>openForm(selSpot)}>{t('checkinBtn')}</button>
-                          <button style={{padding:"4px 14px 6px",background:"none",color:"var(--red)",border:"1.5px solid var(--red)",borderRadius:8,fontSize:13,cursor:"pointer",fontFamily:"inherit"}} onClick={()=>openDetail(selSpot)}>{t('detailBtn')}</button>
+                          <button style={{padding:"5px 14px 6px",background:"var(--red)",color:"#fff",border:"none",borderRadius:8,fontSize:13,cursor:"pointer",fontFamily:"inherit",fontWeight:500}} onClick={()=>openForm(selSpot)}>{t('checkinBtn')}</button>
+                          <button style={{padding:"5px 14px 6px",background:"none",color:"var(--red)",border:"1.5px solid var(--red)",borderRadius:8,fontSize:13,cursor:"pointer",fontFamily:"inherit"}} onClick={()=>openDetail(selSpot)}>{t('detailBtn')}</button>
                           {/* 保存ボタン */}
                           <button className="bookmark-btn" onClick={()=>toggleSave(selSpot)} title={isSaved(selSpot)?t('filterSaved'):t('saveAction')}>
                             <svg width="20" height="20" viewBox="0 0 24 24"
