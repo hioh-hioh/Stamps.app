@@ -2129,22 +2129,24 @@ const searchGeo = async (q) => {
                   const photos = photoEntries.map(e=>e.url);
                   const current = photoEntries[detailPhotoIdx||0];
                   return (
-                    <div style={{width:"100%",marginBottom:16,position:"relative"}}>
-                      <img src={current.url} style={{width:"100%",height:280,borderRadius:8,objectFit:"cover",display:"block",cursor:"pointer",background:"var(--gray-100)"}}
-                        onTouchStart={e=>{e.currentTarget._startX=e.touches[0].clientX;}}
-                        onTouchEnd={e=>{
-                          const diff = e.changedTouches[0].clientX - e.currentTarget._startX;
-                          const idx = detailPhotoIdx||0;
-                          if(diff > 50 && idx>0) setDetailPhotoIdx(idx-1);
-                          if(diff < -50 && idx<photos.length-1) setDetailPhotoIdx(idx+1);
-                        }}
-                        onClick={()=>setPhotoViewer({posts:[{id:"detail-photos",hasImg:true,photos,color:"#000"}],postIdx:0,imgIdx:detailPhotoIdx||0})}/>
-                      {current.limited && (
-                        <div style={{position:"absolute",left:12,bottom:24,display:"flex",alignItems:"center",gap:6}}>
-                          <span className="limited-badge">LIMITED</span>
-                          {current.dateFrom && <span style={{fontSize:12,color:"#fff"}}>{current.dateFrom} → {current.dateTo||"未定"}</span>}
-                        </div>
-                      )}
+                    <div style={{width:"100%",marginBottom:16}}>
+                      <div style={{position:"relative"}}>
+                        <img src={current.url} style={{width:"100%",height:280,borderRadius:8,objectFit:"cover",display:"block",cursor:"pointer",background:"var(--gray-100)"}}
+                          onTouchStart={e=>{e.currentTarget._startX=e.touches[0].clientX;}}
+                          onTouchEnd={e=>{
+                            const diff = e.changedTouches[0].clientX - e.currentTarget._startX;
+                            const idx = detailPhotoIdx||0;
+                            if(diff > 50 && idx>0) setDetailPhotoIdx(idx-1);
+                            if(diff < -50 && idx<photos.length-1) setDetailPhotoIdx(idx+1);
+                          }}
+                          onClick={()=>setPhotoViewer({posts:[{id:"detail-photos",hasImg:true,photos,color:"#000"}],postIdx:0,imgIdx:detailPhotoIdx||0})}/>
+                        {current.limited && (
+                          <div style={{position:"absolute",left:12,bottom:20,display:"flex",alignItems:"center",gap:6}}>
+                            <span className="limited-badge">LIMITED</span>
+                            {current.dateFrom && <span style={{fontSize:12,color:"#fff"}}>{current.dateFrom} → {current.dateTo||"未定"}</span>}
+                          </div>
+                        )}
+                      </div>
                       {photos.length>1 && (
                         <div style={{display:"flex",justifyContent:"center",gap:6,marginTop:8}}>
                           {photos.map((_,i)=>(
