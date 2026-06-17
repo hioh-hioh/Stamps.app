@@ -19,6 +19,28 @@ function calcDist(lat1,lng1,lat2,lng2){
 function fmtDist(km){
   return km<1 ? `${Math.round(km*1000)}m` : `${km.toFixed(1)}km`;
 }
+const CATEGORY_LABELS = {
+  tourist_information_center:"観光案内所", point_of_interest:"観光スポット", establishment:"施設",
+  premise:"施設", subpremise:"施設", store:"店舗", shopping_mall:"商業施設", department_store:"百貨店",
+  supermarket:"スーパー", convenience_store:"コンビニ", clothing_store:"衣料品店", book_store:"書店",
+  restaurant:"レストラン", cafe:"カフェ", bakery:"パン屋", bar:"バー", food:"飲食店",
+  museum:"博物館", art_gallery:"ギャラリー", library:"図書館", park:"公園", zoo:"動物園", aquarium:"水族館",
+  amusement_park:"遊園地", tourist_attraction:"観光地", place_of_worship:"寺社・教会", shrine:"神社", temple:"寺",
+  church:"教会", hindu_temple:"寺院", mosque:"モスク",
+  train_station:"駅", transit_station:"駅", subway_station:"駅", bus_station:"バス停", light_rail_station:"駅",
+  airport:"空港", parking:"駐車場",
+  city_hall:"市役所", local_government_office:"行政施設", post_office:"郵便局", police:"警察署", fire_station:"消防署",
+  hospital:"病院", pharmacy:"薬局", doctor:"医療機関",
+  lodging:"宿泊施設", hotel:"ホテル", campground:"キャンプ場",
+  stadium:"スタジアム", gym:"スポーツ施設", spa:"スパ", beauty_salon:"美容室",
+  school:"学校", university:"大学",
+  bank:"銀行", atm:"ATM",
+  natural_feature:"自然・景観", landmark:"ランドマーク",
+};
+function catLabel(cat){
+  if(!cat) return "";
+  return CATEGORY_LABELS[cat] || cat;
+}
 
 // heightsパターン (左列・右列でずらす)
 const LEFT_HEIGHTS  = [196, 160, 210, 150, 180, 200, 155, 175, 205, 165];
@@ -1385,7 +1407,7 @@ const searchGeo = async (q) => {
       setArchives(a=>[{
         id: data.id,
         spot: data.spot_name,
-        sub: `${data.category}　${data.area}`,
+        sub: `${catLabel(data.category)}　${data.area}`,
         date: data.created_at ? new Date(data.created_at).toLocaleString("ja-JP",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}).replace(/\//g,"/") : "",
         note: data.note,
         emoji: data.emoji,
@@ -1538,7 +1560,7 @@ const searchGeo = async (q) => {
                                 )}
                               </div>
                               <div style={{fontSize:12,color:"var(--text3)",marginBottom:8,display:"flex",gap:8}}>
-                                {item.category?.trim() && <span>{item.category}</span>}
+                                {item.category?.trim() && <span>{catLabel(item.category)}</span>}
                                 {item.area?.trim() && <span>{item.area}</span>}
                                 <span>{item.date?.slice(-5)}</span>
                               </div>
@@ -1840,7 +1862,7 @@ const searchGeo = async (q) => {
                     <div className="saved-item-icon">🏮</div>
                     <div className="saved-item-info">
                       <h4>{s.name}</h4>
-                      <p>{s.category}　{s.area}</p>
+                      <p>{catLabel(s.category)}　{s.area}</p>
                     </div>
                     <button className="bookmark-btn" onClick={e=>{e.stopPropagation();toggleSave(s);}}>
                       <BookmarkSVG active={true} size={18}/>
@@ -1991,7 +2013,7 @@ const searchGeo = async (q) => {
             </div>
             <div className="ov-body">
               <div className="ov-name">{selSpot.name}</div>
-              <div className="ov-sub">{selSpot.category}　{selSpot.area}</div>
+              <div className="ov-sub">{catLabel(selSpot.category)}　{selSpot.area}</div>
               {!(showSpotEdit && isCheckedIn(selSpot)) && (
               <div className="input-card">
                 <textarea placeholder="最新情報" value={ciText} onChange={e=>setCiText(e.target.value)}/>
@@ -2166,7 +2188,7 @@ const searchGeo = async (q) => {
   <div className="ov-name" style={{flex:1,margin:0,textAlign:"center"}}>{selSpot.name}</div>
 </div>
 <div className="ov-sub" style={{display:"flex",gap:8,marginTop:-4,justifyContent:"flex-start"}}>
-  <span>{selSpot.category}</span>
+  <span>{catLabel(selSpot.category)}</span>
   <span>{selSpot.area}</span>
 </div>
                 <div style={{display:"flex",padding:"12px",flexDirection:"column",alignItems:"flex-start",gap:8,alignSelf:"stretch",borderRadius:4,background:"#F6F6F6",marginTop:20}}>
@@ -2393,7 +2415,7 @@ const searchGeo = async (q) => {
                         setSelSpot(s); setTab("map");
                       }}>
                         <div className="nearby-icon">🏮</div>
-                        <div className="nearby-info"><h4>{s.name}</h4><p>{s.category}　{s.area}</p></div>
+                        <div className="nearby-info"><h4>{s.name}</h4><p>{catLabel(s.category)}　{s.area}</p></div>
                         <div className="nearby-dist">{s.dist!=null && fmtDist(s.dist)}<span>{s.checkins.toLocaleString()} stamps</span></div>
                       </div>
                     ))}
