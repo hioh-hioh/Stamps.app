@@ -1009,7 +1009,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .nearby-info p{font-size:12px;color:var(--text2);margin-top:2px}
 .nearby-dist{
-  font-size:12px;color:var(--red);font-weight:500;
+  font-size:12px;color:var(--text3);font-weight:500;
   display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0
 }
 .nearby-dist span{font-size:10px;color:var(--text3);font-weight:400}
