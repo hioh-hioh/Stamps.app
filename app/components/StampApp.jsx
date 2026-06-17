@@ -2540,30 +2540,26 @@ const searchGeo = async (q) => {
                 const farther = filtered.filter(s=>s.dist==null || s.dist>1.0);
                 return <>
                   {nearby.length>0 && <>
-                    <div className="nearby-section-label">{t('nearbyLabel')}</div>
                     {nearby.map(s=>(
                       <div key={s.id} className="nearby-item" onClick={()=>{
                         setNearbyOpen(false); setNearbySearch("");
                         if(window.__mapboxFlyTo) window.__mapboxFlyTo(s.lng, s.lat);
                         setSelSpot(s); setTab("map");
                       }}>
-                        <div className="nearby-icon">🏮</div>
                         <div className="nearby-info"><h4>{s.name}</h4><p>{catLabel(s.category)}　{s.area}</p></div>
-                        <div className="nearby-dist">{s.dist!=null && fmtDist(s.dist)}<span>{s.checkins.toLocaleString()} stamps</span></div>
+                        <div className="nearby-dist">{s.dist!=null && fmtDist(s.dist)}</div>
                       </div>
                     ))}
                   </>}
                   {farther.length>0 && <>
-                    <div className="nearby-section-label">{nearby.length>0?t('otherSpots'):t('allSpots')}</div>
                     {farther.map(s=>(
                       <div key={s.id} className="nearby-item" onClick={()=>{
                         setNearbyOpen(false); setNearbySearch("");
                         if(window.__mapboxFlyTo) window.__mapboxFlyTo(s.lng, s.lat);
                         setSelSpot(s); setTab("map");
                       }}>
-                        <div className="nearby-icon">🏮</div>
                         <div className="nearby-info"><h4>{s.name}</h4><p>{catLabel(s.category)}　{s.area}</p></div>
-                        <div className="nearby-dist">{s.dist!=null && fmtDist(s.dist)}<span>{s.checkins.toLocaleString()} stamps</span></div>
+                        <div className="nearby-dist">{s.dist!=null && fmtDist(s.dist)}</div>
                       </div>
                     ))}
                   </>}
