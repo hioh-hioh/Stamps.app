@@ -2035,31 +2035,31 @@ const searchGeo = async (q) => {
               </>
             ) : (
               <>
-              <div style={{padding:"8px 16px 0",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                <img src="/logo.png" alt="Stamps." style={{height:24,marginTop:20}}/>
+              <div style={{padding:"8px 16px 0",marginTop:20,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                <img src="/logo.png" alt="Stamps." style={{height:24}}/>
                 <button onClick={()=>supabase.auth.signOut()}
                   style={{background:"none",border:"none",color:"var(--text3)",fontSize:12,cursor:"pointer",fontFamily:"inherit"}}>
                   {t('logout')}
                 </button>
               </div>
             <div className="profile-hd">
-              <div className="prof-row">
-                <div className="avatar">
-                  {profile.avatar_url
-                    ? <img src={profile.avatar_url} style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:"50%"}}/>
-                    : <Ic.User s={36}/>}
-                </div>
-                </div>
-              <div className="prof-info">
-                <div style={{flex:1}}>
+              <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:15}}>
+                <div style={{flex:1,minWidth:0}}>
                   <div className="prof-name">{profile.name}</div>
                   <div className="prof-bio">{profile.bio}</div>
                   <div style={{fontSize:11,color:"var(--text3)",marginTop:6}}>Post: {archives.filter(a=>a.photos?.length>0).length}　Checkin: {archives.length}</div>
                 </div>
-                <button className="edit-btn" onClick={()=>{
-                  setEditDraft({name:profile.name,location:profile.location,bio:profile.bio,avatar_url:profile.avatar_url||""});
-                  setProfileEditOpen(true);
-                }}><Ic.Edit/></button>
+                <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:6}}>
+                  <div className="avatar">
+                    {profile.avatar_url
+                      ? <img src={profile.avatar_url} style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:"50%"}}/>
+                      : <Ic.User s={36}/>}
+                  </div>
+                  <button className="edit-btn" onClick={()=>{
+                    setEditDraft({name:profile.name,location:profile.location,bio:profile.bio,avatar_url:profile.avatar_url||""});
+                    setProfileEditOpen(true);
+                  }}><Ic.Edit/></button>
+                </div>
               </div>
             </div>
 
