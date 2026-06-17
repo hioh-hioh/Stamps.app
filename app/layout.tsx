@@ -14,9 +14,12 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Stamps.",
-  description: "スタンプラリーWebアプリ",
+  description: "駅や記念スタンプを共有、記録、整理できるWebアプリ",
   appleWebApp: {
     title: "Stamps.",
+  },
+  other: {
+    google: "notranslate",
   },
 };
 
@@ -27,8 +30,9 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      lang="ja"
+      translate="no"
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased notranslate`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
