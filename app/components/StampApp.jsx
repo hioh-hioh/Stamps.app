@@ -1789,8 +1789,7 @@ const searchGeo = async (q) => {
 
                     {/* サムネイル＋情報 */}
                     <div className="bsheet-top">
-                      <div className="bsheet-thumb" style={{cursor:"pointer"}}
-                        onClick={()=>setPhotoViewer({posts:allPhotoPosts,postIdx:0,imgIdx:0})}>
+                      <div className="bsheet-thumb">
                         {(spotPosts.length>0 && spotPosts[0].photos?.length>0) || window.__publicPhotos?.[selSpot.name]
                           ? <img src={(spotPosts.length>0 && spotPosts[0].photos?.[0]) || window.__publicPhotos?.[selSpot.name]} style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:8}}/>
                           : <div style={{width:"100%",height:"100%",background:"var(--red-bg)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:28}}>🏮</div>
