@@ -1795,7 +1795,7 @@ const searchGeo = async (q) => {
                       <div className="bsheet-info">
                         <h3 style={{paddingRight:24,lineHeight:1.4,wordBreak:"break-all"}}>{selSpot.name}</h3>
                         <div style={{display:"flex",alignItems:"center",gap:8,marginTop:2}}>
-  <span style={{fontSize:12,color:"var(--text2)"}}>観光案内所</span>
+  <span style={{fontSize:12,color:"var(--text2)"}}>{selSpot.category}</span>
   <span style={{fontSize:12,color:"var(--text2)"}}>{selSpot.area}</span>
 </div>
                         <div className="checkin-count" style={{display:"flex",alignItems:"center",gap:4}}>
