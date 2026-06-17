@@ -2367,7 +2367,6 @@ const searchGeo = async (q) => {
                     setSelSpot(spot);
                     setTab("map");
                   }}>
-                    <div className="nearby-icon">📍</div>
                     <div className="nearby-info">
                       <h4>{f.structured_formatting?.main_text || f.description}</h4>
                       <p style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{f.structured_formatting?.secondary_text || f.description}</p>
