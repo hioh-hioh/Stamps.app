@@ -2635,9 +2635,33 @@ const searchGeo = async (q) => {
               </div>
             )}
             {spotSearch.trim() === "" && (
-              <div style={{padding:"32px 16px",textAlign:"center",color:"var(--text3)",fontSize:13}}>
-                {t('searchBySpotOrAddress')}
-              </div>
+              userLocation && dbSpots.length > 0 ? (
+                <>
+                  <div className="nearby-section-label">{t('nearbyLabel')}</div>
+                  {[...dbSpots]
+                    .map(s=>({...s, dist: calcDist(userLocation.lat,userLocation.lng,s.lat,s.lng)}))
+                    .sort((a,b)=>a.dist-b.dist)
+                    .slice(0,10)
+                    .map(s=>(
+                      <div key={s.id} className="spot-list-item" onClick={()=>{
+                        setNewCiOpen(false);
+                        setSpotSearch("");
+                        setGeoResults([]);
+                        openForm(s);
+                      }}>
+                        <div className="spot-list-icon">📍</div>
+                        <div className="spot-list-info">
+                          <h4>{s.name}</h4>
+                          <p style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{catLabel(s.category)}　{s.area}</p>
+                        </div>
+                      </div>
+                    ))}
+                </>
+              ) : (
+                <div style={{padding:"32px 16px",textAlign:"center",color:"var(--text3)",fontSize:13}}>
+                  {t('searchBySpotOrAddress')}
+                </div>
+              )
             )}
           </div>
         </div>
