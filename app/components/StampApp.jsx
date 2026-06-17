@@ -2622,7 +2622,6 @@ const searchGeo = async (q) => {
                 setGeoResults([]);
                 openForm(spot);
               }}>
-                <div className="spot-list-icon">📍</div>
                 <div className="spot-list-info">
                   <h4>{f.structured_formatting?.main_text || f.description}</h4>
                   <p style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{f.structured_formatting?.secondary_text || f.description}</p>
@@ -2649,7 +2648,6 @@ const searchGeo = async (q) => {
                         setGeoResults([]);
                         openForm(s);
                       }}>
-                        <div className="spot-list-icon">📍</div>
                         <div className="spot-list-info">
                           <h4>{s.name}</h4>
                           <p style={{whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{catLabel(s.category)}　{s.area}</p>
