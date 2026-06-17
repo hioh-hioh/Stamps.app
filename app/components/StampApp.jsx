@@ -1968,6 +1968,11 @@ const searchGeo = async (q) => {
         {/* ════ CHECKIN FORM OVERLAY ════ */}
         <div className={`overlay ${overlay==="form"?"open":""}`} style={{overflowY:"auto"}}>
           {selSpot && overlay==="form" && <>
+            <div style={{display:"flex",alignItems:"center",padding:"14px 16px 12px",position:"sticky",top:0,background:"var(--white)",zIndex:10}}>
+              <button className="ov-back" style={{position:"static",background:"none",border:"none",cursor:"pointer",color:"var(--text2)",display:"flex",padding:0}} onClick={closeOv}>
+                <Ic.Back/>
+              </button>
+            </div>
             <div className="ov-maparea">
               <Map
                 mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
@@ -1984,7 +1989,6 @@ const searchGeo = async (q) => {
                   <PinSVG color="var(--red)"/>
                 </div>
               </Map>
-              <button className="ov-back" onClick={closeOv} style={{position:"absolute",top:16,left:16}}>←</button>
             </div>
             <div className="ov-body">
               <div className="ov-name">{selSpot.name}</div>
@@ -2141,7 +2145,7 @@ const searchGeo = async (q) => {
                           }}
                           onClick={()=>setPhotoViewer({posts:[{id:"detail-photos",hasImg:true,photos,color:"#000"}],postIdx:0,imgIdx:detailPhotoIdx||0})}/>
                         {current.limited && (
-                          <div style={{position:"absolute",left:12,bottom:16,display:"flex",alignItems:"center",gap:6}}>
+                          <div style={{position:"absolute",left:12,bottom:12,display:"flex",alignItems:"center",gap:6}}>
                             <span className="limited-badge">LIMITED</span>
                             {current.dateFrom && <span style={{fontSize:12,color:"#fff"}}>{current.dateFrom} → {current.dateTo||"未定"}</span>}
                           </div>
