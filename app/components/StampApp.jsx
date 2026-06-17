@@ -1121,6 +1121,7 @@ export default function App() {
   const [selArc, setSelArc]       = useState(null);
   const [selGroup, setSelGroup]   = useState(null); // {title, items[]}
   const [archives, setArchives]   = useState([]);
+  const [spotCheckins, setSpotCheckins] = useState([]);
   const [catSel, setCatSel]       = useState("All");
   const [searchQ, setSearchQ]     = useState("");
   const [newCiOpen, setNewCiOpen] = useState(false);
@@ -1179,6 +1180,33 @@ useEffect(()=>{
     supabase.from("profiles").select("avatar_url").eq("id", selSpot.created_by).single()
       .then(({data})=> setCreatorAvatar(data?.avatar_url||""));
   },[selSpot?.created_by]);
+
+  useEffect(()=>{
+    if(!selSpot?.id){ setSpotCheckins([]); return; }
+    (async()=>{
+      const { data } = await supabase.from("checkins").select("*").eq("spot_id", String(selSpot.id)).order("created_at",{ascending:false});
+      if(!data){ setSpotCheckins([]); return; }
+      const userIds = [...new Set(data.map(d=>d.user_id).filter(Boolean))];
+      let nameMap = {};
+      if(userIds.length>0){
+        const { data: profiles } = await supabase.from("profiles").select("id,name").in("id", userIds);
+        nameMap = Object.fromEntries((profiles||[]).map(p=>[p.id,p.name]));
+      }
+      setSpotCheckins(data.map(d=>({
+        id: d.id,
+        user: nameMap[d.user_id] || "ゲスト",
+        date: d.created_at ? new Date(d.created_at).toLocaleString("ja-JP",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}).replace(/\//g,"/") : "",
+        note: d.note||"",
+        emoji: d.emoji||"🏮",
+        hasImg: (d.photo_urls||[]).length>0,
+        photos: d.photo_urls||[],
+        color: d.color||"#E1F5EE",
+        limited: d.limited||false,
+        dateFrom: d.date_from||"",
+        dateTo: d.date_to||"",
+      })));
+    })();
+  },[selSpot?.id]);
 
   const loadCheckins = async (userId) => {
     const { data, error } = await supabase
@@ -1740,7 +1768,7 @@ const searchGeo = async (q) => {
             {/* bottom sheet */}
             <div className={`bsheet ${selSpot?"":"hidden"}`}>
               {selSpot && (()=>{
-                const spotPosts = archives.filter(a=>a.spot===selSpot.name && a.hasImg);
+                const spotPosts = spotCheckins.filter(a=>a.hasImg);
                 const allPhotoPosts = [
                   {id:"mock-0", spot:selSpot.name, emoji:"🏮", color:"var(--red-bg)", hasImg:true, note:selSpot.comment, date:""},
                   ...spotPosts
@@ -2084,7 +2112,7 @@ const searchGeo = async (q) => {
         <div className={`overlay ${overlay==="detail"?"open":""}`} style={{overflowY:"auto"}}>
           {selSpot && overlay==="detail" && (()=>{
             // このスポットへのチェックイン一覧
-            const spotPosts = archives.filter(a=>a.spot===selSpot.name);
+            const spotPosts = spotCheckins;
             // モックレビューも投稿カード形式に変換
             const mockPosts = (selSpot.reviews||[]).filter(r=>r.text).map((r,i)=>({
               id:`mock-${i}`, spot:selSpot.name, note:r.text,
