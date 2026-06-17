@@ -1588,6 +1588,7 @@ const searchGeo = async (q) => {
           return (
             <div style={{display:"flex",flexDirection:"column",height:"100%",overflow:"hidden"}}>
               <div style={{flex:1,overflowY:"auto",padding:"8px 16px 120px"}}>
+                <div style={{fontSize:13,fontWeight:700,color:"var(--text)",marginBottom:8}}>Total stamps {dbSpots.length.toLocaleString()}</div>
                 {filtered.length===0 && <div style={{color:"var(--text3)",textAlign:"center",marginTop:40}}>スポットがありません</div>}
                 {filtered.map(s=>{
                   const latestPhoto = archives.find(a=>a.spot===s.name&&a.photos?.length>0)?.photos?.[0] || window.__publicPhotos?.[s.name];
@@ -1680,11 +1681,7 @@ const searchGeo = async (q) => {
                 <CheckCircleSVG active={mapFilter==="checkedin"}/>
                 チェックイン済み
               </button>
-              <button className={`map-filter-btn ${mapFilter==="updated"?"on":""}`}
-                onClick={()=>{setMapFilter("updated");setShowSaved(false);}}>
-                <UpdateSVG active={mapFilter==="updated"}/> 更新あり
-              </button>
-            </div>
+              </div>
             <button onClick={()=>{
                 if(!navigator.geolocation) return;
                 navigator.geolocation.getCurrentPosition(pos=>{
