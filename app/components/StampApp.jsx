@@ -2136,9 +2136,16 @@ const searchGeo = async (q) => {
                   return (
                     <div style={{width:"100%",marginBottom:16,position:"relative"}}>
                       <img src={photos[detailPhotoIdx||0]} style={{width:"100%",maxHeight:280,borderRadius:8,objectFit:"cover",display:"block",cursor:"pointer"}}
+                        onTouchStart={e=>{e.currentTarget._startX=e.touches[0].clientX;}}
+                        onTouchEnd={e=>{
+                          const diff = e.changedTouches[0].clientX - e.currentTarget._startX;
+                          const idx = detailPhotoIdx||0;
+                          if(diff > 50 && idx>0) setDetailPhotoIdx(idx-1);
+                          if(diff < -50 && idx<photos.length-1) setDetailPhotoIdx(idx+1);
+                        }}
                         onClick={()=>setPhotoViewer({posts:[{id:"detail-photos",hasImg:true,photos,color:"#000"}],postIdx:0,imgIdx:detailPhotoIdx||0})}/>
                       {limitedPost && (
-                        <div style={{position:"absolute",left:12,bottom:12,display:"flex",alignItems:"center",gap:6}}>
+                        <div style={{position:"absolute",left:12,bottom:20,display:"flex",alignItems:"center",gap:6}}>
                           <span className="limited-badge">LIMITED</span>
                           {limitedPost.dateFrom && <span style={{fontSize:12,color:"#fff"}}>{limitedPost.dateFrom} → {limitedPost.dateTo||"未定"}</span>}
                         </div>
