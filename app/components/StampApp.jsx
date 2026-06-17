@@ -612,7 +612,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 .spot-post-img:active{opacity:.8}
 .spot-empty{
   padding:24px 16px;text-align:center;
-  color:var(--text3);font-size:13px
+  color:var(--text3);font-size:13px;width:100%
 }
 
 /* Photo viewer overlay */
@@ -1924,7 +1924,9 @@ const searchGeo = async (q) => {
                           {f.id!=="all" && (
                             <div style={{position:"absolute",top:6,right:6}} onClick={e=>e.stopPropagation()}>
                               <button onClick={()=>setFolderMenuOpen(m=>m===f.id?null:f.id)}
-                                style={{background:"rgba(0,0,0,.4)",border:"none",borderRadius:"50%",width:24,height:24,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",color:"#fff",fontSize:16,lineHeight:1}}>⋯</button>
+                                style={{background:"rgba(0,0,0,.4)",border:"none",borderRadius:"50%",width:24,height:24,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",color:"#fff",padding:0}}>
+                                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><circle cx="3" cy="8" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="13" cy="8" r="1.5"/></svg>
+                              </button>
                               {folderMenuOpen===f.id && (
                                 <div style={{position:"absolute",top:28,right:0,background:"#fff",borderRadius:8,boxShadow:"0 2px 8px rgba(0,0,0,.2)",overflow:"hidden",zIndex:5}}>
                                   <button onClick={async()=>{
