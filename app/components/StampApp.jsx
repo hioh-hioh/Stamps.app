@@ -656,7 +656,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 .profile-hd{padding:28px 16px 0}
 .prof-row{display:flex;align-items:center;gap:15px;align-self:stretch}
 .avatar{
-  width:72px;height:72px;border-radius:50%;
+  width:56px;height:56px;border-radius:50%;
   background:var(--gray-100);border:1px solid var(--border);
   display:flex;align-items:center;justify-content:center;
   color:var(--text3);flex-shrink:0
@@ -2043,7 +2043,7 @@ const searchGeo = async (q) => {
                 </button>
               </div>
             <div className="profile-hd">
-              <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:15}}>
+              <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",gap:15}}>
                 <div style={{flex:1,minWidth:0}}>
                   <div className="prof-name">{profile.name}</div>
                   <div className="prof-bio">{profile.bio}</div>
