@@ -20,31 +20,148 @@ function fmtDist(km){
   return km<1 ? `${Math.round(km*1000)}m` : `${km.toFixed(1)}km`;
 }
 const CATEGORY_LABELS = {
-  tourist_information_center:"観光案内所", point_of_interest:"観光スポット", establishment:"施設",
-  premise:"施設", subpremise:"施設", store:"店舗", shopping_mall:"商業施設", department_store:"百貨店",
-  supermarket:"スーパー", convenience_store:"コンビニ", clothing_store:"衣料品店", book_store:"書店",
-  restaurant:"レストラン", cafe:"カフェ", bakery:"パン屋", bar:"バー", food:"飲食店",
-  museum:"博物館", art_gallery:"ギャラリー", library:"図書館", park:"公園", zoo:"動物園", aquarium:"水族館",
-  amusement_park:"遊園地", tourist_attraction:"観光地", place_of_worship:"寺社・教会", shrine:"神社", temple:"寺",
-  church:"教会", hindu_temple:"寺院", mosque:"モスク",
-  train_station:"駅", transit_station:"駅", subway_station:"駅", bus_station:"バス停", light_rail_station:"駅",
-  airport:"空港", parking:"駐車場",
-  city_hall:"市役所", local_government_office:"行政施設", post_office:"郵便局", police:"警察署", fire_station:"消防署",
-  hospital:"病院", pharmacy:"薬局", doctor:"医療機関",
-  lodging:"宿泊施設", hotel:"ホテル", campground:"キャンプ場",
-  stadium:"スタジアム", gym:"スポーツ施設", spa:"スパ", beauty_salon:"美容室",
-  school:"学校", university:"大学",
-  bank:"銀行", atm:"ATM",
-  natural_feature:"自然・景観", landmark:"ランドマーク",
+  ja: {
+    tourist_information_center:"観光案内所", point_of_interest:"観光スポット", establishment:"施設",
+    premise:"施設", subpremise:"施設", store:"店舗", shopping_mall:"商業施設", department_store:"百貨店",
+    supermarket:"スーパー", convenience_store:"コンビニ", clothing_store:"衣料品店", book_store:"書店",
+    restaurant:"レストラン", cafe:"カフェ", bakery:"パン屋", bar:"バー", food:"飲食店",
+    museum:"博物館", art_gallery:"ギャラリー", library:"図書館", park:"公園", zoo:"動物園", aquarium:"水族館",
+    amusement_park:"遊園地", tourist_attraction:"観光地", place_of_worship:"寺社・教会", shrine:"神社", temple:"寺",
+    church:"教会", hindu_temple:"寺院", mosque:"モスク",
+    train_station:"駅", transit_station:"駅", subway_station:"駅", bus_station:"バス停", light_rail_station:"駅",
+    airport:"空港", parking:"駐車場",
+    city_hall:"市役所", local_government_office:"行政施設", post_office:"郵便局", police:"警察署", fire_station:"消防署",
+    hospital:"病院", pharmacy:"薬局", doctor:"医療機関",
+    lodging:"宿泊施設", hotel:"ホテル", campground:"キャンプ場",
+    stadium:"スタジアム", gym:"スポーツ施設", spa:"スパ", beauty_salon:"美容室",
+    school:"学校", university:"大学",
+    bank:"銀行", atm:"ATM",
+    natural_feature:"自然・景観", landmark:"ランドマーク",
+    place:"場所",
+  },
+  en: {
+    tourist_information_center:"Tourist Information", point_of_interest:"Point of Interest", establishment:"Establishment",
+    premise:"Facility", subpremise:"Facility", store:"Store", shopping_mall:"Shopping Mall", department_store:"Department Store",
+    supermarket:"Supermarket", convenience_store:"Convenience Store", clothing_store:"Clothing Store", book_store:"Bookstore",
+    restaurant:"Restaurant", cafe:"Cafe", bakery:"Bakery", bar:"Bar", food:"Restaurant",
+    museum:"Museum", art_gallery:"Art Gallery", library:"Library", park:"Park", zoo:"Zoo", aquarium:"Aquarium",
+    amusement_park:"Amusement Park", tourist_attraction:"Tourist Attraction", place_of_worship:"Place of Worship", shrine:"Shrine", temple:"Temple",
+    church:"Church", hindu_temple:"Hindu Temple", mosque:"Mosque",
+    train_station:"Station", transit_station:"Station", subway_station:"Station", bus_station:"Bus Stop", light_rail_station:"Station",
+    airport:"Airport", parking:"Parking",
+    city_hall:"City Hall", local_government_office:"Government Office", post_office:"Post Office", police:"Police Station", fire_station:"Fire Station",
+    hospital:"Hospital", pharmacy:"Pharmacy", doctor:"Medical Clinic",
+    lodging:"Lodging", hotel:"Hotel", campground:"Campground",
+    stadium:"Stadium", gym:"Sports Facility", spa:"Spa", beauty_salon:"Beauty Salon",
+    school:"School", university:"University",
+    bank:"Bank", atm:"ATM",
+    natural_feature:"Natural Feature", landmark:"Landmark",
+    place:"Place",
+  },
+  zh: {
+    tourist_information_center:"旅游咨询处", point_of_interest:"景点", establishment:"设施",
+    premise:"设施", subpremise:"设施", store:"商店", shopping_mall:"购物中心", department_store:"百货商店",
+    supermarket:"超市", convenience_store:"便利店", clothing_store:"服装店", book_store:"书店",
+    restaurant:"餐厅", cafe:"咖啡馆", bakery:"面包店", bar:"酒吧", food:"餐厅",
+    museum:"博物馆", art_gallery:"美术馆", library:"图书馆", park:"公园", zoo:"动物园", aquarium:"水族馆",
+    amusement_park:"游乐园", tourist_attraction:"旅游景点", place_of_worship:"寺社・教堂", shrine:"神社", temple:"寺庙",
+    church:"教堂", hindu_temple:"印度教寺庙", mosque:"清真寺",
+    train_station:"车站", transit_station:"车站", subway_station:"车站", bus_station:"公交车站", light_rail_station:"车站",
+    airport:"机场", parking:"停车场",
+    city_hall:"市政厅", local_government_office:"行政机构", post_office:"邮局", police:"警察局", fire_station:"消防局",
+    hospital:"医院", pharmacy:"药店", doctor:"诊所",
+    lodging:"住宿设施", hotel:"酒店", campground:"露营地",
+    stadium:"体育场", gym:"运动设施", spa:"水疗中心", beauty_salon:"美容院",
+    school:"学校", university:"大学",
+    bank:"银行", atm:"ATM",
+    natural_feature:"自然景观", landmark:"地标",
+    place:"地点",
+  },
 };
-function catLabel(cat){
-  if(!cat) return "";
-  return CATEGORY_LABELS[cat] || cat;
-}
 
 // heightsパターン (左列・右列でずらす)
 const LEFT_HEIGHTS  = [196, 160, 210, 150, 180, 200, 155, 175, 205, 165];
 const RIGHT_HEIGHTS = [150, 200, 155, 195, 165, 145, 210, 160, 180, 190];
+
+// 多言語UI辞書（ユーザー入力データは対象外。日本語がデフォルト/フォールバック）
+const T = {
+  guestUser:            { ja:"ゲスト", en:"Guest", zh:"游客" },
+  loginRequired:        { ja:"ログインが必要です", en:"Please log in", zh:"请先登录" },
+  saveFailed:            { ja:"保存に失敗しました", en:"Failed to save", zh:"保存失败" },
+  checkinComplete:      { ja:"チェックイン完了！", en:"Checked in!", zh:"打卡完成！" },
+  noCheckinRecords:      { ja:"チェックインの記録がありません", en:"No check-in records yet", zh:"暂无打卡记录" },
+  confirmDeleteCheckin:  { ja:"削除しますか？", en:"Delete this?", zh:"要删除吗？" },
+  noSpots:              { ja:"スポットがありません", en:"No spots", zh:"没有地点" },
+  searchStampPlaceholder:{ ja:"Search Stamp / スタンプ検索", en:"Search Stamp", zh:"搜索印章" },
+  filterAll:             { ja:"すべて", en:"All", zh:"全部" },
+  filterSaved:          { ja:"保存済み", en:"Saved", zh:"已保存" },
+  filterCheckedIn:      { ja:"チェックイン済み", en:"Checked in", zh:"已打卡" },
+  checkinBtn:            { ja:"チェックイン", en:"Check in", zh:"打卡" },
+  detailBtn:            { ja:"詳細", en:"Details", zh:"详情" },
+  saveAction:            { ja:"保存する", en:"Save", zh:"保存" },
+  savedSpotsHeader:      { ja:"保存済みスポット", en:"Saved Spots", zh:"已保存地点" },
+  savedEmptyLine1:      { ja:"保存したスポットがここに表示されます", en:"Spots you save will appear here", zh:"已保存的地点会显示在这里" },
+  savedEmptyLine2:      { ja:"ピンを選択してブックマークしましょう", en:"Tap a pin to bookmark it", zh:"点击图钉即可收藏" },
+  myPageTitle:          { ja:"マイページ", en:"My Page", zh:"我的页面" },
+  loginDescription:      { ja:"Googleアカウントでログインすると、チェックイン記録やフォルダを管理できます。", en:"Log in with your Google account to manage your check-ins and folders.", zh:"使用Google账号登录后即可管理打卡记录和文件夹。" },
+  loginWithGoogle:      { ja:"Googleでログイン", en:"Log in with Google", zh:"使用Google登录" },
+  logout:                { ja:"ログアウト", en:"Log out", zh:"退出登录" },
+  confirmDeleteFolder:  { ja:"このフォルダを削除しますか？", en:"Delete this folder?", zh:"要删除这个文件夹吗？" },
+  folderDeleted:        { ja:"フォルダを削除しました", en:"Folder deleted", zh:"文件夹已删除" },
+  delete:                { ja:"削除", en:"Delete", zh:"删除" },
+  latestInfoPlaceholder:{ ja:"最新情報", en:"Latest update", zh:"最新动态" },
+  firstCheckinMessage:  { ja:"初めてのチェックインスポットです！スポット情報を登録しましょう🎉", en:"This is your first check-in here! Let's add some spot info 🎉", zh:"这是你在这里的第一次打卡！来登记一下地点信息吧🎉" },
+  hoursLabel:            { ja:"営業時間", en:"Hours", zh:"营业时间" },
+  hoursPlaceholder:      { ja:"例：10:00-20:00 / 終日", en:"e.g. 10:00-20:00 / All day", zh:"例如：10:00-20:00 / 全天" },
+  stampLocationLabel:    { ja:"スタンプ設置場所", en:"Stamp location", zh:"印章放置位置" },
+  stampLocationPlaceholder:{ ja:"例：入口入って左側", en:"e.g. Left side after entrance", zh:"例如：入口进去左侧" },
+  limitedTimeLabel:      { ja:"期間限定", en:"Limited time", zh:"限定期间" },
+  visibilityLabel:      { ja:"公開範囲", en:"Visibility", zh:"公开范围" },
+  makePublic:            { ja:"公開する", en:"Public", zh:"公开" },
+  onlyMe:                { ja:"自分だけ", en:"Only me", zh:"仅自己" },
+  spotInfoUpdated:      { ja:"スポット情報を更新しました", en:"Spot info updated", zh:"地点信息已更新" },
+  submitting:            { ja:"送信中...", en:"Submitting...", zh:"提交中..." },
+  createdOn:            { ja:"{date}に作成", en:"Created {date}", zh:"创建于{date}" },
+  checkinRecordsTitle:  { ja:"チェックイン記録", en:"Check-in Record", zh:"打卡记录" },
+  confirmDeleteCheckinRecord:{ ja:"このチェックインを削除しますか？", en:"Delete this check-in?", zh:"要删除这次打卡吗？" },
+  deletedToast:          { ja:"削除しました", en:"Deleted", zh:"已删除" },
+  tbd:                  { ja:"未定", en:"TBD", zh:"待定" },
+  backToMap:            { ja:"マップに戻る", en:"Back to map", zh:"返回地图" },
+  searchPlaceholderStation:{ ja:"場所を検索（例：東京駅）", en:"Search a place (e.g. Tokyo Station)", zh:"搜索地点（例如：东京站）" },
+  searching:            { ja:"検索中...", en:"Searching...", zh:"搜索中..." },
+  notFound:              { ja:"見つかりませんでした", en:"No results found", zh:"未找到结果" },
+  gettingLocation:      { ja:"📍 現在地を取得中...", en:"📍 Getting your location...", zh:"📍 正在获取当前位置..." },
+  nearbyLabel:          { ja:"📍 近く（1km以内）", en:"📍 Nearby (within 1km)", zh:"📍 附近（1公里内）" },
+  otherSpots:            { ja:"その他のスポット", en:"Other spots", zh:"其他地点" },
+  allSpots:              { ja:"すべてのスポット", en:"All spots", zh:"全部地点" },
+  selectSpotTitle:      { ja:"スポットを選択", en:"Select a spot", zh:"选择地点" },
+  searchPlaceholderTower:{ ja:"場所を検索（例：東京タワー）", en:"Search a place (e.g. Tokyo Tower)", zh:"搜索地点（例如：东京塔）" },
+  searchBySpotOrAddress:{ ja:"スポット名や住所で検索してください", en:"Search by spot name or address", zh:"请输入地点名称或地址进行搜索" },
+  editProfileTitle:      { ja:"プロフィール編集", en:"Edit Profile", zh:"编辑资料" },
+  profileSaved:          { ja:"保存しました", en:"Saved", zh:"已保存" },
+  saveBtn:              { ja:"保存", en:"Save", zh:"保存" },
+  changePhoto:          { ja:"写真を変更", en:"Change photo", zh:"更换照片" },
+  namePlaceholder:      { ja:"名前を入力", en:"Enter your name", zh:"请输入姓名" },
+  bioPlaceholder:        { ja:"自己紹介を入力", en:"Write a short bio", zh:"请输入个人简介" },
+  edit:                  { ja:"編集", en:"Edit", zh:"编辑" },
+  selectFolderTitle:    { ja:"フォルダを選択", en:"Select a folder", zh:"选择文件夹" },
+  noFolders:            { ja:"フォルダがありません", en:"No folders yet", zh:"暂无文件夹" },
+  addedToFolder:        { ja:"「{name}」に追加しました", en:"Added to \"{name}\"", zh:"已添加到「{name}」" },
+  createNewFolder:      { ja:"＋ 新しいフォルダを作成", en:"+ Create new folder", zh:"＋ 创建新文件夹" },
+  editFolderTitle:      { ja:"フォルダを編集", en:"Edit folder", zh:"编辑文件夹" },
+  newFolderTitle:        { ja:"新しいフォルダを作成", en:"Create new folder", zh:"创建新文件夹" },
+  folderNamePlaceholder:{ ja:"フォルダ名を入力...", en:"Enter folder name...", zh:"请输入文件夹名称..." },
+  selectCheckinsForFolder:{ ja:"チェックインを選択してフォルダに追加", en:"Select check-ins to add to this folder", zh:"选择要添加到文件夹的打卡记录" },
+  cancel:                { ja:"キャンセル", en:"Cancel", zh:"取消" },
+  createAction:          { ja:"作成する", en:"Create", zh:"创建" },
+  viewMore:              { ja:"もっと見る（{count}件）", en:"View more ({count})", zh:"查看更多（{count}）" },
+  close:                { ja:"閉じる", en:"Close", zh:"收起" },
+  postsLabel:            { ja:"投稿", en:"Posts", zh:"帖子" },
+  noPostsYet:            { ja:"まだ投稿がありません", en:"No posts yet", zh:"暂无帖子" },
+  startCheckinPrompt:    { ja:"最初にチェックインしてみましょう！", en:"Be the first to check in!", zh:"快来抢先打卡吧！" },
+  checkinHere:          { ja:"チェックインする", en:"Check in", zh:"去打卡" },
+  editSpotInfo:          { ja:"スポット情報を修正する", en:"Edit spot info", zh:"修改地点信息" },
+};
 
 const MOCK_FEED = [
   { id:101, name:"Shibuya Chikamichi Info",     nameJa:"渋谷ちかみち総合インフォメーション", hasImg:true,  emoji:"🏮", color:"#E1F5EE", category:"観光" },
@@ -1177,6 +1294,22 @@ const [creatorAvatar, setCreatorAvatar] = useState("");
   const [showFolderPicker, setShowFolderPicker] = useState(false);
   const [toast, setToast]         = useState({msg:"",type:""});
   const [toastOn, setToastOn]     = useState(false);
+  // ブラウザの言語設定から表示言語を自動判定（ja/en/zh。それ以外はja）
+  const [lang] = useState(()=>{
+    const bl = (typeof navigator!=="undefined" ? navigator.language||navigator.userLanguage||"" : "").toLowerCase();
+    if(bl.startsWith("en")) return "en";
+    if(bl.startsWith("zh")) return "zh";
+    return "ja";
+  });
+  const t = (key, vars) => {
+    let s = T[key]?.[lang] ?? T[key]?.ja ?? key;
+    if(vars) Object.entries(vars).forEach(([k,v])=>{ s = s.replace(`{${k}}`, v); });
+    return s;
+  };
+  const catLabel = (cat) => {
+    if(!cat) return "";
+    return CATEGORY_LABELS[lang]?.[cat] || CATEGORY_LABELS.ja[cat] || cat;
+  };
 useEffect(()=>{
     supabase.auth.getSession().then(({data:{session}})=>{
       setUser(session?.user ?? null);
@@ -1216,7 +1349,7 @@ useEffect(()=>{
       }
       setSpotCheckins(data.map(d=>({
         id: d.id,
-        user: nameMap[d.user_id] || "ゲスト",
+        user: nameMap[d.user_id] || t('guestUser'),
         date: d.created_at ? new Date(d.created_at).toLocaleString("ja-JP",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}).replace(/\//g,"/") : "",
         note: d.note||"",
         emoji: d.emoji||"🏮",
@@ -1240,7 +1373,7 @@ useEffect(()=>{
     setArchives(data.map(d=>({
       id: d.id,
       spot: d.spot_name,
-      sub: `${d.category||""}　${d.area||""}`,
+      sub: `${catLabel(d.category)}　${d.area||""}`,
       date: d.created_at ? new Date(d.created_at).toLocaleString("ja-JP",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}).replace(/\//g,"/") : "",
       note: d.note||"",
       emoji: d.emoji||"🏮",
@@ -1353,7 +1486,7 @@ const searchGeo = async (q) => {
   const submit = async () => {
     if(submitting) return;
     setSubmitting(true);
-    if(!user){ showToast("ログインが必要です"); return; }
+    if(!user){ showToast(t('loginRequired')); return; }
 
     // 写真をSupabase Storageにアップロード
     const photoUrls = [];
@@ -1425,7 +1558,7 @@ const searchGeo = async (q) => {
       setCheckins(c=>c+1);
     }
     setOverlay(null); setSelSpot(null); setCiPhotos([]);
-    showToast(error?"保存に失敗しました":"チェックイン完了！", error?"":"ok");
+    showToast(error?t('saveFailed'):t('checkinComplete'), error?"":"ok");
     if(!error && selSpot?.lat && selSpot?.lng){
       setTab("map");
       setTimeout(()=>{ if(window.__mapboxFlyTo) window.__mapboxFlyTo(selSpot.lng, selSpot.lat); }, 100);
@@ -1512,7 +1645,7 @@ const searchGeo = async (q) => {
 
               if(filtered.length===0) return (
                 <div style={{padding:"48px 24px",textAlign:"center",color:"var(--text3)",fontSize:14}}>
-                  チェックインの記録がありません
+                  {t('noCheckinRecords')}
                 </div>
               );
 
@@ -1550,7 +1683,7 @@ const searchGeo = async (q) => {
                                 {item.id && !String(item.id).startsWith("mock") && (
                                   <button onClick={async(e)=>{
                                     e.stopPropagation();
-                                    if(!confirm("削除しますか？")) return;
+                                    if(!confirm(t('confirmDeleteCheckin'))) return;
                                     const {supabase} = await import("../../lib/supabase");
                                     await supabase.from("checkins").delete().eq("id", item.id);
                                     setArchives(a=>a.filter(x=>x.id!==item.id));
@@ -1611,7 +1744,7 @@ const searchGeo = async (q) => {
             <div style={{display:"flex",flexDirection:"column",height:"100%",overflow:"hidden"}}>
               <div style={{flex:1,overflowY:"auto",padding:"8px 16px 120px"}}>
                 <div style={{fontSize:13,fontWeight:700,color:"var(--text)",marginTop:12,marginBottom:8}}>{dbSpots.length.toLocaleString()} Stamps.</div>
-                {filtered.length===0 && <div style={{color:"var(--text3)",textAlign:"center",marginTop:40}}>スポットがありません</div>}
+                {filtered.length===0 && <div style={{color:"var(--text3)",textAlign:"center",marginTop:40}}>{t('noSpots')}</div>}
                 {filtered.map(s=>{
                   const latestPhoto = archives.find(a=>a.spot===s.name&&a.photos?.length>0)?.photos?.[0] || window.__publicPhotos?.[s.name];
                   return (
@@ -1683,7 +1816,7 @@ const searchGeo = async (q) => {
                 } else { setUserLocation({lat:35.6580,lng:139.7016}); setLocLoading(false); }
               }}>
               <Ic.Search/>
-              <input placeholder="Search Stamp / スタンプ検索" readOnly style={{cursor:"pointer"}}/>
+              <input placeholder={t('searchStampPlaceholder')} readOnly style={{cursor:"pointer"}}/>
             </div>
 
             
@@ -1692,16 +1825,16 @@ const searchGeo = async (q) => {
             <div className="map-filter-bar">
               <button className={`map-filter-btn ${mapFilter==="all"?"on":""}`}
                 onClick={()=>{setMapFilter("all");setShowSaved(false);}}>
-                すべて
+                {t('filterAll')}
               </button>
               <button className={`map-filter-btn ${mapFilter==="saved"?"on":""}`}
                 onClick={()=>{setMapFilter("saved");setShowSaved(true);}}>
-                <BookmarkSVG active={mapFilter==="saved"} size={14}/> 保存済み{savedSpots.length>0?` (${savedSpots.length})`:""}
+                <BookmarkSVG active={mapFilter==="saved"} size={14}/> {t('filterSaved')}{savedSpots.length>0?` (${savedSpots.length})`:""}
               </button>
               <button className={`map-filter-btn ${mapFilter==="checkedin"?"on":""}`}
                 onClick={()=>{setMapFilter("checkedin");setShowSaved(false);}}>
                 <CheckCircleSVG active={mapFilter==="checkedin"}/>
-                チェックイン済み
+                {t('filterCheckedIn')}
               </button>
               </div>
             <button onClick={()=>{
@@ -1817,7 +1950,7 @@ const searchGeo = async (q) => {
                       <div className="bsheet-info">
                         <h3 style={{paddingRight:24,lineHeight:1.4,wordBreak:"break-all"}}>{selSpot.name}</h3>
                         <div style={{display:"flex",alignItems:"center",gap:8,marginTop:2}}>
-  <span style={{fontSize:12,color:"var(--text2)"}}>{selSpot.category}</span>
+  <span style={{fontSize:12,color:"var(--text2)"}}>{catLabel(selSpot.category)}</span>
   <span style={{fontSize:12,color:"var(--text2)"}}>{selSpot.area}</span>
 </div>
                         <div className="checkin-count" style={{display:"flex",alignItems:"center",gap:4}}>
@@ -1831,10 +1964,10 @@ const searchGeo = async (q) => {
                         )}
                         <p className="sheet-comment">{selSpot.comment}</p>
                         <div style={{display:"flex",gap:8,marginTop:10,alignItems:"center"}}>
-                          <button style={{padding:"4px 14px 6px",background:"var(--red)",color:"#fff",border:"none",borderRadius:8,fontSize:13,cursor:"pointer",fontFamily:"inherit",fontWeight:500}} onClick={()=>openForm(selSpot)}>チェックイン</button>
-                          <button style={{padding:"4px 14px 6px",background:"none",color:"var(--red)",border:"1.5px solid var(--red)",borderRadius:8,fontSize:13,cursor:"pointer",fontFamily:"inherit"}} onClick={()=>openDetail(selSpot)}>詳細</button>
+                          <button style={{padding:"4px 14px 6px",background:"var(--red)",color:"#fff",border:"none",borderRadius:8,fontSize:13,cursor:"pointer",fontFamily:"inherit",fontWeight:500}} onClick={()=>openForm(selSpot)}>{t('checkinBtn')}</button>
+                          <button style={{padding:"4px 14px 6px",background:"none",color:"var(--red)",border:"1.5px solid var(--red)",borderRadius:8,fontSize:13,cursor:"pointer",fontFamily:"inherit"}} onClick={()=>openDetail(selSpot)}>{t('detailBtn')}</button>
                           {/* 保存ボタン */}
-                          <button className="bookmark-btn" onClick={()=>toggleSave(selSpot)} title={isSaved(selSpot)?"保存済み":"保存する"}>
+                          <button className="bookmark-btn" onClick={()=>toggleSave(selSpot)} title={isSaved(selSpot)?t('filterSaved'):t('saveAction')}>
                             <svg width="20" height="20" viewBox="0 0 24 24"
                               fill={isSaved(selSpot)?"#616168":"none"}
                               stroke={isSaved(selSpot)?"#616168":"var(--text3)"}
@@ -1852,11 +1985,11 @@ const searchGeo = async (q) => {
             {/* Saved spots panel */}
             <div className={`saved-panel ${showSaved&&mapFilter==="saved"?"":"hidden"}`}>
               <div className="saved-panel-hd">
-                <h3>🔖 保存済みスポット ({savedSpots.length})</h3>
+                <h3>🔖 {t('savedSpotsHeader')} ({savedSpots.length})</h3>
                 <button className="saved-panel-close" onClick={()=>{setShowSaved(false);setMapFilter("all");}}>×</button>
               </div>
               {savedSpots.length===0
-                ? <div className="saved-empty">保存したスポットがここに表示されます<br/><span style={{fontSize:11,marginTop:4,display:"block"}}>ピンを選択してブックマークしましょう</span></div>
+                ? <div className="saved-empty">{t('savedEmptyLine1')}<br/><span style={{fontSize:11,marginTop:4,display:"block"}}>{t('savedEmptyLine2')}</span></div>
                 : savedSpots.map(s=>(
                   <div key={s.id} className="saved-item" onClick={()=>{setSelSpot(s);setShowSaved(false);}}>
                     <div className="saved-item-icon">🏮</div>
@@ -1880,11 +2013,11 @@ const searchGeo = async (q) => {
             {!user ? (
               <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",height:"70vh",gap:16,padding:"0 32px",textAlign:"center"}}>
                 <div style={{fontSize:48}}>👤</div>
-                <div style={{fontSize:18,fontWeight:700,color:"var(--text)"}}>マイページ</div>
-                <div style={{fontSize:14,color:"var(--text3)",lineHeight:1.6}}>Googleアカウントでログインすると、チェックイン記録やフォルダを管理できます。</div>
+                <div style={{fontSize:18,fontWeight:700,color:"var(--text)"}}>{t('myPageTitle')}</div>
+                <div style={{fontSize:14,color:"var(--text3)",lineHeight:1.6}}>{t('loginDescription')}</div>
                 <button onClick={()=>supabase.auth.signInWithOAuth({provider:"google",options:{redirectTo:window.location.origin}})}
                   style={{marginTop:8,padding:"12px 24px",background:"var(--red)",color:"#fff",border:"none",borderRadius:12,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>
-                  Googleでログイン
+                  {t('loginWithGoogle')}
                 </button>
               </div>
             ) : (
@@ -1892,7 +2025,7 @@ const searchGeo = async (q) => {
               <div style={{padding:"8px 16px 0",textAlign:"right"}}>
                 <button onClick={()=>supabase.auth.signOut()}
                   style={{background:"none",border:"none",color:"var(--text3)",fontSize:12,cursor:"pointer",fontFamily:"inherit"}}>
-                  ログアウト
+                  {t('logout')}
                 </button>
               </div>
             <div className="profile-hd">
@@ -1919,7 +2052,7 @@ const searchGeo = async (q) => {
             {/* フォルダ一覧 */}
             {(()=>{
               const allFolders = [
-                { id:"all", title:"All", items: archives },
+                { id:"all", title:t('filterAll'), items: archives },
                 ...folders.map(f=>({
                   id: f.id,
                   title: f.title,
@@ -1949,12 +2082,12 @@ const searchGeo = async (q) => {
                               {folderMenuOpen===f.id && (
                                 <div style={{position:"absolute",top:28,right:0,background:"#fff",borderRadius:8,boxShadow:"0 2px 8px rgba(0,0,0,.2)",overflow:"hidden",zIndex:5}}>
                                   <button onClick={async()=>{
-                                    if(!confirm("このフォルダを削除しますか？")) return;
+                                    if(!confirm(t('confirmDeleteFolder'))) return;
                                     await supabase.from("folders").delete().eq("id", f.id);
                                     setFolders(fs=>fs.filter(fo=>fo.id!==f.id));
                                     setFolderMenuOpen(null);
-                                    showToast("フォルダを削除しました");
-                                  }} style={{background:"none",border:"none",padding:"10px 16px",color:"var(--red)",fontSize:13,cursor:"pointer",whiteSpace:"nowrap",fontFamily:"inherit"}}>削除</button>
+                                    showToast(t('folderDeleted'));
+                                  }} style={{background:"none",border:"none",padding:"10px 16px",color:"var(--red)",fontSize:13,cursor:"pointer",whiteSpace:"nowrap",fontFamily:"inherit"}}>{t('delete')}</button>
                                 </div>
                               )}
                             </div>
@@ -2016,7 +2149,7 @@ const searchGeo = async (q) => {
               <div className="ov-sub">{catLabel(selSpot.category)}　{selSpot.area}</div>
               {!(showSpotEdit && isCheckedIn(selSpot)) && (
               <div className="input-card">
-                <textarea placeholder="最新情報" value={ciText} onChange={e=>setCiText(e.target.value)}/>
+                <textarea placeholder={t('latestInfoPlaceholder')} value={ciText} onChange={e=>setCiText(e.target.value)}/>
                 {ciPhotos.length > 0 && (
                   <div className="prev-wrap" style={{display:"flex",gap:8,flexWrap:"wrap"}}>
                     {ciPhotos.map((p,i)=>(
@@ -2057,24 +2190,24 @@ const searchGeo = async (q) => {
                 <div style={{width:"100%",boxSizing:"border-box"}}>
                   {!isCheckedIn(selSpot) && (
                     <div style={{fontSize:13,color:"var(--red)",fontWeight:700,marginBottom:12,textAlign:"left"}}>
-                      初めてのチェックインスポットです！スポット情報を登録しましょう🎉
+                      {t('firstCheckinMessage')}
                     </div>
                   )}
                   <div style={{marginBottom:12}}>
-                    <label style={{fontSize:12,color:"var(--text3)",fontWeight:500,display:"block",marginBottom:4}}>営業時間</label>
-                    <input className="modal-input" placeholder="例：10:00-20:00 / 終日"
+                    <label style={{fontSize:12,color:"var(--text3)",fontWeight:500,display:"block",marginBottom:4}}>{t('hoursLabel')}</label>
+                    <input className="modal-input" placeholder={t('hoursPlaceholder')}
                       value={ciHours} onChange={e=>setCiHours(e.target.value)} style={{margin:0,width:"100%",boxSizing:"border-box",background:"#fff"}}/>
                   </div>
                   <div style={{marginBottom:4}}>
-                    <label style={{fontSize:12,color:"var(--text3)",fontWeight:500,display:"block",marginBottom:4}}>スタンプ設置場所</label>
-                    <input className="modal-input" placeholder="例：入口入って左側"
+                    <label style={{fontSize:12,color:"var(--text3)",fontWeight:500,display:"block",marginBottom:4}}>{t('stampLocationLabel')}</label>
+                    <input className="modal-input" placeholder={t('stampLocationPlaceholder')}
                       value={ciLocation} onChange={e=>setCiLocation(e.target.value)} style={{margin:0,width:"100%",boxSizing:"border-box",background:"#fff"}}/>
                   </div>
                 </div>
               )}
               {/* 期間限定設定 */}
               {!(showSpotEdit && isCheckedIn(selSpot)) && <div className="vis-row" style={{marginBottom:"-8px"}}>
-                <label>期間限定</label>
+                <label>{t('limitedTimeLabel')}</label>
                 <div className="vis-tog">
                   <button className={`vtbtn ${ciLimited?"on":""}`} onClick={()=>setCiLimited(true)}>ON</button>
                   <button className={`vtbtn ${!ciLimited?"on":""}`} onClick={()=>setCiLimited(false)}>OFF</button>
@@ -2097,10 +2230,10 @@ const searchGeo = async (q) => {
               )}
               </div>
               {!(showSpotEdit && isCheckedIn(selSpot)) && <div className="vis-row" style={{paddingLeft:16,paddingRight:16,width:"100%",boxSizing:"border-box",marginTop:"-4px"}}>
-                <label>公開範囲</label>
+                <label>{t('visibilityLabel')}</label>
                 <div className="vis-tog">
-                  <button className={`vtbtn ${ciVis==="public"?"on":""}`} onClick={()=>setCiVis("public")}>公開する</button>
-                  <button className={`vtbtn ${ciVis==="private"?"on":""}`} onClick={()=>setCiVis("private")}>自分だけ</button>
+                  <button className={`vtbtn ${ciVis==="public"?"on":""}`} onClick={()=>setCiVis("public")}>{t('makePublic')}</button>
+                  <button className={`vtbtn ${ciVis==="private"?"on":""}`} onClick={()=>setCiVis("private")}>{t('onlyMe')}</button>
                 </div>
               </div>}
               {showSpotEdit && isCheckedIn(selSpot) ? (
@@ -2115,12 +2248,12 @@ const searchGeo = async (q) => {
                     setSelSpot(s=>s?{...s,hours:ciHours||s.hours,location:ciLocation||s.location}:s);
                   }
                   setOverlay("detail");
-                  showToast("スポット情報を更新しました","ok");
+                  showToast(t('spotInfoUpdated'),"ok");
                 }} style={{marginTop:40,marginBottom:120,marginLeft:16,marginRight:16,width:"calc(100% - 32px)"}}>
-                  保存する
+                  {t('saveAction')}
                 </button>
               ) : (
-                <button className="submit-btn" onClick={submit} disabled={submitting} style={{marginTop:40,marginBottom:120,marginLeft:16,marginRight:16,width:"calc(100% - 32px)",opacity:submitting?0.5:1}}>{submitting?"送信中...":"チェックイン"}</button>
+                <button className="submit-btn" onClick={submit} disabled={submitting} style={{marginTop:40,marginBottom:120,marginLeft:16,marginRight:16,width:"calc(100% - 32px)",opacity:submitting?0.5:1}}>{submitting?t('submitting'):t('checkinBtn')}</button>
               )}
           </>}
         </div>
@@ -2167,7 +2300,7 @@ const searchGeo = async (q) => {
                         {current.limited && (
                           <div style={{position:"absolute",left:12,bottom:12,display:"flex",alignItems:"center",gap:6}}>
                             <span className="limited-badge">LIMITED</span>
-                            {current.dateFrom && <span style={{fontSize:12,color:"#fff"}}>{current.dateFrom} → {current.dateTo||"未定"}</span>}
+                            {current.dateFrom && <span style={{fontSize:12,color:"#fff"}}>{current.dateFrom} → {current.dateTo||t('tbd')}</span>}
                           </div>
                         )}
                       </div>
@@ -2198,10 +2331,10 @@ const searchGeo = async (q) => {
                 {/* 投稿一覧 */}
                 <div className="spot-posts" style={{display:"flex",flexDirection:"column",alignItems:"flex-start",gap:12,alignSelf:"stretch"}}>
                   <div style={{fontSize:13,fontWeight:700,color:"var(--text)",marginBottom:4,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                    <span>投稿 ({allPosts.length})</span>
+                    <span>{t('postsLabel')} ({allPosts.length})</span>
                   </div>
                   {allPosts.length===0
-                    ? <div className="spot-empty">まだ投稿がありません<br/>最初にチェックインしてみましょう！</div>
+                    ? <div className="spot-empty">{t('noPostsYet')}<br/>{t('startCheckinPrompt')}</div>
                     : <>
                       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"4px 12px",width:"100%"}}>
                       {(showAllPosts ? allPosts : allPosts.slice(0,2)).map((post,pi)=>(
@@ -2237,7 +2370,7 @@ const searchGeo = async (q) => {
                         <button onClick={()=>setShowAllPosts(v=>!v)}
                           style={{background:"none",border:"none",color:"var(--text3)",fontSize:13,
                             cursor:"pointer",fontFamily:"inherit",textDecoration:"underline",padding:"4px 0 0"}}>
-                          {showAllPosts ? "閉じる" : `View more (${allPosts.length-2}件)`}
+                          {showAllPosts ? t('close') : t('viewMore',{count:allPosts.length-2})}
                         </button>
                       )}
                     </>
@@ -2251,12 +2384,12 @@ const searchGeo = async (q) => {
                     </div>
                     <div style={{fontSize:13,color:"var(--text2)"}}>
                       <span style={{fontWeight:600,color:"var(--text)"}}>{selSpot.creator_name}</span>
-                      {selSpot.spot_created_at && <span style={{color:"var(--text3)",marginLeft:6}}>{selSpot.spot_created_at.slice(0,10).replace(/-/g,"/")}に作成</span>}
+                      {selSpot.spot_created_at && <span style={{color:"var(--text3)",marginLeft:6}}>{t('createdOn',{date:selSpot.spot_created_at.slice(0,10).replace(/-/g,"/")})}</span>}
                     </div>
                   </div>
                 )}
                 <div style={{display:"flex",gap:8,alignItems:"center",marginTop:8,width:"100%"}}>
-                  <button className="submit-btn" style={{flex:1,margin:0}} onClick={()=>setOverlay("form")}>チェックインする</button>
+                  <button className="submit-btn" style={{flex:1,margin:0}} onClick={()=>setOverlay("form")}>{t('checkinHere')}</button>
                   <button className="bookmark-btn" onClick={()=>toggleSave(selSpot)}
                     style={{flexShrink:0,width:44,height:44,borderRadius:12,border:"1px solid var(--border)",background:"#fff",display:"flex",alignItems:"center",justifyContent:"center"}}>
                     <BookmarkSVG active={isSaved(selSpot)} size={20}/>
@@ -2264,7 +2397,7 @@ const searchGeo = async (q) => {
                 </div>
                 <button onClick={()=>{setShowSpotEdit(true);setCiHours(selSpot.hours||"");setCiLocation(selSpot.location||"");setOverlay("form");}}
                   style={{background:"none",border:"none",color:"var(--text3)",fontSize:13,cursor:"pointer",fontFamily:"inherit",display:"block",margin:"8px auto 0",textDecoration:"underline"}}>
-                  スポット情報を修正する
+                  {t('editSpotInfo')}
                 </button>
 
                 {/* ── マップ（写真一覧の下） ── */}
@@ -2287,7 +2420,7 @@ const searchGeo = async (q) => {
           {selArc && <>
             <div className="arc-hd">
               <button className="arc-back" onClick={()=>setSelArc(null)}><Ic.Back/></button>
-              <h2>チェックイン記録</h2>
+              <h2>{t('checkinRecordsTitle')}</h2>
             </div>
             {selArc.photos && selArc.photos.length > 0 ? (
               <div style={{marginTop:16,display:"flex",gap:6,overflowX:"auto"}}>
@@ -2302,12 +2435,12 @@ const searchGeo = async (q) => {
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                 <div className="arc-spot">{selArc.spot}</div>
                 <button onClick={async()=>{
-                  if(!confirm("このチェックインを削除しますか？")) return;
+                  if(!confirm(t('confirmDeleteCheckinRecord'))) return;
                   const {supabase} = await import("../../lib/supabase");
                   await supabase.from("checkins").delete().eq("id", selArc.id);
                   setArchives(a=>a.filter(e=>e.id!==selArc.id));
                   setSelArc(null);
-                  showToast("削除しました");
+                  showToast(t('deletedToast'));
                 }} style={{background:"none",border:"none",cursor:"pointer",color:"var(--text3)",padding:4}}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
                 </button>
@@ -2317,7 +2450,7 @@ const searchGeo = async (q) => {
               {selArc.limited && (
                 <div style={{display:"flex",alignItems:"center",gap:6,marginTop:6}}>
                   <span className="limited-badge">LIMITED</span>
-                  {selArc.dateFrom && <span style={{fontSize:12,color:"var(--text3)"}}>{selArc.dateFrom} → {selArc.dateTo||"未定"}</span>}
+                  {selArc.dateFrom && <span style={{fontSize:12,color:"var(--text3)"}}>{selArc.dateFrom} → {selArc.dateTo||t('tbd')}</span>}
                 </div>
               )}
               <p className="arc-note">{selArc.note}</p>
@@ -2333,12 +2466,12 @@ const searchGeo = async (q) => {
         <div className={`nearby-overlay ${nearbyOpen?"open":""}`}>
           <div className="nearby-search-top">
             <button className="nearby-back" onClick={()=>{setNearbyOpen(false);setNearbySearch("");}}>
-              <Ic.Back/> マップに戻る
+              <Ic.Back/> {t('backToMap')}
             </button>
             <div className="nearby-search-input">
               <Ic.Search/>
               <input
-                placeholder="場所を検索（例：東京駅）"
+                placeholder={t('searchPlaceholderStation')}
                 value={nearbySearch}
                 onChange={async e=>{
                   const q = e.target.value;
@@ -2360,7 +2493,7 @@ const searchGeo = async (q) => {
           <div className="nearby-list">
             {nearbySearch.trim().length >= 2 ? (
               <>
-                {nearbyGeoLoading && <div style={{padding:"24px 16px",textAlign:"center",color:"var(--text3)",fontSize:13}}>検索中...</div>}
+                {nearbyGeoLoading && <div style={{padding:"24px 16px",textAlign:"center",color:"var(--text3)",fontSize:13}}>{t('searching')}</div>}
                 {!nearbyGeoLoading && nearbyGeoResults.map(f=>(
                   <div key={f.place_id} className="nearby-item" onClick={async ()=>{
                     const res = await fetch(`/api/places/details?place_id=${f.place_id}`);
@@ -2373,7 +2506,7 @@ const searchGeo = async (q) => {
                       address: result.formatted_address || "",
                       lat: result.geometry.location.lat,
                       lng: result.geometry.location.lng,
-                      category: result.types?.[0] || "場所",
+                      category: result.types?.[0] || "place",
                       area: result.address_components?.find(c=>c.types?.includes("locality"))?.long_name || "",
                       checkins: 0, hours: "", location: result.formatted_address || "", reviews: [], comment: "",
                     };
@@ -2393,12 +2526,12 @@ const searchGeo = async (q) => {
                   </div>
                 ))}
                 {!nearbyGeoLoading && nearbyGeoResults.length === 0 && (
-                  <div style={{padding:"32px 16px",textAlign:"center",color:"var(--text3)",fontSize:13}}>見つかりませんでした</div>
+                  <div style={{padding:"32px 16px",textAlign:"center",color:"var(--text3)",fontSize:13}}>{t('notFound')}</div>
                 )}
               </>
             ) : (
               locLoading ? (
-                <div style={{padding:"40px 16px",textAlign:"center",color:"var(--text3)",fontSize:13}}>📍 現在地を取得中...</div>
+                <div style={{padding:"40px 16px",textAlign:"center",color:"var(--text3)",fontSize:13}}>{t('gettingLocation')}</div>
               ) : (()=>{
                 const filtered = MAP_SPOTS
                   .map(s=>({...s, dist: userLocation ? calcDist(userLocation.lat,userLocation.lng,s.lat,s.lng) : null}))
@@ -2407,7 +2540,7 @@ const searchGeo = async (q) => {
                 const farther = filtered.filter(s=>s.dist==null || s.dist>1.0);
                 return <>
                   {nearby.length>0 && <>
-                    <div className="nearby-section-label">📍 近く（1km以内）</div>
+                    <div className="nearby-section-label">{t('nearbyLabel')}</div>
                     {nearby.map(s=>(
                       <div key={s.id} className="nearby-item" onClick={()=>{
                         setNearbyOpen(false); setNearbySearch("");
@@ -2421,7 +2554,7 @@ const searchGeo = async (q) => {
                     ))}
                   </>}
                   {farther.length>0 && <>
-                    <div className="nearby-section-label">{nearby.length>0?"その他のスポット":"すべてのスポット"}</div>
+                    <div className="nearby-section-label">{nearby.length>0?t('otherSpots'):t('allSpots')}</div>
                     {farther.map(s=>(
                       <div key={s.id} className="nearby-item" onClick={()=>{
                         setNearbyOpen(false); setNearbySearch("");
@@ -2429,7 +2562,7 @@ const searchGeo = async (q) => {
                         setSelSpot(s); setTab("map");
                       }}>
                         <div className="nearby-icon">🏮</div>
-                        <div className="nearby-info"><h4>{s.name}</h4><p>{s.category}　{s.area}</p></div>
+                        <div className="nearby-info"><h4>{s.name}</h4><p>{catLabel(s.category)}　{s.area}</p></div>
                         <div className="nearby-dist">{s.dist!=null && fmtDist(s.dist)}<span>{s.checkins.toLocaleString()} stamps</span></div>
                       </div>
                     ))}
@@ -2445,12 +2578,12 @@ const searchGeo = async (q) => {
         <div className={`new-ci-overlay ${newCiOpen?"open":""}`}>
           <div className="new-ci-hd">
             <button className="arc-back" onClick={()=>{setNewCiOpen(false);setSpotSearch("");}}><Ic.Back/></button>
-            <h2>スポットを選択</h2>
+            <h2>{t('selectSpotTitle')}</h2>
           </div>
           <div className="spot-search-box">
             <Ic.Search/>
             <input
-              placeholder="場所を検索（例：東京タワー）"
+              placeholder={t('searchPlaceholderTower')}
               value={spotSearch}
               onChange={e=>searchGeo(e.target.value)}
               autoFocus
@@ -2458,7 +2591,7 @@ const searchGeo = async (q) => {
           </div>
           <div className="spot-list">
             {geoLoading && (
-              <div style={{padding:"24px 16px",textAlign:"center",color:"var(--text3)",fontSize:13}}>検索中...</div>
+              <div style={{padding:"24px 16px",textAlign:"center",color:"var(--text3)",fontSize:13}}>{t('searching')}</div>
             )}
             {!geoLoading && geoResults.map(f=>(
               <div key={f.place_id} className="spot-list-item" onClick={async ()=>{
@@ -2472,7 +2605,7 @@ const searchGeo = async (q) => {
                   address: result.formatted_address || "",
                   lat: result.geometry.location.lat,
                   lng: result.geometry.location.lng,
-                  category: result.types?.[0] || "場所",
+                  category: result.types?.[0] || "place",
                   area: result.address_components?.find(c=>c.types?.includes("locality"))?.long_name || "",
                   creator_name: profile.name || user?.email || "",
                   created_by: user?.id || "",
@@ -2498,12 +2631,12 @@ const searchGeo = async (q) => {
             ))}
             {!geoLoading && spotSearch.length >= 2 && geoResults.length === 0 && (
               <div style={{padding:"32px 16px",textAlign:"center",color:"var(--text3)",fontSize:13}}>
-                見つかりませんでした
+                {t('notFound')}
               </div>
             )}
             {spotSearch.trim() === "" && (
               <div style={{padding:"32px 16px",textAlign:"center",color:"var(--text3)",fontSize:13}}>
-                スポット名や住所で検索してください
+                {t('searchBySpotOrAddress')}
               </div>
             )}
           </div>
@@ -2517,13 +2650,13 @@ const searchGeo = async (q) => {
         <div className={`profile-edit-overlay ${profileEditOpen?"open":""}`}>
           <div className="pe-hd">
             <button className="arc-back" onClick={()=>setProfileEditOpen(false)}><Ic.Back/></button>
-            <h2>プロフィール編集</h2>
+            <h2>{t('editProfileTitle')}</h2>
             <button className="pe-save" onClick={async()=>{
               await supabase.from("profiles").upsert({id:user.id,...editDraft});
               setProfile({...editDraft});
               setProfileEditOpen(false);
-              showToast("保存しました","ok");
-            }}>保存</button>
+              showToast(t('profileSaved'),"ok");
+            }}>{t('saveBtn')}</button>
           </div>
           <div className="pe-body">
             {/* アバター */}
@@ -2547,7 +2680,7 @@ const searchGeo = async (q) => {
                 }}/>
               </label>
               <label style={{cursor:"pointer",fontSize:13,color:"var(--red)"}}>
-                写真を変更
+                {t('changePhoto')}
                 <input type="file" accept="image/*" style={{display:"none"}} onChange={async(e)=>{
                   const file = e.target.files[0];
                   if(!file||!user) return;
@@ -2564,7 +2697,7 @@ const searchGeo = async (q) => {
             {/* 名前 */}
             <div className="pe-field">
               <label className="pe-label">NAME</label>
-              <input className="pe-input" placeholder="名前を入力"
+              <input className="pe-input" placeholder={t('namePlaceholder')}
                 value={editDraft.name}
                 onChange={e=>setEditDraft(d=>({...d,name:e.target.value}))}/>
             </div>
@@ -2572,7 +2705,7 @@ const searchGeo = async (q) => {
             {/* 自己紹介 */}
             <div className="pe-field">
               <label className="pe-label">BIO</label>
-              <textarea className="pe-textarea" placeholder="自己紹介を入力"
+              <textarea className="pe-textarea" placeholder={t('bioPlaceholder')}
                 value={editDraft.bio}
                 onChange={e=>setEditDraft(d=>({...d,bio:e.target.value}))}/>
             </div>
@@ -2605,7 +2738,7 @@ const searchGeo = async (q) => {
                     setFolderPhotos(archives.filter(a=>folder.ids.includes(a.id)));
                     setEditingFolderId(folder.id);
                     setShowFolderModal(true);
-                  }} style={{background:"none",border:"none",color:"var(--text2)",fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>編集</button>
+                  }} style={{background:"none",border:"none",color:"var(--text2)",fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>{t('edit')}</button>
                 )}
               </div>
               <div className="group-masonry">
@@ -2681,12 +2814,12 @@ const searchGeo = async (q) => {
           <div className="modal-backdrop" onClick={()=>setShowFolderPicker(false)}>
             <div className="modal-sheet" onClick={e=>e.stopPropagation()}>
               <div className="modal-sheet-hd">
-                <h3>フォルダを選択</h3>
+                <h3>{t('selectFolderTitle')}</h3>
                 <button onClick={()=>setShowFolderPicker(false)}>×</button>
               </div>
               <div className="modal-body">
                 {folders.length===0 && (
-                  <div style={{padding:"24px 0",textAlign:"center",color:"var(--text3)",fontSize:13}}>フォルダがありません</div>
+                  <div style={{padding:"24px 0",textAlign:"center",color:"var(--text3)",fontSize:13}}>{t('noFolders')}</div>
                 )}
                 {folders.map(f=>(
                   <div key={f.id} onClick={()=>{
@@ -2698,7 +2831,7 @@ const searchGeo = async (q) => {
                     setShowFolderPicker(false);
                     setSelectMode(false);
                     setSelectedIds([]);
-                    showToast(`「${f.title}」に追加しました`,"ok");
+                    showToast(t('addedToFolder',{name:f.title}),"ok");
                   }}
                     style={{display:"flex",alignItems:"center",gap:12,padding:"14px 0",
                       borderBottom:"1px solid var(--gray-50)",cursor:"pointer"}}>
@@ -2714,7 +2847,7 @@ const searchGeo = async (q) => {
                   style={{marginTop:16,width:"100%",padding:"12px",borderRadius:10,
                     border:"1.5px dashed var(--border)",background:"none",
                     cursor:"pointer",fontSize:13,color:"var(--text2)",fontFamily:"inherit"}}>
-                  ＋ 新しいフォルダを作成
+                  {t('createNewFolder')}
                 </button>
               </div>
             </div>
@@ -2726,15 +2859,15 @@ const searchGeo = async (q) => {
           <div className="modal-backdrop" onClick={()=>{setShowFolderModal(false);setFolderName("");setFolderPhotos([]);setEditingFolderId(null);}}>
             <div className="modal-sheet" onClick={e=>e.stopPropagation()}>
               <div className="modal-sheet-hd">
-                <h3>{editingFolderId ? "フォルダを編集" : "新しいフォルダを作成"}</h3>
+                <h3>{editingFolderId ? t('editFolderTitle') : t('newFolderTitle')}</h3>
                 <button onClick={()=>{setShowFolderModal(false);setFolderName("");setFolderPhotos([]);setEditingFolderId(null);}}>×</button>
               </div>
               <div className="modal-body" style={{paddingBottom:40}}>
                 <label className="modal-field-label">FOLDER NAME</label>
-                <input className="modal-input" placeholder="フォルダ名を入力..."
+                <input className="modal-input" placeholder={t('folderNamePlaceholder')}
                   value={folderName} onChange={e=>setFolderName(e.target.value)}
                   autoFocus/>
-                <label className="modal-field-label">チェックインを選択してフォルダに追加</label>
+                <label className="modal-field-label">{t('selectCheckinsForFolder')}</label>
                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:6,marginBottom:24,maxHeight:200,overflowY:"auto"}}>
                   {archives.map(e=>{
                     const selected = folderPhotos.some(p=>p.id===e.id);
@@ -2756,7 +2889,7 @@ const searchGeo = async (q) => {
                   })}
                 </div>
                 <div className="modal-actions">
-                  <button className="modal-cancel" onClick={()=>{setShowFolderModal(false);setFolderName("");setFolderPhotos([]);setEditingFolderId(null);}}>キャンセル</button>
+                  <button className="modal-cancel" onClick={()=>{setShowFolderModal(false);setFolderName("");setFolderPhotos([]);setEditingFolderId(null);}}>{t('cancel')}</button>
                   <button className="modal-ok" onClick={async ()=>{
                     if(!folderName.trim()) return;
                     if(editingFolderId){
@@ -2771,7 +2904,7 @@ const searchGeo = async (q) => {
                       if(!error && data) setFolders(f=>[...f,{id:data.id,title:data.title,type:"custom",ids:data.checkin_ids||[]}]);
                     }
                     setFolderName(""); setFolderPhotos([]); setShowFolderModal(false); setEditingFolderId(null);
-                  }}>{editingFolderId ? "保存する" : "作成する"}</button>
+                  }}>{editingFolderId ? t('saveAction') : t('createAction')}</button>
                 </div>
               </div>
             </div>
