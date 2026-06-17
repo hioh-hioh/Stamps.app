@@ -2141,7 +2141,7 @@ const searchGeo = async (q) => {
                           }}
                           onClick={()=>setPhotoViewer({posts:[{id:"detail-photos",hasImg:true,photos,color:"#000"}],postIdx:0,imgIdx:detailPhotoIdx||0})}/>
                         {current.limited && (
-                          <div style={{position:"absolute",left:12,bottom:20,display:"flex",alignItems:"center",gap:6}}>
+                          <div style={{position:"absolute",left:12,bottom:16,display:"flex",alignItems:"center",gap:6}}>
                             <span className="limited-badge">LIMITED</span>
                             {current.dateFrom && <span style={{fontSize:12,color:"#fff"}}>{current.dateFrom} → {current.dateTo||"未定"}</span>}
                           </div>
