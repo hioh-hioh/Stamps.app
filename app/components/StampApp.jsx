@@ -2135,7 +2135,7 @@ const searchGeo = async (q) => {
                   const limitedPost = spotPosts.find(p=>p.limited);
                   return (
                     <div style={{width:"100%",marginBottom:16,position:"relative"}}>
-                      <img src={photos[detailPhotoIdx||0]} style={{width:"100%",maxHeight:280,borderRadius:8,objectFit:"cover",display:"block",cursor:"pointer"}}
+                      <img src={photos[detailPhotoIdx||0]} style={{width:"100%",height:280,borderRadius:8,objectFit:"cover",display:"block",cursor:"pointer",background:"var(--gray-100)"}}
                         onTouchStart={e=>{e.currentTarget._startX=e.touches[0].clientX;}}
                         onTouchEnd={e=>{
                           const diff = e.changedTouches[0].clientX - e.currentTarget._startX;
