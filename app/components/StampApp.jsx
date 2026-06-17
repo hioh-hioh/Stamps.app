@@ -2533,7 +2533,7 @@ const searchGeo = async (q) => {
               locLoading ? (
                 <div style={{padding:"40px 16px",textAlign:"center",color:"var(--text3)",fontSize:13}}>{t('gettingLocation')}</div>
               ) : (()=>{
-                const filtered = MAP_SPOTS
+                const filtered = dbSpots
                   .map(s=>({...s, dist: userLocation ? calcDist(userLocation.lat,userLocation.lng,s.lat,s.lng) : null}))
                   .sort((a,b)=> a.dist!=null&&b.dist!=null ? a.dist-b.dist : 0);
                 const nearby  = filtered.filter(s=>s.dist!=null && s.dist<=1.0);
