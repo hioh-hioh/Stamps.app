@@ -220,7 +220,7 @@ const S = `
   --red:#E8452A; --red-dark:#C43520; --red-bg:#FEF0ED;
   --gray-50:#F7F7F5; --gray-100:#EBEBEB; --gray-200:#D8D8D5; --gray-400:#9B9B97;
   --gray-600:#6B6B67; --gray-800:#2C2C2A;
-  --white:#FFFFFF; --text:#1A1A18; --text2:#6B6B67; --text3:#9B9B97;
+  --white:#FBFFF5; --text:#1A1A18; --text2:#6B6B67; --text3:#9B9B97;
   --border:#E0DFDB;
   --r-sm:8px; --r-md:12px; --r-lg:16px;
   --sh-sm:0 1px 4px rgba(0,0,0,.06);
