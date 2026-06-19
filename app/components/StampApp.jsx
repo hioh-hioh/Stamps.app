@@ -1285,6 +1285,8 @@ const [user, setUser] = useState(null);
 const [creatorAvatar, setCreatorAvatar] = useState("");
   const [folders, setFolders]       = useState([]);
   const [showFolderModal, setShowFolderModal] = useState(false);
+  const [folderCoverFile, setFolderCoverFile] = useState(null);
+  const [folderCoverPreview, setFolderCoverPreview] = useState(null);
   const [folderName, setFolderName]   = useState("");
   const [folderPhotos, setFolderPhotos] = useState([]); // mock photo list
   const [editingFolderId, setEditingFolderId] = useState(null);
@@ -1395,7 +1397,7 @@ useEffect(()=>{
   };
   const loadFolders = async (userId) => {
     const { data } = await supabase.from("folders").select("*").eq("user_id", userId);
-    if(data) setFolders(data.map(f=>({id:f.id, title:f.title, type:"custom", ids:f.checkin_ids||[]})));
+    if(data) setFolders(data.map(f=>({id:f.id, title:f.title, type:"custom", ids:f.checkin_ids||[], cover_url:f.cover_url||null})));
   };
   const loadSavedSpots = async (userId) => {
     const { data: saved } = await supabase.from("saved_spots").select("spot_id").eq("user_id", userId);
@@ -2087,17 +2089,17 @@ const searchGeo = async (q) => {
               ];
               return (
                 <div style={{padding:"20px 16px 100px"}}>
-                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
                     {allFolders.map(f=>{
-                      const thumb = f.items.find(e=>e.photos&&e.photos.length>0);
+                      const coverUrl = f.cover_url || f.items.find(e=>e.photos&&e.photos.length>0)?.photos[0];
                       return (
                         <div key={f.id} onClick={()=>setSelGroup({id:f.id,title:f.title,items:f.items})}
-                          style={{borderRadius:8,overflow:"hidden",cursor:"pointer",position:"relative",height:120,background:"#444"}}>
-                          {thumb ? (
-                            <img src={thumb.photos[0]}
+                          style={{borderRadius:8,overflow:"hidden",cursor:"pointer",position:"relative",aspectRatio:"2/3",background:"#444"}}>
+                          {coverUrl ? (
+                            <img src={coverUrl}
                               style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
                           ) : (
-                            <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:32}}>📁</div>
+                            <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:28}}>📁</div>
                           )}
                           {f.id!=="all" && (
                             <div style={{position:"absolute",top:6,right:6}} onClick={e=>e.stopPropagation()}>
@@ -2129,7 +2131,7 @@ const searchGeo = async (q) => {
                     })}
                     <button onClick={()=>setShowFolderModal(true)}
                       style={{display:"flex",alignItems:"center",justifyContent:"center",
-                        height:120,background:"none",border:"1.5px dashed var(--border)",borderRadius:8,
+                        aspectRatio:"2/3",background:"none",border:"1.5px dashed var(--border)",borderRadius:8,
                         cursor:"pointer",color:"var(--text2)",fontSize:24,fontFamily:"inherit"}}>
                       ＋
                     </button>
@@ -2899,17 +2901,37 @@ const searchGeo = async (q) => {
 
         {/* ════ FOLDER MODAL ════ */}
         {showFolderModal && (
-          <div className="modal-backdrop" onClick={()=>{setShowFolderModal(false);setFolderName("");setFolderPhotos([]);setEditingFolderId(null);}}>
+          <div className="modal-backdrop" onClick={()=>{setShowFolderModal(false);setFolderName("");setFolderPhotos([]);setFolderCoverFile(null);setFolderCoverPreview(null);setEditingFolderId(null);}}>
             <div className="modal-sheet" onClick={e=>e.stopPropagation()}>
               <div className="modal-sheet-hd">
                 <h3>{editingFolderId ? t('editFolderTitle') : t('newFolderTitle')}</h3>
-                <button onClick={()=>{setShowFolderModal(false);setFolderName("");setFolderPhotos([]);setEditingFolderId(null);}}>×</button>
+                <button onClick={()=>{setShowFolderModal(false);setFolderName("");setFolderPhotos([]);setFolderCoverFile(null);setFolderCoverPreview(null);setEditingFolderId(null);}}>×</button>
               </div>
               <div className="modal-body" style={{paddingBottom:40}}>
                 <label className="modal-field-label">FOLDER NAME</label>
                 <input className="modal-input" placeholder={t('folderNamePlaceholder')}
                   value={folderName} onChange={e=>setFolderName(e.target.value)}
                   autoFocus/>
+                <label className="modal-field-label">COVER IMAGE</label>
+                <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:20}}>
+                  {folderCoverPreview && (
+                    <img src={folderCoverPreview} style={{width:60,height:90,objectFit:"cover",borderRadius:6,flexShrink:0}}/>
+                  )}
+                  <label style={{display:"flex",alignItems:"center",gap:6,padding:"8px 14px",border:"1.5px dashed var(--border)",borderRadius:8,cursor:"pointer",fontSize:13,color:"var(--text2)"}}>
+                    📷 {folderCoverPreview ? "変更する" : "写真を選ぶ"}
+                    <input type="file" accept="image/*" style={{display:"none"}} onChange={async e=>{
+                      const file = e.target.files?.[0];
+                      if(!file) return;
+                      const previewUrl = URL.createObjectURL(file);
+                      setFolderCoverPreview(previewUrl);
+                      setFolderCoverFile(file);
+                    }}/>
+                  </label>
+                  {folderCoverPreview && (
+                    <button onClick={()=>{setFolderCoverPreview(null);setFolderCoverFile(null);}}
+                      style={{background:"none",border:"none",color:"var(--text3)",fontSize:12,cursor:"pointer"}}>削除</button>
+                  )}
+                </div>
                 <label className="modal-field-label">{t('selectCheckinsForFolder')}</label>
                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:6,marginBottom:24,maxHeight:200,overflowY:"auto"}}>
                   {archives.map(e=>{
@@ -2935,18 +2957,30 @@ const searchGeo = async (q) => {
                   <button className="modal-cancel" onClick={()=>{setShowFolderModal(false);setFolderName("");setFolderPhotos([]);setEditingFolderId(null);}}>{t('cancel')}</button>
                   <button className="modal-ok" onClick={async ()=>{
                     if(!folderName.trim()) return;
+                    let coverUrl = null;
+                    if(folderCoverFile){
+                      const ext = folderCoverFile.name.split(".").pop();
+                      const path = `folders/${user.id}/${Date.now()}.${ext}`;
+                      const { data: upData } = await supabase.storage.from("photos").upload(path, folderCoverFile, {upsert:true});
+                      if(upData){
+                        const { data: urlData } = supabase.storage.from("photos").getPublicUrl(path);
+                        coverUrl = urlData.publicUrl;
+                      }
+                    }
                     if(editingFolderId){
                       const ids = folderPhotos.map(p=>p.id);
-                      await supabase.from("folders").update({title:folderName.trim(), checkin_ids:ids}).eq("id", editingFolderId);
-                      setFolders(f=>f.map(fo=>fo.id===editingFolderId?{...fo,title:folderName.trim(),ids}:fo));
+                      const upd = {title:folderName.trim(), checkin_ids:ids};
+                      if(coverUrl) upd.cover_url = coverUrl;
+                      await supabase.from("folders").update(upd).eq("id", editingFolderId);
+                      setFolders(f=>f.map(fo=>fo.id===editingFolderId?{...fo,title:folderName.trim(),ids,cover_url:coverUrl||fo.cover_url}:fo));
                       setSelGroup(g=>g&&g.id===editingFolderId?{...g,title:folderName.trim(),items:folderPhotos}:g);
                     } else {
-                      const { data, error } = await supabase.from("folders").insert({
-                        user_id: user.id, title: folderName.trim(), checkin_ids: folderPhotos.map(p=>p.id)
-                      }).select().single();
-                      if(!error && data) setFolders(f=>[...f,{id:data.id,title:data.title,type:"custom",ids:data.checkin_ids||[]}]);
+                      const ins = {user_id: user.id, title: folderName.trim(), checkin_ids: folderPhotos.map(p=>p.id)};
+                      if(coverUrl) ins.cover_url = coverUrl;
+                      const { data, error } = await supabase.from("folders").insert(ins).select().single();
+                      if(!error && data) setFolders(f=>[...f,{id:data.id,title:data.title,type:"custom",ids:data.checkin_ids||[],cover_url:data.cover_url||null}]);
                     }
-                    setFolderName(""); setFolderPhotos([]); setShowFolderModal(false); setEditingFolderId(null);
+                    setFolderName(""); setFolderPhotos([]); setFolderCoverFile(null); setFolderCoverPreview(null); setShowFolderModal(false); setEditingFolderId(null);
                   }}>{editingFolderId ? t('saveAction') : t('createAction')}</button>
                 </div>
               </div>
