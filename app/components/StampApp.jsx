@@ -2918,7 +2918,7 @@ const searchGeo = async (q) => {
                     <img src={folderCoverPreview} style={{width:60,height:90,objectFit:"cover",borderRadius:6,flexShrink:0}}/>
                   )}
                   <label style={{display:"flex",alignItems:"center",gap:6,padding:"8px 14px",border:"1.5px dashed var(--border)",borderRadius:8,cursor:"pointer",fontSize:13,color:"var(--text2)"}}>
-                    📷 {folderCoverPreview ? "変更する" : "写真を選ぶ"}
+                     {folderCoverPreview ? "変更する" : "表紙を選ぶ"}
                     <input type="file" accept="image/*" style={{display:"none"}} onChange={async e=>{
                       const file = e.target.files?.[0];
                       if(!file) return;
