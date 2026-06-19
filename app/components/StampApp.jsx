@@ -830,7 +830,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 .pe-input:focus{border-color:var(--red)}
 .pe-textarea{
   width:100%;border:1px solid var(--border);border-radius:10px;
-  padding:12px 14px;font-size:15px;font-family:inherit;
+  padding:12px 14px;font-size:16px;font-family:inherit;
   color:var(--text);outline:none;resize:none;
   min-height:80px;line-height:1.6;transition:border-color .15s
 }
@@ -928,7 +928,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 }
 .modal-input{
   width:100%;border:1px solid var(--border);border-radius:10px;
-  padding:12px 14px;font-size:15px;font-family:inherit;
+  padding:12px 14px;font-size:16px;font-family:inherit;
   color:var(--text);outline:none;margin-bottom:20px;
   background:var(--gray-50);transition:border-color .15s,background .15s
 }
