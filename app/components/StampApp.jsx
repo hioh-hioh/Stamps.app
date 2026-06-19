@@ -1624,6 +1624,9 @@ const searchGeo = async (q) => {
         {/* ════ HOME ════ */}
         {tab==="home" && (
           <div className="home-screen">
+            <div style={{padding:"20px 16px 0"}}>
+              <img src="/stamp_logo.png" alt="Stamps." style={{height:32}}/>
+            </div>
 
             {/* Timeline */}
             {(()=>{
@@ -2053,7 +2056,7 @@ const searchGeo = async (q) => {
             ) : (
               <>
               <div style={{padding:"8px 16px 0",marginTop:20,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                <img src="/logo.png" alt="Stamps." style={{height:24}}/>
+                <img src="/stamp_logo.png" alt="Stamps." style={{height:32}}/>
                 <button onClick={()=>supabase.auth.signOut()}
                   style={{background:"none",border:"none",color:"var(--text3)",fontSize:12,cursor:"pointer",fontFamily:"inherit"}}>
                   {t('logout')}
