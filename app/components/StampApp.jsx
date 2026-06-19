@@ -1352,7 +1352,7 @@ useEffect(()=>{
         user: nameMap[d.user_id] || t('guestUser'),
         date: d.created_at ? new Date(d.created_at).toLocaleString("ja-JP",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}).replace(/\//g,"/") : "",
         note: d.note||"",
-        emoji: d.emoji||"🏮",
+        emoji: d.emoji||"",
         hasImg: (d.photo_urls||[]).length>0,
         photos: d.photo_urls||[],
         color: d.color||"#E1F5EE",
@@ -1376,7 +1376,7 @@ useEffect(()=>{
       sub: `${catLabel(d.category)}　${d.area||""}`,
       date: d.created_at ? new Date(d.created_at).toLocaleString("ja-JP",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}).replace(/\//g,"/") : "",
       note: d.note||"",
-      emoji: d.emoji||"🏮",
+      emoji: d.emoji||"",
       hasImg: (d.photo_urls||[]).length>0,
       photos: d.photo_urls||[],
       color: d.color||"#E1F5EE",
@@ -1642,7 +1642,7 @@ const searchGeo = async (q) => {
                   const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
                   return `${a.date?.slice(0,10).replace(/-/g,"/")} (${days[d.getDay()]})`;
                 })(),
-                emoji: a.emoji||"🏮",
+                emoji: a.emoji||"",
                 color: a.color||"var(--gray-100)",
                 note: a.note||"",
                 hasImg: a.hasImg||false,
@@ -1947,7 +1947,7 @@ const searchGeo = async (q) => {
               {selSpot && (()=>{
                 const spotPosts = spotCheckins.filter(a=>a.hasImg);
                 const allPhotoPosts = [
-                  {id:"mock-0", spot:selSpot.name, emoji:"🏮", color:"var(--red-bg)", hasImg:true, note:selSpot.comment, date:""},
+                  {id:"mock-0", spot:selSpot.name, emoji:"", color:"var(--red-bg)", hasImg:true, note:selSpot.comment, date:""},
                   ...spotPosts
                 ];
                 return (
@@ -1969,7 +1969,7 @@ const searchGeo = async (q) => {
                       <div className="bsheet-thumb">
                         {(spotPosts.length>0 && spotPosts[0].photos?.length>0) || window.__publicPhotos?.[selSpot.name]
                           ? <img src={(spotPosts.length>0 && spotPosts[0].photos?.[0]) || window.__publicPhotos?.[selSpot.name]} style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:8}}/>
-                          : <div style={{width:"100%",height:"100%",background:"var(--red-bg)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:28}}>🏮</div>
+                          : <div style={{width:"100%",height:"100%",background:"var(--red-bg)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:28}}></div>
                         }
                       </div>
                       <div className="bsheet-info">
@@ -2017,7 +2017,7 @@ const searchGeo = async (q) => {
                 ? <div className="saved-empty">{t('savedEmptyLine1')}<br/><span style={{fontSize:11,marginTop:4,display:"block"}}>{t('savedEmptyLine2')}</span></div>
                 : savedSpots.map(s=>(
                   <div key={s.id} className="saved-item" onClick={()=>{setSelSpot(s);setShowSaved(false);}}>
-                    <div className="saved-item-icon">🏮</div>
+                    <div className="saved-item-icon"></div>
                     <div className="saved-item-info">
                       <h4>{s.name}</h4>
                       <p>{catLabel(s.category)}　{s.area}</p>
@@ -2293,7 +2293,7 @@ const searchGeo = async (q) => {
             // モックレビューも投稿カード形式に変換
             const mockPosts = (selSpot.reviews||[]).filter(r=>r.text).map((r,i)=>({
               id:`mock-${i}`, spot:selSpot.name, note:r.text,
-              date:"2025/11/01 10:00", hasImg:false, emoji:"🏮",
+              date:"2025/11/01 10:00", hasImg:false, emoji:"",
               color:"var(--red-bg)", user:r.user||"Anonymous"
             }));
             const allPosts = [...spotPosts, ...mockPosts];
