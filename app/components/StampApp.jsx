@@ -2395,26 +2395,10 @@ const searchGeo = async (q) => {
                             <div className="spot-post-avatar">
                               {post.avatar_url ? <img src={post.avatar_url} style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:"50%"}}/> : <Ic.User s={14}/>}
                             </div>
-                            <div className="spot-post-meta" style={{flex:1}}>
+                            <div className="spot-post-meta">
                               <h4>{post.user||"You"}</h4>
                               <p>{post.date}</p>
                             </div>
-                            {user && archives.some(a=>a.id===post.id) && (
-                              <div style={{position:"relative"}} onClick={e=>e.stopPropagation()}>
-                                <button onClick={()=>setTimelineMenu(m=>m===post.id?null:post.id)}
-                                  style={{background:"none",border:"none",cursor:"pointer",color:"var(--text3)",fontSize:16,padding:"0 4px"}}>•••</button>
-                                {timelineMenu===post.id && (
-                                  <div style={{position:"absolute",top:24,right:0,background:"#fff",borderRadius:8,boxShadow:"0 2px 12px rgba(0,0,0,.15)",zIndex:20,overflow:"hidden",minWidth:120}}>
-                                    <button onClick={()=>{
-                                      setEditingCheckin({id:post.id,note:post.note,photos:post.photos||[]});
-                                      setEditNote(post.note||"");
-                                      setEditPhotos(post.photos||[]);
-                                      setTimelineMenu(null);
-                                    }} style={{display:"block",width:"100%",padding:"10px 16px",background:"none",border:"none",textAlign:"left",fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>編集</button>
-                                  </div>
-                                )}
-                              </div>
-                            )}
                           </div>
                           {post.note && <>
                             <p className={`spot-post-text${(expandedPosts||[]).includes(post.id)?" expanded":""}`}>{post.note}</p>
@@ -2435,6 +2419,22 @@ const searchGeo = async (q) => {
                                   }
                                 </div>
                               ))}
+                            </div>
+                          )}
+                          {user && archives.some(a=>a.id===post.id) && (
+                            <div style={{position:"relative"}} onClick={e=>e.stopPropagation()}>
+                              <button onClick={()=>setTimelineMenu(m=>m===post.id?null:post.id)}
+                                style={{background:"none",border:"none",cursor:"pointer",color:"var(--text3)",fontSize:16,padding:"0 4px"}}>•••</button>
+                              {timelineMenu===post.id && (
+                                <div style={{position:"absolute",bottom:24,left:0,background:"#fff",borderRadius:8,boxShadow:"0 2px 12px rgba(0,0,0,.15)",zIndex:20,overflow:"hidden",minWidth:120}}>
+                                  <button onClick={()=>{
+                                    setEditingCheckin({id:post.id,note:post.note,photos:post.photos||[]});
+                                    setEditNote(post.note||"");
+                                    setEditPhotos(post.photos||[]);
+                                    setTimelineMenu(null);
+                                  }} style={{display:"block",width:"100%",padding:"10px 16px",background:"none",border:"none",textAlign:"left",fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>編集</button>
+                                </div>
+                              )}
                             </div>
                           )}
                         </div>
