@@ -1569,7 +1569,7 @@ const searchGeo = async (q) => {
     console.log("spotsErr:", spotsErr, "creator_name送信値:", !selSpot.creator_name ? (profile.name || user?.email || "") : "(スキップ)");
     if(ciHours||ciLocation){
       // selSpotに即時反映
-      setSelSpot(s=>s ? {...s, hours:ciHours||s.hours, location:ciLocation||s.location} : s);
+      setSelSpot(s=>s ? {...s, hours:ciHours||s.hours, location:ciLocation||s.location, creator_name:profile.name||user?.email||"", spot_updated_at:new Date().toISOString()} : s);
     }
     await loadSpots();
 
