@@ -4,6 +4,7 @@ import { Marker as MapMarker } from 'react-map-gl/mapbox'
 import { useState, useEffect } from "react";
 import { supabase } from '../../lib/supabase'
 import { Browser } from '@capacitor/browser'
+import { App } from '@capacitor/app'
 import MapView from './MapView'
 import Map from 'react-map-gl/mapbox'
 // ══════════════════════════════════════════════
@@ -1343,6 +1344,16 @@ useEffect(()=>{
       setUser(session?.user ?? null);
       if(session?.user && session.user.id !== user?.id){ loadCheckins(session.user.id); loadProfile(session.user.id); loadFolders(session.user.id); loadSavedSpots(session.user.id); }
       else setArchives([]);
+    });
+    App.addListener('appUrlOpen', async({url})=>{
+      if(url.includes('login-callback')){
+        const u = new URL(url);
+        const code = u.searchParams.get('code');
+        if(code){
+          await supabase.auth.exchangeCodeForSession(code);
+        }
+        await Browser.close();
+      }
     });
     return () => subscription.unsubscribe();
   },[]);
