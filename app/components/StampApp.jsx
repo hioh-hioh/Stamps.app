@@ -870,7 +870,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   cursor:pointer;position:relative
 }
 .group-cell-img{
-  width:100%;display:flex;align-items:center;
+  width:100%;aspect-ratio:1/1;display:flex;align-items:center;
   justify-content:center;font-size:36px;
   border-radius:8px;overflow:hidden
 }
