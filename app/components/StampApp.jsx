@@ -2290,13 +2290,15 @@ const searchGeo = async (q) => {
                   <div className="limited-date-field">
                     <span className="limited-date-label">START</span>
                     <input type="date" className="limited-date-input"
-                      value={ciDateFrom} onChange={e=>setCiDateFrom(e.target.value)}/>
+                      value={ciDateFrom} onChange={e=>setCiDateFrom(e.target.value)}
+                      style={{appearance:"none",WebkitAppearance:"none"}}/>
                   </div>
                   <span className="limited-sep" style={{paddingBottom:10,flexShrink:0}}>→</span>
                   <div className="limited-date-field">
                     <span className="limited-date-label">END</span>
                     <input type="date" className="limited-date-input"
-                      value={ciDateTo} onChange={e=>setCiDateTo(e.target.value)}/>
+                      value={ciDateTo} onChange={e=>setCiDateTo(e.target.value)}
+                      style={{appearance:"none",WebkitAppearance:"none"}}/>
                   </div>
                 </div>
                 </>
@@ -3006,12 +3008,12 @@ const searchGeo = async (q) => {
                   <div className="limited-dates" style={{width:"100%",marginBottom:8}}>
                     <div className="limited-date-field">
                       <span className="limited-date-label">START</span>
-                      <input type="date" className="limited-date-input" value={editDateFrom} onChange={e=>setEditDateFrom(e.target.value)}/>
+                      <input type="date" className="limited-date-input" value={editDateFrom} onChange={e=>setEditDateFrom(e.target.value)} style={{appearance:"none",WebkitAppearance:"none"}}/>
                     </div>
                     <span className="limited-sep" style={{paddingBottom:10,flexShrink:0}}>→</span>
                     <div className="limited-date-field">
                       <span className="limited-date-label">END</span>
-                      <input type="date" className="limited-date-input" value={editDateTo} onChange={e=>setEditDateTo(e.target.value)}/>
+                      <input type="date" className="limited-date-input" value={editDateTo} onChange={e=>setEditDateTo(e.target.value)} style={{appearance:"none",WebkitAppearance:"none"}}/>
                     </div>
                   </div>
                 </>)}
