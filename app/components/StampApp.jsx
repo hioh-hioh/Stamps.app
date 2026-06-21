@@ -589,8 +589,8 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 }
 .toggle-switch input:checked ~ .toggle-thumb{transform:translateX(18px)}
 .limited-dates{
-  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;background:var(--white);width:100%;
-  margin-top:12px
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:8px;background:var(--white);
+  width:100%;padding:0 16px;box-sizing:border-box;margin-top:12px
 }
 .limited-date-field{display:flex;flex-direction:column;gap:4px;min-width:0}
 .limited-date-label{font-size:11px;color:var(--text3);font-weight:500;letter-spacing:.03em}
@@ -2280,7 +2280,7 @@ const searchGeo = async (q) => {
                     <input type="date" className="limited-date-input"
                       value={ciDateFrom} onChange={e=>setCiDateFrom(e.target.value)}/>
                   </div>
-                  <span className="limited-sep" style={{paddingTop:"16px"}}>→</span>
+                  <span className="limited-sep">→</span>
                   <div className="limited-date-field">
                     <span className="limited-date-label">END</span>
                     <input type="date" className="limited-date-input"
