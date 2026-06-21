@@ -507,7 +507,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 }
 .overlay.open{display:flex;flex-direction:column;}
 
-.ov-maparea{height:100px;flex-shrink:0;background:#E8EEF4;position:relative;overflow:hidden}
+.ov-maparea{height:160px;flex-shrink:0;background:#E8EEF4;position:relative;overflow:hidden}
 .ov-sbar{
   position:absolute;top:12px;left:12px;right:12px;
   display:flex;align-items:center;gap:8px;
@@ -1652,8 +1652,9 @@ const searchGeo = async (q) => {
               const TIMELINE_MOCK = [];
 
               // archivesをタイムライン形式に変換してマージ
-              const arcItems = archives.map(a=>({
+              cconst arcItems = archives.map(a=>({
                 id: a.id,
+                spot_id: a.spot_id||"",
                 spot: a.spot,
                 category: a.sub||"",
                 area: "",
@@ -1669,6 +1670,10 @@ const searchGeo = async (q) => {
                 note: a.note||"",
                 hasImg: a.hasImg||false,
                 photos: a.photos||[],
+                limited: a.limited||false,
+                eventName: a.eventName||"",
+                dateFrom: a.dateFrom||"",
+                dateTo: a.dateTo||"",
               }));
 
               const allItems = [...arcItems, ...TIMELINE_MOCK];
