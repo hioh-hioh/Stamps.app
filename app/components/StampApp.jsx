@@ -2315,7 +2315,7 @@ const searchGeo = async (q) => {
               <div className="ov-body" style={{paddingTop:16}}>
                 {/* 投稿済み写真（メイン1枚＋ドット） */}
                 {(()=>{
-                  const photoEntries = spotPosts.flatMap(a=>(a.photos||[]).filter(Boolean).map(url=>({url, limited:a.limited, dateFrom:a.dateFrom, dateTo:a.dateTo})));
+                  const photoEntries = spotPosts.flatMap(a=>(a.photos||[]).filter(Boolean).map(url=>({url, limited:a.limited, dateFrom:a.dateFrom, dateTo:a.dateTo, note:a.note, user:a.user})));
                   if(photoEntries.length===0) return null;
                   const photos = photoEntries.map(e=>e.url);
                   const current = photoEntries[detailPhotoIdx||0];
@@ -2330,7 +2330,7 @@ const searchGeo = async (q) => {
                             if(diff > 50 && idx>0) setDetailPhotoIdx(idx-1);
                             if(diff < -50 && idx<photos.length-1) setDetailPhotoIdx(idx+1);
                           }}
-                          onClick={()=>setPhotoViewer({posts:[{id:"detail-photos",hasImg:true,photos,color:"#000"}],postIdx:0,imgIdx:detailPhotoIdx||0})}/>
+                          onClick={()=>setPhotoViewer({posts:photoEntries.map((e,i)=>({id:`detail-${i}`,hasImg:true,photos:[e.url],color:"#000",note:e.note,user:e.user})),postIdx:detailPhotoIdx||0,imgIdx:0})}/>
                         {current.limited && (
                           <div style={{position:"absolute",left:12,bottom:12,display:"flex",alignItems:"center",gap:6}}>
                             <span className="limited-badge">LIMITED</span>
