@@ -98,7 +98,7 @@ export default async function SpotPage({ params }) {
   );
 
   return (
-    <div style={{ maxWidth: 1000, margin: "0 auto", padding: "32px 24px 80px", fontFamily: "sans-serif", color: "#1A1A18" }}>
+    <div style={{ maxWidth: 1000, margin: "0 auto", padding: "32px 24px 80px", color: "#1A1A18" }}>
 
       {/* メインレイアウト：左コンテンツ＋右サイドバー */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 280px", gap: 32, alignItems: "start" }}>
