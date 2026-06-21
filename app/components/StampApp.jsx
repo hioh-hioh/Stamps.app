@@ -2373,36 +2373,36 @@ const searchGeo = async (q) => {
                       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"4px 12px",width:"100%"}}>
                       {(showAllPosts ? allPosts : allPosts.slice(0,2)).map((post,pi)=>(
                         <div key={post.id} className="spot-post-card" style={{display:"flex",flexDirection:"column",alignItems:"flex-start",gap:8,background:"#F7F7F7",borderRadius:8,padding:12,boxShadow:"none"}}>
-                          <div className="spot-post-avatar">
-                            {post.avatar_url ? <img src={post.avatar_url} style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:"50%"}}/> : <Ic.User s={14}/>}
-                          </div>
-                          <div style={{display:"flex",flexDirection:"column",alignItems:"flex-start",gap:4,flex:1}}>
+                          <div style={{display:"flex",alignItems:"center",gap:8,width:"100%"}}>
+                            <div className="spot-post-avatar">
+                              {post.avatar_url ? <img src={post.avatar_url} style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:"50%"}}/> : <Ic.User s={14}/>}
+                            </div>
                             <div className="spot-post-meta">
                               <h4>{post.user||"You"}</h4>
                               <p>{post.date}</p>
                             </div>
-                            {post.note && <>
-                              <p className={`spot-post-text${(expandedPosts||[]).includes(post.id)?" expanded":""}`}>{post.note}</p>
-                              {post.note.length>60 && !(expandedPosts||[]).includes(post.id) && (
-                                <button onClick={e=>{e.stopPropagation();setExpandedPosts(p=>[...(p||[]),post.id]);}}
-                                  style={{background:"none",border:"none",color:"var(--text3)",fontSize:11,cursor:"pointer",padding:0,fontFamily:"inherit",marginBottom:6}}>続きを見る</button>
-                              )}
-                            </>}
-                            {post.hasImg && (
-                              <div className="spot-post-imgs">
-                                {(post.photos&&post.photos.length>0 ? post.photos : [null]).map((url,ii)=>(
-                                  <div key={ii} className="spot-post-img"
-                                    style={{background:post.color||"var(--red-bg)"}}
-                                    onClick={()=>setPhotoViewer({posts:allPosts,postIdx:pi,imgIdx:ii})}>
-                                    {url
-                                      ? <img src={url} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
-                                      : <span style={{fontSize:36}}>{post.emoji}</span>
-                                    }
-                                  </div>
-                                ))}
-                              </div>
-                            )}
                           </div>
+                          {post.note && <>
+                            <p className={`spot-post-text${(expandedPosts||[]).includes(post.id)?" expanded":""}`}>{post.note}</p>
+                            {post.note.length>60 && !(expandedPosts||[]).includes(post.id) && (
+                              <button onClick={e=>{e.stopPropagation();setExpandedPosts(p=>[...(p||[]),post.id]);}}
+                                style={{background:"none",border:"none",color:"var(--text3)",fontSize:11,cursor:"pointer",padding:0,fontFamily:"inherit",marginBottom:6}}>続きを見る</button>
+                            )}
+                          </>}
+                          {post.hasImg && (
+                            <div className="spot-post-imgs">
+                              {(post.photos&&post.photos.length>0 ? post.photos : [null]).map((url,ii)=>(
+                                <div key={ii} className="spot-post-img"
+                                  style={{background:post.color||"var(--red-bg)"}}
+                                  onClick={()=>setPhotoViewer({posts:allPosts,postIdx:pi,imgIdx:ii})}>
+                                  {url
+                                    ? <img src={url} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+                                    : <span style={{fontSize:36}}>{post.emoji}</span>
+                                  }
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       ))}
                       </div>
