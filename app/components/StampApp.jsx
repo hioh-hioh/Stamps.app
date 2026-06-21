@@ -762,8 +762,8 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 }
 .photo-viewer-img{
   width:calc(100vw - 32px);max-width:480px;
-  aspect-ratio:1/1;border-radius:12px;
-  background:var(--red-bg);display:flex;align-items:center;
+  max-height:80vh;border-radius:12px;
+  background:#000;display:flex;align-items:center;
   justify-content:center;font-size:80px;overflow:hidden
 }
 .photo-viewer-close{
@@ -2841,7 +2841,7 @@ const searchGeo = async (q) => {
                 }}
                 style={{background:photoCount>0?"#000":(post.color||"var(--red-bg)"),display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
                 {photoCount>0
-                  ? <img src={post.photos[imgIdx]} style={{width:"100%",height:"100%",objectFit:"contain"}}/>
+                  ? <img src={post.photos[imgIdx]} style={{width:"100%",height:"auto",maxHeight:"80vh",objectFit:"contain"}}/>
                   : <span style={{fontSize:80}}>{post.emoji}</span>}
               </div>
               {photoCount>1 && (
