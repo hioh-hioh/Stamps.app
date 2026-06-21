@@ -1452,7 +1452,7 @@ useEffect(()=>{
       category: s.category||"", area: s.area||"",
       hours: s.hours||"", location: s.location||"",
       creator_name: s.creator_name||"", created_by: s.created_by||"",
-      spot_created_at: s.created_at||"",
+      spot_created_at: s.created_at||"", spot_updated_at: s.updated_at||"",
       checkins: 0, reviews: [], comment: "",
       stampUpdatedAt: null, stampUpdatedBy: null,
     }));
