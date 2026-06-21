@@ -589,10 +589,10 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 }
 .toggle-switch input:checked ~ .toggle-thumb{transform:translateX(18px)}
 .limited-dates{
-  display:flex;align-items:flex-end;gap:6px;background:var(--white);
-  width:100%;max-width:100%;box-sizing:border-box;margin-top:12px;overflow:hidden
+  display:grid;grid-template-columns:1fr 20px 1fr;align-items:end;gap:4px;background:var(--white);
+  width:100%;box-sizing:border-box;margin-top:12px
 }
-.limited-date-field{display:flex;flex-direction:column;gap:4px;flex:1;min-width:0}
+.limited-date-field{display:flex;flex-direction:column;gap:4px;min-width:0;overflow:hidden}
 .limited-date-label{font-size:11px;color:var(--text3);font-weight:500;letter-spacing:.03em}
 .limited-date-input{
   border:1px solid var(--border);border-radius:8px;
@@ -601,7 +601,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   transition:border-color .15s;width:100%;min-width:0;box-sizing:border-box
 }
 .limited-date-input:focus{border-color:var(--gray-400);background:var(--white)}
-.limited-sep{color:var(--text3);font-size:13px;flex-shrink:0;padding-bottom:10px}
+.limited-sep{color:var(--text3);font-size:13px;text-align:center;padding-bottom:10px}
 
 .vis-row{
   display:flex;align-items:center;justify-content:space-between;
