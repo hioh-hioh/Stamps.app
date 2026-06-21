@@ -507,7 +507,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 }
 .overlay.open{display:flex;flex-direction:column;}
 
-.ov-maparea{height:220px;background:#E8EEF4;position:relative;overflow:hidden}
+.ov-maparea{height:320px;background:#E8EEF4;position:relative;overflow:hidden}
 .ov-sbar{
   position:absolute;top:12px;left:12px;right:12px;
   display:flex;align-items:center;gap:8px;
