@@ -960,7 +960,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 .modal-cancel:active{background:var(--gray-50)}
 .modal-ok{
   flex:2;padding:14px;border-radius:12px;border:none;
-  background:var(--red);color:#fff;cursor:pointer;
+  background:#616168;color:#fff;cursor:pointer;
   font-size:14px;font-weight:700;font-family:inherit;
   transition:opacity .15s
 }
