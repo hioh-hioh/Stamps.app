@@ -601,7 +601,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   transition:border-color .15s;width:100%
 }
 .limited-date-input:focus{border-color:var(--gray-400);background:var(--white)}
-.limited-sep{color:var(--text3);font-size:13px;align-self:center}
+.limited-sep{color:var(--text3);font-size:13px;display:flex;align-items:center;height:100%}
 
 .vis-row{
   display:flex;align-items:center;justify-content:space-between;
@@ -2280,7 +2280,7 @@ const searchGeo = async (q) => {
                     <input type="date" className="limited-date-input"
                       value={ciDateFrom} onChange={e=>setCiDateFrom(e.target.value)}/>
                   </div>
-                  <span className="limited-sep">→</span>
+                  <span className="limited-sep" style={{paddingTop:18}}>→</span>
                   <div className="limited-date-field">
                     <span className="limited-date-label">END</span>
                     <input type="date" className="limited-date-input"
