@@ -2089,7 +2089,7 @@ const searchGeo = async (q) => {
               <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",height:"70vh",gap:16,padding:"0 32px",textAlign:"center"}}>
                 <img src="/stamp_logo.png" alt="Stamps." style={{height:80}}/>
                 <div style={{fontSize:14,color:"var(--text3)",lineHeight:1.6}}>{t('loginDescription')}</div>
-                <button onClick={()=>supabase.auth.signInWithOAuth({provider:"google",options:{redirectTo:window.location.origin}})}
+                <button onClick={()=>supabase.auth.signInWithOAuth({provider:"google",options:{redirectTo:"com.stampsapp.app://login-callback",skipBrowserRedirect:false}})}
                   style={{marginTop:8,padding:"12px 24px",background:"var(--red)",color:"#fff",border:"none",borderRadius:12,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>
                   {t('loginWithGoogle')}
                 </button>
