@@ -1345,13 +1345,16 @@ useEffect(()=>{
       if(!data){ setSpotCheckins([]); return; }
       const userIds = [...new Set(data.map(d=>d.user_id).filter(Boolean))];
       let nameMap = {};
+      let avatarMap = {};
       if(userIds.length>0){
-        const { data: profiles } = await supabase.from("profiles").select("id,name").in("id", userIds);
+        const { data: profiles } = await supabase.from("profiles").select("id,name,avatar_url").in("id", userIds);
         nameMap = Object.fromEntries((profiles||[]).map(p=>[p.id,p.name]));
+        avatarMap = Object.fromEntries((profiles||[]).map(p=>[p.id,p.avatar_url]));
       }
       setSpotCheckins(data.map(d=>({
         id: d.id,
         user: nameMap[d.user_id] || t('guestUser'),
+        avatar_url: avatarMap[d.user_id] || null,
         date: d.created_at ? new Date(d.created_at).toLocaleString("ja-JP",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}).replace(/\//g,"/") : "",
         note: d.note||"",
         emoji: d.emoji||"",
@@ -2368,7 +2371,7 @@ const searchGeo = async (q) => {
                       {(showAllPosts ? allPosts : allPosts.slice(0,2)).map((post,pi)=>(
                         <div key={post.id} className="spot-post-card" style={{display:"flex",flexDirection:"column",alignItems:"flex-start",gap:8,background:"#F7F7F7",borderRadius:8,padding:12,boxShadow:"none"}}>
                           <div className="spot-post-avatar">
-                            {profile.avatar_url ? <img src={profile.avatar_url} style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:"50%"}}/> : <Ic.User s={14}/>}
+                            {post.avatar_url ? <img src={post.avatar_url} style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:"50%"}}/> : <Ic.User s={14}/>}
                           </div>
                           <div style={{display:"flex",flexDirection:"column",alignItems:"flex-start",gap:4,flex:1}}>
                             <div className="spot-post-meta">
