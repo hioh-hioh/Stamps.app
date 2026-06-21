@@ -1253,9 +1253,15 @@ export default function App() {
   const [showAllPosts, setShowAllPosts] = useState(false);
   const [expandedPosts, setExpandedPosts] = useState([]);
   const [timelineMenu, setTimelineMenu] = useState(null); // item.id
-  const [editingCheckin, setEditingCheckin] = useState(null); // {id,note,photos}
+  const [editingCheckin, setEditingCheckin] = useState(null);
   const [editNote, setEditNote] = useState("");
   const [editPhotos, setEditPhotos] = useState([]);
+  const [editLimited, setEditLimited] = useState(false);
+  const [editEventName, setEditEventName] = useState("");
+  const [editDateFrom, setEditDateFrom] = useState("");
+  const [editDateTo, setEditDateTo] = useState("");
+  const [editHours, setEditHours] = useState("");
+  const [editLocation, setEditLocation] = useState("");
   const [dbSpots, setDbSpots] = useState([]);
   const [savedSpots, setSavedSpots] = useState([]);
   const [mapFilter, setMapFilter]   = useState("all"); // "all"|"saved"|"checkedin"
@@ -1727,9 +1733,15 @@ const searchGeo = async (q) => {
                                     {timelineMenu===item.id && (
                                       <div style={{position:"absolute",top:24,right:0,background:"#fff",borderRadius:8,boxShadow:"0 2px 12px rgba(0,0,0,.15)",zIndex:20,overflow:"hidden",minWidth:120}}>
                                         <button onClick={()=>{
-                                          setEditingCheckin({id:item.id,note:item.note,photos:item.photos||[]});
+                                          setEditingCheckin({id:item.id,spot_id:item.spot_id||selSpot?.id,note:item.note,photos:item.photos||[]});
                                           setEditNote(item.note||"");
                                           setEditPhotos(item.photos||[]);
+                                          setEditLimited(item.limited||false);
+                                          setEditEventName(item.eventName||"");
+                                          setEditDateFrom(item.dateFrom||"");
+                                          setEditDateTo(item.dateTo||"");
+                                          setEditHours(selSpot?.hours||"");
+                                          setEditLocation(selSpot?.location||"");
                                           setTimelineMenu(null);
                                         }} style={{display:"block",width:"100%",padding:"10px 16px",background:"none",border:"none",textAlign:"left",fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>編集</button>
                                         <button onClick={async()=>{
@@ -2437,9 +2449,15 @@ const searchGeo = async (q) => {
                               {timelineMenu===post.id && (
                                 <div style={{position:"absolute",bottom:24,left:0,background:"#fff",borderRadius:8,boxShadow:"0 2px 12px rgba(0,0,0,.15)",zIndex:20,overflow:"hidden",minWidth:120}}>
                                   <button onClick={()=>{
-                                    setEditingCheckin({id:post.id,note:post.note,photos:post.photos||[]});
+                                    setEditingCheckin({id:post.id,spot_id:selSpot?.id,note:post.note,photos:post.photos||[]});
                                     setEditNote(post.note||"");
                                     setEditPhotos(post.photos||[]);
+                                    setEditLimited(post.limited||false);
+                                    setEditEventName(post.eventName||"");
+                                    setEditDateFrom(post.dateFrom||"");
+                                    setEditDateTo(post.dateTo||"");
+                                    setEditHours(selSpot?.hours||"");
+                                    setEditLocation(selSpot?.location||"");
                                     setTimelineMenu(null);
                                   }} style={{display:"block",width:"100%",padding:"10px 16px",background:"none",border:"none",textAlign:"left",fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>編集</button>
                                 </div>
@@ -2960,12 +2978,43 @@ const searchGeo = async (q) => {
             <div className="modal-sheet" onClick={e=>e.stopPropagation()}>
               <div className="modal-sheet-hd">
                 <h3>投稿を編集</h3>
-                <button onClick={()=>setEditingCheckin(null)}>×</button>
+                <button onClick={()=>{setEditingCheckin(null);setEditLimited(false);setEditEventName("");setEditDateFrom("");setEditDateTo("");setEditHours("");setEditLocation("");}}>×</button>
               </div>
               <div className="modal-body" style={{paddingBottom:40}}>
                 <label className="modal-field-label">コメント</label>
                 <textarea className="modal-input" value={editNote} onChange={e=>setEditNote(e.target.value)}
                   style={{minHeight:80,resize:"none",background:"#fff"}}/>
+                <label className="modal-field-label">{t('hoursLabel')}</label>
+                <input className="modal-input" placeholder={t('hoursPlaceholder')} value={editHours}
+                  onChange={e=>setEditHours(e.target.value)} style={{background:"#fff",fontSize:16}}/>
+                <label className="modal-field-label">{t('stampLocationLabel')}</label>
+                <input className="modal-input" placeholder={t('stampLocationPlaceholder')} value={editLocation}
+                  onChange={e=>setEditLocation(e.target.value)} style={{background:"#fff",fontSize:16}}/>
+                <div className="vis-row" style={{width:"100%",marginBottom:8}}>
+                  <label>{t('limitedTimeLabel')}</label>
+                  <div className="vis-tog">
+                    <button className={`vtbtn ${editLimited?"on":""}`} onClick={()=>setEditLimited(true)}>ON</button>
+                    <button className={`vtbtn ${!editLimited?"on":""}`} onClick={()=>setEditLimited(false)}>OFF</button>
+                  </div>
+                </div>
+                {editLimited && (<>
+                  <div style={{width:"100%",boxSizing:"border-box",marginBottom:8}}>
+                    <input className="limited-date-input" placeholder="イベント名（任意）"
+                      value={editEventName} onChange={e=>setEditEventName(e.target.value)}
+                      style={{fontSize:16,background:"#fff",width:"100%",padding:"8px 12px"}}/>
+                  </div>
+                  <div className="limited-dates" style={{width:"100%",marginBottom:8}}>
+                    <div className="limited-date-field">
+                      <span className="limited-date-label">START</span>
+                      <input type="date" className="limited-date-input" value={editDateFrom} onChange={e=>setEditDateFrom(e.target.value)}/>
+                    </div>
+                    <span className="limited-sep" style={{paddingBottom:10,flexShrink:0}}>→</span>
+                    <div className="limited-date-field">
+                      <span className="limited-date-label">END</span>
+                      <input type="date" className="limited-date-input" value={editDateTo} onChange={e=>setEditDateTo(e.target.value)}/>
+                    </div>
+                  </div>
+                </>)}
                 <label className="modal-field-label">画像</label>
                 <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:32}}>
                   {editPhotos.map((url,i)=>(
@@ -2999,11 +3048,22 @@ const searchGeo = async (q) => {
                   </label>
                 </div>
                 <div className="modal-actions" style={{marginBottom:40}}>
-                  <button className="modal-cancel" onClick={()=>setEditingCheckin(null)}>{t('cancel')}</button>
+                  <button className="modal-cancel" onClick={()=>{setEditingCheckin(null);setEditLimited(false);setEditEventName("");setEditDateFrom("");setEditDateTo("");setEditHours("");setEditLocation("");}}>{t('cancel')}</button>
                   <button className="modal-ok" onClick={async()=>{
-                    await supabase.from("checkins").update({note:editNote, photo_urls:editPhotos}).eq("id",editingCheckin.id);
-                    setArchives(a=>a.map(x=>x.id===editingCheckin.id?{...x,note:editNote,photos:editPhotos,hasImg:editPhotos.length>0}:x));
-                    setSpotCheckins(a=>a.map(x=>x.id===editingCheckin.id?{...x,note:editNote,photos:editPhotos,hasImg:editPhotos.length>0}:x));
+                    await supabase.from("checkins").update({
+                      note:editNote, photo_urls:editPhotos,
+                      limited:editLimited, event_name:editEventName||null,
+                      date_from:editDateFrom||null, date_to:editDateTo||null,
+                    }).eq("id",editingCheckin.id);
+                    if(editingCheckin.spot_id && (editHours||editLocation)){
+                      await supabase.from("spots").update({
+                        ...(editHours?{hours:editHours}:{}),
+                        ...(editLocation?{location:editLocation}:{}),
+                      }).eq("id",editingCheckin.spot_id);
+                      setSelSpot(s=>s?{...s,hours:editHours||s.hours,location:editLocation||s.location}:s);
+                    }
+                    setArchives(a=>a.map(x=>x.id===editingCheckin.id?{...x,note:editNote,photos:editPhotos,hasImg:editPhotos.length>0,limited:editLimited,dateFrom:editDateFrom,dateTo:editDateTo}:x));
+                    setSpotCheckins(a=>a.map(x=>x.id===editingCheckin.id?{...x,note:editNote,photos:editPhotos,hasImg:editPhotos.length>0,limited:editLimited,dateFrom:editDateFrom,dateTo:editDateTo}:x));
                     setEditingCheckin(null);
                     showToast(t('profileSaved'),"ok");
                   }}>{t('saveAction')}</button>
