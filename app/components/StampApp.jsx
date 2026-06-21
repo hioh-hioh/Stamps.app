@@ -590,7 +590,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 .toggle-switch input:checked ~ .toggle-thumb{transform:translateX(18px)}
 .limited-dates{
   display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:8px;background:var(--white);
-  width:100%;padding:0 16px;box-sizing:border-box;margin-top:12px
+  width:100%;box-sizing:border-box;margin-top:12px
 }
 .limited-date-field{display:flex;flex-direction:column;gap:4px;min-width:0}
 .limited-date-label{font-size:11px;color:var(--text3);font-weight:500;letter-spacing:.03em}
@@ -2269,12 +2269,12 @@ const searchGeo = async (q) => {
               </div>}
               {ciLimited && (
                 <>
-                <div className="limited-dates" style={{marginTop:"4px"}}>
+                <div style={{padding:"0 16px",width:"100%",boxSizing:"border-box",marginTop:"4px"}}>
                   <input className="limited-date-input" placeholder="イベント名（任意）"
                     value={ciEventName} onChange={e=>setCiEventName(e.target.value)}
-                    style={{gridColumn:"1 / -1",fontSize:16,background:"#fff"}}/>
+                    style={{fontSize:16,background:"#fff",width:"100%"}}/>
                 </div>
-                <div className="limited-dates" style={{marginTop:"4px"}}>
+                <div className="limited-dates" style={{marginTop:"4px",padding:"0 16px"}}>
                   <div className="limited-date-field">
                     <span className="limited-date-label">START</span>
                     <input type="date" className="limited-date-input"
