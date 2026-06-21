@@ -596,9 +596,9 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 .limited-date-label{font-size:11px;color:var(--text3);font-weight:500;letter-spacing:.03em}
 .limited-date-input{
   border:1px solid var(--border);border-radius:8px;
-  padding:8px 10px;font-size:13px;font-family:inherit;
+  padding:8px 6px;font-size:12px;font-family:inherit;
   color:var(--text);outline:none;background:var(--white);
-  transition:border-color .15s;width:100%
+  transition:border-color .15s;width:100%;min-width:0;box-sizing:border-box
 }
 .limited-date-input:focus{border-color:var(--gray-400);background:var(--white)}
 .limited-sep{color:var(--text3);font-size:13px;display:flex;align-items:center;height:100%}
