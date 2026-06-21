@@ -1652,7 +1652,7 @@ const searchGeo = async (q) => {
               const TIMELINE_MOCK = [];
 
               // archivesをタイムライン形式に変換してマージ
-              cconst arcItems = archives.map(a=>({
+              const arcItems = archives.map(a=>({
                 id: a.id,
                 spot_id: a.spot_id||"",
                 spot: a.spot,
