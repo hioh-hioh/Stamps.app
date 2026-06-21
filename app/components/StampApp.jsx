@@ -1247,6 +1247,7 @@ export default function App() {
   const [ciDateFrom, setCiDateFrom] = useState("");
   const [ciDateTo, setCiDateTo]     = useState("");
   const [ciEventName, setCiEventName] = useState("");
+  const [ciEventName, setCiEventName] = useState("");
   const [ciHours, setCiHours] = useState("");
   const [ciLocation, setCiLocation] = useState("");
   const [showSpotEdit, setShowSpotEdit] = useState(false);
