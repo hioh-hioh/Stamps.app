@@ -601,7 +601,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   transition:border-color .15s;width:100%
 }
 .limited-date-input:focus{border-color:var(--gray-400);background:var(--white)}
-.limited-sep{color:var(--text3);font-size:13px;padding-top:20px}
+.limited-sep{color:var(--text3);font-size:13px;align-self:center}
 
 .vis-row{
   display:flex;align-items:center;justify-content:space-between;
@@ -2272,7 +2272,7 @@ const searchGeo = async (q) => {
                 <div style={{padding:"0 16px 8px",width:"100%",boxSizing:"border-box"}}>
                   <input className="modal-input" placeholder="イベント・スタンプラリー名（任意）"
                     value={ciEventName} onChange={e=>setCiEventName(e.target.value)}
-                    style={{marginBottom:0,background:"#fff",fontSize:16}}/>
+                    style={{marginBottom:0,background:"#fff",fontSize:16,width:"100%",boxSizing:"border-box"}}/>
                 </div>
                 <div className="limited-dates" style={{marginTop:"-8px"}}>
                   <div className="limited-date-field">
