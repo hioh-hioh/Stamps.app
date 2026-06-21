@@ -1246,6 +1246,7 @@ export default function App() {
   const [ciLimited, setCiLimited]   = useState(false);
   const [ciDateFrom, setCiDateFrom] = useState("");
   const [ciDateTo, setCiDateTo]     = useState("");
+  const [ciEventName, setCiEventName] = useState("");
   const [ciHours, setCiHours] = useState("");
   const [ciLocation, setCiLocation] = useState("");
   const [showSpotEdit, setShowSpotEdit] = useState(false);
@@ -1541,6 +1542,7 @@ const searchGeo = async (q) => {
       emoji: "",
       color: "#E1F5EE",
       limited: ciLimited,
+      event_name: ciEventName||null,
       date_from: ciDateFrom||null,
       date_to: ciDateTo||null,
     }).select().single();
@@ -1584,7 +1586,7 @@ const searchGeo = async (q) => {
       },...a]);
       setCheckins(c=>c+1);
     }
-    setOverlay(null); setSelSpot(null); setCiPhotos([]);
+    setOverlay(null); setSelSpot(null); setCiPhotos([]); setCiEventName("");
     showToast(error?t('saveFailed'):t('checkinComplete'), error?"":"ok");
     if(!error && selSpot?.lat && selSpot?.lng){
       setTab("map");
@@ -2266,6 +2268,12 @@ const searchGeo = async (q) => {
                 </div>
               </div>}
               {ciLimited && (
+                <>
+                <div style={{padding:"0 16px 8px",width:"100%",boxSizing:"border-box"}}>
+                  <input className="modal-input" placeholder="イベント・スタンプラリー名（任意）"
+                    value={ciEventName} onChange={e=>setCiEventName(e.target.value)}
+                    style={{marginBottom:0,background:"#fff",fontSize:16}}/>
+                </div>
                 <div className="limited-dates" style={{marginTop:"-8px"}}>
                   <div className="limited-date-field">
                     <span className="limited-date-label">START</span>
@@ -2279,6 +2287,7 @@ const searchGeo = async (q) => {
                       value={ciDateTo} onChange={e=>setCiDateTo(e.target.value)}/>
                   </div>
                 </div>
+                </>
               )}
               </div>
               {!(showSpotEdit && isCheckedIn(selSpot)) && <div className="vis-row" style={{paddingLeft:16,paddingRight:16,width:"100%",boxSizing:"border-box",marginTop:"-4px"}}>
