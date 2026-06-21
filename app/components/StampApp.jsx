@@ -2956,7 +2956,7 @@ const searchGeo = async (q) => {
               <div className="modal-body" style={{paddingBottom:40}}>
                 <label className="modal-field-label">コメント</label>
                 <textarea className="modal-input" value={editNote} onChange={e=>setEditNote(e.target.value)}
-                  style={{minHeight:80,resize:"none"}}/>
+                  style={{minHeight:80,resize:"none",background:"#fff"}}/>
                 <label className="modal-field-label">画像</label>
                 <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:16}}>
                   {editPhotos.map((url,i)=>(
@@ -2989,7 +2989,7 @@ const searchGeo = async (q) => {
                     }}/>
                   </label>
                 </div>
-                <div className="modal-actions">
+                <div className="modal-actions" style={{marginBottom:40}}>
                   <button className="modal-cancel" onClick={()=>setEditingCheckin(null)}>{t('cancel')}</button>
                   <button className="modal-ok" onClick={async()=>{
                     await supabase.from("checkins").update({note:editNote, photo_urls:editPhotos}).eq("id",editingCheckin.id);
