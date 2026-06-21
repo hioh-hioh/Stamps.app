@@ -1251,6 +1251,10 @@ export default function App() {
   const [showSpotEdit, setShowSpotEdit] = useState(false);
   const [showAllPosts, setShowAllPosts] = useState(false);
   const [expandedPosts, setExpandedPosts] = useState([]);
+  const [timelineMenu, setTimelineMenu] = useState(null); // item.id
+  const [editingCheckin, setEditingCheckin] = useState(null); // {id,note,photos}
+  const [editNote, setEditNote] = useState("");
+  const [editPhotos, setEditPhotos] = useState([]);
   const [dbSpots, setDbSpots] = useState([]);
   const [savedSpots, setSavedSpots] = useState([]);
   const [mapFilter, setMapFilter]   = useState("all"); // "all"|"saved"|"checkedin"
@@ -1713,15 +1717,29 @@ const searchGeo = async (q) => {
                               <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:2}}>
                                 <div style={{fontWeight:700,fontSize:14,color:"rgba(28,27,31,1)"}}>{item.spot}</div>
                                 {item.id && !String(item.id).startsWith("mock") && (
-                                  <button onClick={async(e)=>{
-                                    e.stopPropagation();
-                                    if(!confirm(t('confirmDeleteCheckin'))) return;
-                                    const {supabase} = await import("../../lib/supabase");
-                                    await supabase.from("checkins").delete().eq("id", item.id);
-                                    setArchives(a=>a.filter(x=>x.id!==item.id));
-                                  }} style={{background:"none",border:"none",cursor:"pointer",color:"var(--text3)",padding:"0 4px",fontSize:18,lineHeight:1,flexShrink:0,marginTop:3}}>
-                                    •••
-                                  </button>
+                                  <div style={{position:"relative",flexShrink:0}} onClick={e=>e.stopPropagation()}>
+                                    <button onClick={()=>setTimelineMenu(m=>m===item.id?null:item.id)}
+                                      style={{background:"none",border:"none",cursor:"pointer",color:"var(--text3)",padding:"0 4px",fontSize:18,lineHeight:1,marginTop:3}}>
+                                      •••
+                                    </button>
+                                    {timelineMenu===item.id && (
+                                      <div style={{position:"absolute",top:24,right:0,background:"#fff",borderRadius:8,boxShadow:"0 2px 12px rgba(0,0,0,.15)",zIndex:20,overflow:"hidden",minWidth:120}}>
+                                        <button onClick={()=>{
+                                          setEditingCheckin({id:item.id,note:item.note,photos:item.photos||[]});
+                                          setEditNote(item.note||"");
+                                          setEditPhotos(item.photos||[]);
+                                          setTimelineMenu(null);
+                                        }} style={{display:"block",width:"100%",padding:"10px 16px",background:"none",border:"none",textAlign:"left",fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>編集</button>
+                                        <button onClick={async()=>{
+                                          if(!confirm(t('confirmDeleteCheckin'))) return;
+                                          const {supabase} = await import("../../lib/supabase");
+                                          await supabase.from("checkins").delete().eq("id", item.id);
+                                          setArchives(a=>a.filter(x=>x.id!==item.id));
+                                          setTimelineMenu(null);
+                                        }} style={{display:"block",width:"100%",padding:"10px 16px",background:"none",border:"none",textAlign:"left",fontSize:13,color:"var(--red)",cursor:"pointer",fontFamily:"inherit"}}>削除</button>
+                                      </div>
+                                    )}
+                                  </div>
                                 )}
                               </div>
                               <div style={{fontSize:12,color:"var(--text3)",marginBottom:8,display:"flex",gap:8}}>
@@ -2377,10 +2395,26 @@ const searchGeo = async (q) => {
                             <div className="spot-post-avatar">
                               {post.avatar_url ? <img src={post.avatar_url} style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:"50%"}}/> : <Ic.User s={14}/>}
                             </div>
-                            <div className="spot-post-meta">
+                            <div className="spot-post-meta" style={{flex:1}}>
                               <h4>{post.user||"You"}</h4>
                               <p>{post.date}</p>
                             </div>
+                            {user && archives.some(a=>a.id===post.id) && (
+                              <div style={{position:"relative"}} onClick={e=>e.stopPropagation()}>
+                                <button onClick={()=>setTimelineMenu(m=>m===post.id?null:post.id)}
+                                  style={{background:"none",border:"none",cursor:"pointer",color:"var(--text3)",fontSize:16,padding:"0 4px"}}>•••</button>
+                                {timelineMenu===post.id && (
+                                  <div style={{position:"absolute",top:24,right:0,background:"#fff",borderRadius:8,boxShadow:"0 2px 12px rgba(0,0,0,.15)",zIndex:20,overflow:"hidden",minWidth:120}}>
+                                    <button onClick={()=>{
+                                      setEditingCheckin({id:post.id,note:post.note,photos:post.photos||[]});
+                                      setEditNote(post.note||"");
+                                      setEditPhotos(post.photos||[]);
+                                      setTimelineMenu(null);
+                                    }} style={{display:"block",width:"100%",padding:"10px 16px",background:"none",border:"none",textAlign:"left",fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>編集</button>
+                                  </div>
+                                )}
+                              </div>
+                            )}
                           </div>
                           {post.note && <>
                             <p className={`spot-post-text${(expandedPosts||[]).includes(post.id)?" expanded":""}`}>{post.note}</p>
@@ -2906,6 +2940,65 @@ const searchGeo = async (q) => {
                     cursor:"pointer",fontSize:13,color:"var(--text2)",fontFamily:"inherit"}}>
                   {t('createNewFolder')}
                 </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ════ CHECKIN EDIT MODAL ════ */}
+        {editingCheckin && (
+          <div className="modal-backdrop" onClick={()=>setEditingCheckin(null)}>
+            <div className="modal-sheet" onClick={e=>e.stopPropagation()}>
+              <div className="modal-sheet-hd">
+                <h3>投稿を編集</h3>
+                <button onClick={()=>setEditingCheckin(null)}>×</button>
+              </div>
+              <div className="modal-body" style={{paddingBottom:40}}>
+                <label className="modal-field-label">コメント</label>
+                <textarea className="modal-input" value={editNote} onChange={e=>setEditNote(e.target.value)}
+                  style={{minHeight:80,resize:"none"}}/>
+                <label className="modal-field-label">画像</label>
+                <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:16}}>
+                  {editPhotos.map((url,i)=>(
+                    <div key={i} style={{position:"relative",width:80,height:80}}>
+                      <img src={url} style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:8}}/>
+                      <button onClick={()=>setEditPhotos(p=>p.filter((_,j)=>j!==i))}
+                        style={{position:"absolute",top:-6,right:-6,width:20,height:20,borderRadius:"50%",background:"var(--red)",border:"none",color:"#fff",fontSize:12,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
+                    </div>
+                  ))}
+                  <label style={{width:80,height:80,border:"1.5px dashed var(--border)",borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",fontSize:24,color:"var(--text3)"}}>
+                    ＋
+                    <input type="file" accept="image/*" multiple style={{display:"none"}} onChange={async e=>{
+                      const files = Array.from(e.target.files||[]);
+                      for(const file of files){
+                        const canvas = document.createElement("canvas");
+                        const img = new Image();
+                        img.src = URL.createObjectURL(file);
+                        await new Promise(r=>{img.onload=r;});
+                        const max=1920;
+                        let w=img.width,h=img.height;
+                        if(w>max||h>max){ if(w>h){h=Math.round(h*max/w);w=max;}else{w=Math.round(w*max/h);h=max;} }
+                        canvas.width=w; canvas.height=h;
+                        canvas.getContext("2d").drawImage(img,0,0,w,h);
+                        canvas.toBlob(async blob=>{
+                          const path=`photos/${user.id}/${Date.now()}_${file.name}`;
+                          const {data}=await supabase.storage.from("photos").upload(path,blob,{upsert:true});
+                          if(data){ const {data:u}=supabase.storage.from("photos").getPublicUrl(path); setEditPhotos(p=>[...p,u.publicUrl]); }
+                        },"image/jpeg",0.85);
+                      }
+                    }}/>
+                  </label>
+                </div>
+                <div className="modal-actions">
+                  <button className="modal-cancel" onClick={()=>setEditingCheckin(null)}>{t('cancel')}</button>
+                  <button className="modal-ok" onClick={async()=>{
+                    await supabase.from("checkins").update({note:editNote, photo_urls:editPhotos}).eq("id",editingCheckin.id);
+                    setArchives(a=>a.map(x=>x.id===editingCheckin.id?{...x,note:editNote,photos:editPhotos,hasImg:editPhotos.length>0}:x));
+                    setSpotCheckins(a=>a.map(x=>x.id===editingCheckin.id?{...x,note:editNote,photos:editPhotos,hasImg:editPhotos.length>0}:x));
+                    setEditingCheckin(null);
+                    showToast(t('profileSaved'),"ok");
+                  }}>{t('saveAction')}</button>
+                </div>
               </div>
             </div>
           </div>
