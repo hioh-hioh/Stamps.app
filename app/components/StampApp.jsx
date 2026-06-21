@@ -1428,7 +1428,7 @@ useEffect(()=>{
       category: s.category||"", area: s.area||"",
       hours: s.hours||"", location: s.location||"",
       creator_name: s.creator_name||"", created_by: s.created_by||"",
-      spot_created_at: s.created_at||"",
+      spot_created_at: s.created_at||"", spot_updated_at: s.updated_at||"",
       checkins: 0, reviews: [], comment: "",
       stampUpdatedAt: null, stampUpdatedBy: null,
     })));
@@ -1562,7 +1562,7 @@ const searchGeo = async (q) => {
       area: selSpot.area||"",
       ...(ciHours ? {hours: ciHours} : {}),
       ...(ciLocation ? {location: ciLocation} : {}),
-      ...(!selSpot.creator_name ? {creator_name: profile.name || user?.email || "", created_by: user?.id || ""} : {}),
+      ...((ciHours||ciLocation) ? {creator_name: profile.name || user?.email || "", created_by: user?.id || "", updated_at: new Date().toISOString()} : (!selSpot.creator_name ? {creator_name: profile.name || user?.email || "", created_by: user?.id || ""} : {})),
       lat: selSpot.lat||null,
       lng: selSpot.lng||null,
     }, { onConflict:"id" });
@@ -2496,7 +2496,7 @@ const searchGeo = async (q) => {
                     </div>
                     <div style={{fontSize:13,color:"var(--text2)"}}>
                       <span style={{fontWeight:600,color:"var(--text)"}}>{selSpot.creator_name}</span>
-                      {selSpot.spot_created_at && <span style={{color:"var(--text3)",marginLeft:6}}>{t('createdOn',{date:selSpot.spot_created_at.slice(0,10).replace(/-/g,"/")})}</span>}
+                      {selSpot.spot_created_at && <span style={{color:"var(--text3)",marginLeft:6}}>{(selSpot.spot_updated_at||selSpot.spot_created_at).slice(0,10).replace(/-/g,"/")+"に更新"}</span>}
                     </div>
                   </div>
                 )}
