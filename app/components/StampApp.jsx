@@ -3032,7 +3032,7 @@ const searchGeo = async (q) => {
                     <div key={i} style={{position:"relative",width:80,height:80}}>
                       <img src={url} style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:8}}/>
                       <button onClick={()=>setEditPhotos(p=>p.filter((_,j)=>j!==i))}
-                        style={{position:"absolute",top:-6,right:-6,width:20,height:20,borderRadius:"50%",background:"var(--red)",border:"none",color:"#fff",fontSize:12,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
+                        style={{position:"absolute",top:-6,right:-6,width:20,height:20,borderRadius:"50%",background:"#616168",border:"none",color:"#fff",fontSize:12,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
                     </div>
                   ))}
                   <label style={{width:80,height:80,border:"1.5px dashed var(--border)",borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",fontSize:24,color:"var(--text3)"}}>
