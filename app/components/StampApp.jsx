@@ -761,7 +761,8 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   flex-direction:column;gap:12px
 }
 .photo-viewer-img{
-  width:340px;height:340px;border-radius:12px;
+  width:calc(100vw - 32px);max-width:480px;
+  aspect-ratio:1/1;border-radius:12px;
   background:var(--red-bg);display:flex;align-items:center;
   justify-content:center;font-size:80px;overflow:hidden
 }
