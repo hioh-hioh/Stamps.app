@@ -7,6 +7,9 @@ const config: CapacitorConfig = {
   server: {
     url: 'https://stampsapp.vercel.app',
     cleartext: false
+  },
+  ios: {
+    scheme: 'com.stampsapp.app'
   }
 };
 
