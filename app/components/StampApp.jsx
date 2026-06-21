@@ -2280,7 +2280,7 @@ const searchGeo = async (q) => {
                     <input type="date" className="limited-date-input"
                       value={ciDateFrom} onChange={e=>setCiDateFrom(e.target.value)}/>
                   </div>
-                  <span className="limited-sep" style={{paddingTop:18}}>→</span>
+                  <span className="limited-sep" style={{paddingTop:"16px"}}>→</span>
                   <div className="limited-date-field">
                     <span className="limited-date-label">END</span>
                     <input type="date" className="limited-date-input"
