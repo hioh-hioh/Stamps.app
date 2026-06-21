@@ -2413,7 +2413,7 @@ const searchGeo = async (q) => {
                   <div className="mrow"><Ic.Pin/> {selSpot.location}</div>
                 </div>
                 {/* 投稿一覧 */}
-                <div className="spot-posts" style={{display:"flex",flexDirection:"column",alignItems:"flex-start",gap:12,alignSelf:"stretch"}}>
+                <div className="spot-posts" style={{display:"flex",flexDirection:"column",alignItems:"stretch",gap:12,alignSelf:"stretch"}}>
                   <div style={{fontSize:13,fontWeight:700,color:"var(--text)",marginBottom:4,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                     <span>{t('postsLabel')} ({allPosts.length})</span>
                   </div>
