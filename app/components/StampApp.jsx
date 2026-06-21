@@ -3168,6 +3168,7 @@ const searchGeo = async (q) => {
                     setFolderName(""); setFolderPhotos([]); setFolderCoverFile(null); setFolderCoverPreview(null); setShowFolderModal(false); setEditingFolderId(null);
                   }}>{editingFolderId ? t('saveAction') : t('createAction')}</button>
                 </div>
+              <div style={{height:40}}/>
               </div>
             </div>
           </div>
