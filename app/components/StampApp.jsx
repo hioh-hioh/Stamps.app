@@ -2269,12 +2269,12 @@ const searchGeo = async (q) => {
               </div>}
               {ciLimited && (
                 <>
-                <div style={{padding:"0 16px",width:"100%",boxSizing:"border-box",marginTop:"4px"}}>
+                <div style={{width:"100%",boxSizing:"border-box",marginTop:"4px"}}>
                   <input className="limited-date-input" placeholder="イベント名（任意）"
                     value={ciEventName} onChange={e=>setCiEventName(e.target.value)}
                     style={{fontSize:16,background:"#fff",width:"100%"}}/>
                 </div>
-                <div className="limited-dates" style={{marginTop:"4px",padding:"0 16px"}}>
+                <div className="limited-dates" style={{marginTop:"4px"}}>
                   <div className="limited-date-field">
                     <span className="limited-date-label">START</span>
                     <input type="date" className="limited-date-input"
