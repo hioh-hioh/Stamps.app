@@ -736,7 +736,8 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 }
 .spot-post-meta h4{font-size:13px;font-weight:500;color:var(--text)}
 .spot-post-meta p{font-size:11px;color:var(--text3);margin-top:1px}
-.spot-post-text{font-size:13px;color:var(--text);line-height:1.6;margin-bottom:10px}
+.spot-post-text{font-size:13px;color:var(--text);line-height:1.6;margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.spot-post-text.expanded{display:block;overflow:visible}
 .spot-post-imgs{
   display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;
   margin:0
@@ -1249,6 +1250,7 @@ export default function App() {
   const [ciLocation, setCiLocation] = useState("");
   const [showSpotEdit, setShowSpotEdit] = useState(false);
   const [showAllPosts, setShowAllPosts] = useState(false);
+  const [expandedPosts, setExpandedPosts] = useState([]);
   const [dbSpots, setDbSpots] = useState([]);
   const [savedSpots, setSavedSpots] = useState([]);
   const [mapFilter, setMapFilter]   = useState("all"); // "all"|"saved"|"checkedin"
@@ -2379,7 +2381,13 @@ const searchGeo = async (q) => {
                               <h4>{post.user||"You"}</h4>
                               <p>{post.date}</p>
                             </div>
-                            {post.note && <p className="spot-post-text">{post.note}</p>}
+                            {post.note && <>
+                              <p className={`spot-post-text${(expandedPosts||[]).includes(post.id)?" expanded":""}`}>{post.note}</p>
+                              {post.note.length>60 && !(expandedPosts||[]).includes(post.id) && (
+                                <button onClick={e=>{e.stopPropagation();setExpandedPosts(p=>[...(p||[]),post.id]);}}
+                                  style={{background:"none",border:"none",color:"var(--text3)",fontSize:11,cursor:"pointer",padding:0,fontFamily:"inherit",marginBottom:6}}>続きを見る</button>
+                              )}
+                            </>}
                             {post.hasImg && (
                               <div className="spot-post-imgs">
                                 {(post.photos&&post.photos.length>0 ? post.photos : [null]).map((url,ii)=>(
