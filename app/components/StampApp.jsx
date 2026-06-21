@@ -2328,8 +2328,11 @@ const searchGeo = async (q) => {
                       name:selSpot.name,
                       hours:ciHours||"",
                       location:ciLocation||"",
+                      creator_name:profile.name||user?.email||"",
+                      created_by:user?.id||"",
+                      updated_at:new Date().toISOString(),
                     },{onConflict:"id"});
-                    setSelSpot(s=>s?{...s,hours:ciHours||s.hours,location:ciLocation||s.location}:s);
+                    setSelSpot(s=>s?{...s,hours:ciHours||s.hours,location:ciLocation||s.location,creator_name:profile.name||user?.email||"",spot_updated_at:new Date().toISOString()}:s);
                   }
                   setOverlay("detail");
                   showToast(t('spotInfoUpdated'),"ok");
