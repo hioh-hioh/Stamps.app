@@ -2967,7 +2967,7 @@ const searchGeo = async (q) => {
                 <textarea className="modal-input" value={editNote} onChange={e=>setEditNote(e.target.value)}
                   style={{minHeight:80,resize:"none",background:"#fff"}}/>
                 <label className="modal-field-label">画像</label>
-                <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:16}}>
+                <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:32}}>
                   {editPhotos.map((url,i)=>(
                     <div key={i} style={{position:"relative",width:80,height:80}}>
                       <img src={url} style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:8}}/>
