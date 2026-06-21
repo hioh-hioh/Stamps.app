@@ -1391,6 +1391,7 @@ useEffect(()=>{
     if(error || !data) return;
     setArchives(data.map(d=>({
       id: d.id,
+      spot_id: d.spot_id||"",
       spot: d.spot_name,
       sub: `${catLabel(d.category)}　${d.area||""}`,
       date: d.created_at ? new Date(d.created_at).toLocaleString("ja-JP",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}).replace(/\//g,"/") : "",
@@ -1402,6 +1403,7 @@ useEffect(()=>{
       category: d.category||"",
       tags: [],
       limited: d.limited||false,
+      eventName: d.event_name||"",
       dateFrom: d.date_from||"",
       dateTo: d.date_to||"",
       lat: d.lat,
@@ -1740,9 +1742,11 @@ const searchGeo = async (q) => {
                                           setEditEventName(item.eventName||"");
                                           setEditDateFrom(item.dateFrom||"");
                                           setEditDateTo(item.dateTo||"");
-                                          setEditHours(selSpot?.hours||"");
-                                          setEditLocation(selSpot?.location||"");
                                           setTimelineMenu(null);
+                                          if(item.spot_id){
+                                            supabase.from("spots").select("hours,location").eq("id",item.spot_id).maybeSingle()
+                                              .then(({data})=>{ setEditHours(data?.hours||""); setEditLocation(data?.location||""); });
+                                          }
                                         }} style={{display:"block",width:"100%",padding:"10px 16px",background:"none",border:"none",textAlign:"left",fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>編集</button>
                                         <button onClick={async()=>{
                                           if(!confirm(t('confirmDeleteCheckin'))) return;
