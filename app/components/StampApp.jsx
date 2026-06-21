@@ -4,7 +4,7 @@ import { Marker as MapMarker } from 'react-map-gl/mapbox'
 import { useState, useEffect } from "react";
 import { supabase } from '../../lib/supabase'
 import { Browser } from '@capacitor/browser'
-import { App } from '@capacitor/app'
+import { App as CapApp } from '@capacitor/app'
 import MapView from './MapView'
 import Map from 'react-map-gl/mapbox'
 // ══════════════════════════════════════════════
@@ -1345,7 +1345,7 @@ useEffect(()=>{
       if(session?.user && session.user.id !== user?.id){ loadCheckins(session.user.id); loadProfile(session.user.id); loadFolders(session.user.id); loadSavedSpots(session.user.id); }
       else setArchives([]);
     });
-    App.addListener('appUrlOpen', async({url})=>{
+    CapApp.addListener('appUrlOpen', async({url})=>{
       if(url.includes('login-callback')){
         const u = new URL(url);
         const code = u.searchParams.get('code');
@@ -2101,7 +2101,7 @@ const searchGeo = async (q) => {
               <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",height:"70vh",gap:16,padding:"0 32px",textAlign:"center"}}>
                 <img src="/stamp_logo.png" alt="Stamps." style={{height:80}}/>
                 <div style={{fontSize:14,color:"var(--text3)",lineHeight:1.6}}>{t('loginDescription')}</div>
-                <button onClick={async()=>{const{data}=await supabase.auth.signInWithOAuth({provider:"google",options:{redirectTo:"com.stampsapp.app://login-callback",skipBrowserRedirect:true}});if(data?.url)await Browser.open({url:data.url,windowName:"_self"});}}
+                <button onClick={()=>supabase.auth.signInWithOAuth({provider:"google",options:{redirectTo:window.location.origin+"/auth/callback",scopes:"email profile"}})}
                   style={{marginTop:8,padding:"12px 24px",background:"var(--red)",color:"#fff",border:"none",borderRadius:12,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>
                   {t('loginWithGoogle')}
                 </button>
