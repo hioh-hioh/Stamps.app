@@ -724,7 +724,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 .spot-posts{margin-top:20px}
 .spot-post-card{
   background:var(--gray-50);border-radius:8px;
-  padding:14px;margin-bottom:12px
+  padding:14px;margin-bottom:12px;min-width:0;width:100%
 }
 .spot-post-header{
   display:flex;align-items:center;gap:10px;margin-bottom:10px
