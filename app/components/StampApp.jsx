@@ -589,7 +589,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 }
 .toggle-switch input:checked ~ .toggle-thumb{transform:translateX(18px)}
 .limited-dates{
-  display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:8px;background:var(--white);width:100%;
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;background:var(--white);width:100%;
   margin-top:12px
 }
 .limited-date-field{display:flex;flex-direction:column;gap:4px;min-width:0}
@@ -2269,12 +2269,12 @@ const searchGeo = async (q) => {
               </div>}
               {ciLimited && (
                 <>
-                <div style={{padding:"0 16px 8px",width:"100%",boxSizing:"border-box"}}>
-                  <input className="modal-input" placeholder="イベント・スタンプラリー名（任意）"
+                <div className="limited-dates" style={{marginTop:"4px"}}>
+                  <input className="limited-date-input" placeholder="イベント名（任意）"
                     value={ciEventName} onChange={e=>setCiEventName(e.target.value)}
-                    style={{marginBottom:0,background:"#fff",fontSize:16,width:"100%",boxSizing:"border-box"}}/>
+                    style={{gridColumn:"1 / -1",fontSize:16,background:"#fff"}}/>
                 </div>
-                <div className="limited-dates" style={{marginTop:"-8px"}}>
+                <div className="limited-dates" style={{marginTop:"4px"}}>
                   <div className="limited-date-field">
                     <span className="limited-date-label">START</span>
                     <input type="date" className="limited-date-input"
