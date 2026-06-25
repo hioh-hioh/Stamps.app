@@ -10,6 +10,13 @@ const config: CapacitorConfig = {
   },
   ios: {
     scheme: 'com.stampsapp.app'
+  },
+  plugins: {
+    GoogleAuth: {
+      scopes: ['profile', 'email'],
+      serverClientId: '368587032324-pp8j5cuq1s5223kj6501btrh29k8qvg9.apps.googleusercontent.com',
+      forceCodeForRefreshToken: true,
+    }
   }
 };
 
