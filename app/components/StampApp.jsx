@@ -1344,16 +1344,6 @@ useEffect(()=>{
       if(session?.user && session.user.id !== user?.id){ loadCheckins(session.user.id); loadProfile(session.user.id); loadFolders(session.user.id); loadSavedSpots(session.user.id); }
       else setArchives([]);
     });
-    CapApp.addListener('appUrlOpen', async({url})=>{
-      if(url.includes('login-callback')){
-        const u = new URL(url);
-        const code = u.searchParams.get('code');
-        if(code){
-          await supabase.auth.exchangeCodeForSession(code);
-        }
-        await Browser.close();
-      }
-    });
     return () => subscription.unsubscribe();
   },[]);
 
