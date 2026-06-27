@@ -248,7 +248,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   display:flex;align-items:flex-start;
   background:var(--white);
   border-top:1px solid var(--border);
-  padding:12px 0;padding-bottom:calc(20px + env(safe-area-inset-bottom));z-index:999
+  padding:8px 0;padding-bottom:calc(8px + env(safe-area-inset-bottom));z-index:999
 }
 .nbtn{
   flex:1;display:flex;flex-direction:column;align-items:center;
@@ -1818,7 +1818,7 @@ const searchGeo = async (q) => {
             .sort((a,b)=> a.dist!=null && b.dist!=null ? a.dist-b.dist : 0);
           return (
             <div style={{display:"flex",flexDirection:"column",height:"100%",overflow:"hidden"}}>
-              <div style={{flex:1,overflowY:"auto",padding:"8px 16px 120px"}}>
+              <div style={{flex:1,overflowY:"auto",padding:"52px 16px 120px"}}>
                 <div style={{fontSize:13,fontWeight:700,color:"var(--text)",marginTop:12,marginBottom:8}}>{dbSpots.length.toLocaleString()} Stamps.</div>
                 {filtered.length===0 && <div style={{color:"var(--text3)",textAlign:"center",marginTop:40}}>{t('noSpots')}</div>}
                 {filtered.map(s=>{
