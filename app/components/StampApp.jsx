@@ -2106,7 +2106,7 @@ const searchGeo = async (q) => {
               </>
             ) : (
               <>
-              <div style={{padding:"8px 16px 0",marginTop:20,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+              <div style={{padding:"8px 16px 0",marginTop:60,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                 <button onClick={()=>supabase.auth.signOut()}
                   style={{background:"none",border:"none",color:"var(--text3)",fontSize:12,cursor:"pointer",fontFamily:"inherit"}}>
                   {t('logout')}
