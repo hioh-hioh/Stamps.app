@@ -1881,7 +1881,7 @@ const searchGeo = async (q) => {
 </div>
 
             {/* search */}
-            <div className="sbar" style={{position:"absolute",top:isNative?52:16,left:16,right:16}}
+            <div className="sbar" style={{position:"absolute",top:isNative?56:16,left:16,right:16}}
               onClick={()=>{
                 setNearbyOpen(true);
                 setLocLoading(true);
@@ -1899,7 +1899,7 @@ const searchGeo = async (q) => {
             
 
             {/* Filter bar */}
-            <div className="map-filter-bar" style={{top:isNative?108:72}}>
+            <div className="map-filter-bar" style={{top:isNative?112:72}}>
               <button className={`map-filter-btn ${mapFilter==="all"?"on":""}`}
                 onClick={()=>{setMapFilter("all");setShowSaved(false);}}>
                 {t('filterAll')}
