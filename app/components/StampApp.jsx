@@ -1880,7 +1880,7 @@ const searchGeo = async (q) => {
 </div>
 
             {/* search */}
-            <div className="sbar" style={{position:"absolute",top:16,left:16,right:16}}
+            <div className="sbar" style={{position:"absolute",top:52,left:16,right:16}}
               onClick={()=>{
                 setNearbyOpen(true);
                 setLocLoading(true);
