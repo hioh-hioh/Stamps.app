@@ -105,7 +105,7 @@ const T = {
   savedEmptyLine1:      { ja:"保存したスポットがここに表示されます", en:"Spots you save will appear here", zh:"已保存的地点会显示在这里" },
   savedEmptyLine2:      { ja:"ピンを選択してブックマークしましょう", en:"Tap a pin to bookmark it", zh:"点击图钉即可收藏" },
   myPageTitle:          { ja:"マイページ", en:"My Page", zh:"我的页面" },
-  loginDescription:      { ja:"Googleアカウントでログインすると、チェックイン記録やフォルダを管理できます。", en:"Log in with your Google account to manage your check-ins and folders.", zh:"使用Google账号登录后即可管理打卡记录和文件夹。" },
+  loginDescription:      { ja:"マイページにログインすると、スタンプのチェックイン記録や共有、整理ができます。", en:"Log in to record, share, and organize your stamp check-ins.", zh:"登录后即可记录、分享和整理您的印章打卡。" },
   loginWithGoogle:      { ja:"Googleでログイン", en:"Log in with Google", zh:"使用Google登录" },
   loginWithEmail:       { ja:"メールアドレスでログイン", en:"Email address", zh:"邮箱登录" },
   emailPlaceholder:     { ja:"メールアドレス", en:"Email address", zh:"邮箱地址" },
