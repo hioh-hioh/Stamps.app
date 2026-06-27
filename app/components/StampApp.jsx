@@ -315,7 +315,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 }
 .bookmark-btn:active{transform:scale(.85)}
 .map-filter-bar{
-  position:absolute;top:72px;left:0;right:0;
+  position:absolute;top:108px;left:0;right:0;
   display:flex;gap:6px;z-index:20;
   overflow-x:auto;scrollbar-width:none;
   flex-wrap:nowrap;
