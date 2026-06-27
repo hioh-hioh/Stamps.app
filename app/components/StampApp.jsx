@@ -1648,7 +1648,7 @@ const searchGeo = async (q) => {
 
         {/* ════ HOME ════ */}
         {tab==="home" && (
-          <div className="home-screen">
+          <div className="home-screen" style={{paddingTop:isNative?52:16}}>
             {/* Timeline */}
             {(()=>{
               // モックタイムラインデータ
@@ -1899,7 +1899,7 @@ const searchGeo = async (q) => {
             
 
             {/* Filter bar */}
-            <div className="map-filter-bar">
+            <div className="map-filter-bar" style={{top:isNative?108:72}}>
               <button className={`map-filter-btn ${mapFilter==="all"?"on":""}`}
                 onClick={()=>{setMapFilter("all");setShowSaved(false);}}>
                 {t('filterAll')}
