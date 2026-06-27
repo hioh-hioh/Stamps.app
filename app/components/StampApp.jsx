@@ -109,7 +109,10 @@ const T = {
   loginWithGoogle:      { ja:"Googleでログイン", en:"Log in with Google", zh:"使用Google登录" },
   loginWithEmail:       { ja:"メールアドレスでログイン", en:"Email address", zh:"邮箱登录" },
   emailPlaceholder:     { ja:"メールアドレス", en:"Email address", zh:"邮箱地址" },
-  emailSent:            { ja:"ログインリンクを送信しました。メールを確認してください。", en:"Login link sent. Please check your email.", zh:"登录链接已发送，请检查您的邮箱。" },
+  emailSent:            { ja:"6桁のコードをメールに送信しました。", en:"We sent a 6-digit code to your email.", zh:"已向您的邮箱发送6位验证码。" },
+  otpPlaceholder:       { ja:"6桁のコードを入力", en:"Enter 6-digit code", zh:"输入6位验证码" },
+  otpVerify:            { ja:"確認する", en:"Verify", zh:"验证" },
+  otpError:             { ja:"コードが正しくありません", en:"Invalid code", zh:"验证码错误" },
   logout:                { ja:"ログアウト", en:"Log out", zh:"退出登录" },
   confirmDeleteFolder:  { ja:"このフォルダを削除しますか？", en:"Delete this folder?", zh:"要删除这个文件夹吗？" },
   folderDeleted:        { ja:"フォルダを削除しました", en:"Folder deleted", zh:"文件夹已删除" },
@@ -2102,10 +2105,17 @@ const searchGeo = async (q) => {
                 </button>
                 <div style={{width:"100%",display:"flex",alignItems:"center",gap:8}}><div style={{flex:1,height:1,background:"var(--gray-200)"}}/><span style={{fontSize:12,color:"var(--text3)"}}>or</span><div style={{flex:1,height:1,background:"var(--gray-200)"}}/></div>
                 <input id="magic-email" type="email" placeholder={t('emailPlaceholder')} style={{width:"100%",padding:"12px 16px",borderRadius:12,border:"1.5px solid var(--gray-200)",fontSize:16,fontFamily:"inherit",boxSizing:"border-box"}}/>
-                <button onClick={async()=>{const email=document.getElementById('magic-email').value;if(!email)return;const{error}=await supabase.auth.signInWithOtp({email,options:{emailRedirectTo:"https://stampsapp.vercel.app"}});if(error)showToast(error.message);else showToast(t('emailSent'));}}
+                <button onClick={async()=>{const email=document.getElementById('magic-email').value;if(!email)return;const{error}=await supabase.auth.signInWithOtp({email,options:{shouldCreateUser:true}});if(error)showToast(error.message);else{showToast(t('emailSent'));document.getElementById('otp-section').style.display='block';}}}
                   style={{width:"100%",padding:"14px 24px",background:"#616168",color:"#fff",border:"none",borderRadius:12,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>
                   {t('loginWithEmail')}
                 </button>
+                <div id="otp-section" style={{display:"none",width:"100%",display:"flex",flexDirection:"column",gap:8}}>
+                  <input id="otp-code" type="number" placeholder={t('otpPlaceholder')} style={{width:"100%",padding:"12px 16px",borderRadius:12,border:"1.5px solid var(--gray-200)",fontSize:20,fontFamily:"inherit",boxSizing:"border-box",textAlign:"center",letterSpacing:8}}/>
+                  <button onClick={async()=>{const email=document.getElementById('magic-email').value;const token=document.getElementById('otp-code').value;if(!token)return;const{error}=await supabase.auth.verifyOtp({email,token,type:'email'});if(error)showToast(t('otpError'));}}
+                    style={{width:"100%",padding:"14px 24px",background:"var(--red)",color:"#fff",border:"none",borderRadius:12,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>
+                    {t('otpVerify')}
+                  </button>
+                </div>
               </div>
               </>
             ) : (
