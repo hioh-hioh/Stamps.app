@@ -261,7 +261,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 
 /* ── SEARCH BAR ── */
 .sbar{
-  position:absolute;top:16px;left:16px;right:16px;z-index:20;
+  position:absolute;top:52px;left:16px;right:16px;z-index:20;
   display:flex;align-items:center;gap:10px;
   background:var(--white);border-radius:12px;
   padding:10px 14px;box-shadow:var(--sh-md)
@@ -375,7 +375,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 .fab:active{transform:scale(.94)}
 
 /* ══════ HOME ══════ */
-.home-screen{flex:1;overflow-y:auto;padding-top:16px;padding-bottom:160px;background:var(--white);overscroll-behavior:contain}
+.home-screen{flex:1;overflow-y:auto;padding-top:52px;padding-bottom:160px;background:var(--white);overscroll-behavior:contain}
 .home-search{
   display:flex;align-items:center;gap:10px;margin:0;
   background:var(--white);padding:16px 16px 12px;
@@ -2106,7 +2106,7 @@ const searchGeo = async (q) => {
               </>
             ) : (
               <>
-              <div style={{padding:"8px 16px 0",marginTop:"calc(env(safe-area-inset-top) + 16px)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+              <div style={{padding:"8px 16px 0",marginTop:44,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                 <button onClick={()=>supabase.auth.signOut()}
                   style={{background:"none",border:"none",color:"var(--text3)",fontSize:12,cursor:"pointer",fontFamily:"inherit"}}>
                   {t('logout')}
