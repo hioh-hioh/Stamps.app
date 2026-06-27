@@ -1322,6 +1322,7 @@ const [creatorAvatar, setCreatorAvatar] = useState("");
   const [otpEmail, setOtpEmail]   = useState("");
   const [otpOpen, setOtpOpen]     = useState(false);
   const [otpCode, setOtpCode]     = useState("");
+  const [mounted, setMounted]     = useState(false);
   // ブラウザの言語設定から表示言語を自動判定（ja/en/zh。それ以外はja）
   const [lang] = useState(()=>{
     const bl = (typeof navigator!=="undefined" ? navigator.language||navigator.userLanguage||"" : "").toLowerCase();
@@ -1338,6 +1339,7 @@ const [creatorAvatar, setCreatorAvatar] = useState("");
     if(!cat) return "";
     return CATEGORY_LABELS[lang]?.[cat] || CATEGORY_LABELS.ja[cat] || cat;
   };
+useEffect(()=>{ setMounted(true); },[]);
 useEffect(()=>{
     supabase.auth.getSession().then(({data:{session}})=>{
       setUser(session?.user ?? null);
@@ -3212,7 +3214,7 @@ const searchGeo = async (q) => {
         </nav>
 
         {/* ════ TOAST ════ */}
-        {otpOpen && (
+        {mounted && otpOpen && (
           <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.5)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",padding:"0 24px"}}>
             <div style={{background:"#fff",borderRadius:16,padding:24,width:"100%",maxWidth:360,display:"flex",flexDirection:"column",gap:12}}>
               <div style={{fontSize:16,fontWeight:700}}>{t('emailSent')}</div>
