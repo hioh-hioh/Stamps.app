@@ -47,25 +47,22 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
-<key>CFBundleURLTypes</key>
-<array>
 <key>GIDClientID</key>
-<string>368587032324-pp8j5cuq1s5223kj6501btrh29k8qvg9.apps.googleusercontent.com</string>
-<key>CFBundleURLTypes</key>
-<array>
-  <dict>
-    <key>CFBundleURLSchemes</key>
-    <array>
-      <string>com.googleusercontent.apps.368587032324-pp8j5cuq1s5223kj6501btrh29k8qvg9</string>
-    </array>
-  </dict>
-</array>
-  <dict>
-    <key>CFBundleURLSchemes</key>
-    <array>
-      <string>com.stampsapp.app</string>
-    </array>
-  </dict>
-</array>
+	<string>368587032324-pp8j5cuq1s5223kj6501btrh29k8qvg9.apps.googleusercontent.com</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.stampsapp.app</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.368587032324-pp8j5cuq1s5223kj6501btrh29k8qvg9</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

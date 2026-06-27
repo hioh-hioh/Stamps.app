@@ -2092,8 +2092,15 @@ const searchGeo = async (q) => {
                 <img src="/stamp_logo.png" alt="Stamps." style={{height:80}}/>
                 <div style={{fontSize:14,color:"var(--text3)",lineHeight:1.6}}>{t('loginDescription')}</div>
                 <button onClick={async()=>{try{const platform=Capacitor.getPlatform();if(platform==='web'){await supabase.auth.signInWithOAuth({provider:'google',options:{redirectTo:'https://stampsapp.vercel.app/auth/callback'}});}else{const rawNonce=Array.from(crypto.getRandomValues(new Uint8Array(32))).map(b=>b.toString(16).padStart(2,'0')).join('');const encoder=new TextEncoder();const data=encoder.encode(rawNonce);const hashBuffer=await crypto.subtle.digest('SHA-256',data);const nonce=Array.from(new Uint8Array(hashBuffer)).map(b=>b.toString(16).padStart(2,'0')).join('');await SocialLogin.initialize({google:{webClientId:'368587032324-v1vbgkruufbgc13fedfr4pt0ef4em4qd.apps.googleusercontent.com',iOSClientId:'368587032324-pp8j5cuq1s5223kj6501btrh29k8qvg9.apps.googleusercontent.com',mode:'online'}});const r=await SocialLogin.login({provider:'google',options:{scopes:['email','profile'],nonce:nonce}});const idToken=r.result?.idToken;if(idToken){const{error}=await supabase.auth.signInWithIdToken({provider:'google',token:idToken,nonce:rawNonce});if(error)console.error(error);}}}catch(e){console.error(e);}}}
-                  style={{marginTop:8,padding:"12px 24px",background:"var(--red)",color:"#fff",border:"none",borderRadius:12,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>
+                  style={{width:"100%",padding:"14px 24px",background:"var(--red)",color:"#fff",border:"none",borderRadius:12,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+                  <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#fff" d="M44.5 20H24v8.5h11.8C34.7 33.9 29.8 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"/></svg>
                   {t('loginWithGoogle')}
+                </button>
+                <div style={{width:"100%",display:"flex",alignItems:"center",gap:8}}><div style={{flex:1,height:1,background:"var(--gray-200)"}}/><span style={{fontSize:12,color:"var(--text3)"}}>or</span><div style={{flex:1,height:1,background:"var(--gray-200)"}}/></div>
+                <input id="magic-email" type="email" placeholder={t('emailPlaceholder')} style={{width:"100%",padding:"12px 16px",borderRadius:12,border:"1.5px solid var(--gray-200)",fontSize:16,fontFamily:"inherit",boxSizing:"border-box"}}/>
+                <button onClick={async()=>{const email=document.getElementById('magic-email').value;if(!email)return;const{error}=await supabase.auth.signInWithOtp({email,options:{emailRedirectTo:"https://stampsapp.vercel.app"}});if(error)showToast(error.message);else showToast(t('emailSent'));}}
+                  style={{width:"100%",padding:"14px 24px",background:"#616168",color:"#fff",border:"none",borderRadius:12,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>
+                  {t('loginWithEmail')}
                 </button>
               </div>
               </>
