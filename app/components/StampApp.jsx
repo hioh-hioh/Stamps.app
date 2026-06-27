@@ -2589,7 +2589,7 @@ const searchGeo = async (q) => {
 
         {/* ════ NEARBY SEARCH OVERLAY ════ */}
         <div className={`nearby-overlay ${nearbyOpen?"open":""}`}>
-          <div className="nearby-search-top">
+          <div className="nearby-search-top" style={{paddingTop:isNative?52:16}}>
             <button className="nearby-back" onClick={()=>{setNearbyOpen(false);setNearbySearch("");}}>
               <Ic.Back/> {t('backToMap')}
             </button>
