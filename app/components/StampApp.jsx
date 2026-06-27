@@ -1319,6 +1319,9 @@ const [creatorAvatar, setCreatorAvatar] = useState("");
   const [showFolderPicker, setShowFolderPicker] = useState(false);
   const [toast, setToast]         = useState({msg:"",type:""});
   const [toastOn, setToastOn]     = useState(false);
+  const [otpEmail, setOtpEmail]   = useState("");
+  const [otpOpen, setOtpOpen]     = useState(false);
+  const [otpCode, setOtpCode]     = useState("");
   // ブラウザの言語設定から表示言語を自動判定（ja/en/zh。それ以外はja）
   const [lang] = useState(()=>{
     const bl = (typeof navigator!=="undefined" ? navigator.language||navigator.userLanguage||"" : "").toLowerCase();
@@ -2105,17 +2108,10 @@ const searchGeo = async (q) => {
                 </button>
                 <div style={{width:"100%",display:"flex",alignItems:"center",gap:8}}><div style={{flex:1,height:1,background:"var(--gray-200)"}}/><span style={{fontSize:12,color:"var(--text3)"}}>or</span><div style={{flex:1,height:1,background:"var(--gray-200)"}}/></div>
                 <input id="magic-email" type="email" placeholder={t('emailPlaceholder')} style={{width:"100%",padding:"12px 16px",borderRadius:12,border:"1.5px solid var(--gray-200)",fontSize:16,fontFamily:"inherit",boxSizing:"border-box"}}/>
-                <button onClick={async()=>{const email=document.getElementById('magic-email').value;if(!email)return;const{error}=await supabase.auth.signInWithOtp({email,options:{shouldCreateUser:true}});if(error)showToast(error.message);else{showToast(t('emailSent'));document.getElementById('otp-section').style.display='block';}}}
+                <button onClick={async()=>{const email=document.getElementById('magic-email').value;if(!email)return;const{error}=await supabase.auth.signInWithOtp({email,options:{shouldCreateUser:true}});if(error)showToast(error.message);else{showToast(t('emailSent'));setOtpEmail(email);setOtpOpen(true);}}}
                   style={{width:"100%",padding:"14px 24px",background:"#616168",color:"#fff",border:"none",borderRadius:12,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>
                   {t('loginWithEmail')}
                 </button>
-                <div id="otp-section" style={{display:"none",width:"100%",display:"flex",flexDirection:"column",gap:8}}>
-                  <input id="otp-code" type="number" placeholder={t('otpPlaceholder')} style={{width:"100%",padding:"12px 16px",borderRadius:12,border:"1.5px solid var(--gray-200)",fontSize:20,fontFamily:"inherit",boxSizing:"border-box",textAlign:"center",letterSpacing:8}}/>
-                  <button onClick={async()=>{const email=document.getElementById('magic-email').value;const token=document.getElementById('otp-code').value;if(!token)return;const{error}=await supabase.auth.verifyOtp({email,token,type:'email'});if(error)showToast(t('otpError'));}}
-                    style={{width:"100%",padding:"14px 24px",background:"var(--red)",color:"#fff",border:"none",borderRadius:12,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>
-                    {t('otpVerify')}
-                  </button>
-                </div>
               </div>
               </>
             ) : (
@@ -3216,6 +3212,20 @@ const searchGeo = async (q) => {
         </nav>
 
         {/* ════ TOAST ════ */}
+        {otpOpen && (
+          <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.5)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",padding:"0 24px"}}>
+            <div style={{background:"#fff",borderRadius:16,padding:24,width:"100%",maxWidth:360,display:"flex",flexDirection:"column",gap:12}}>
+              <div style={{fontSize:16,fontWeight:700}}>{t('emailSent')}</div>
+              <div style={{fontSize:13,color:"var(--text3)"}}>{otpEmail}</div>
+              <input value={otpCode} onChange={e=>setOtpCode(e.target.value)} type="number" placeholder={t('otpPlaceholder')} style={{padding:"12px 16px",borderRadius:12,border:"1.5px solid var(--gray-200)",fontSize:24,fontFamily:"inherit",textAlign:"center",letterSpacing:8,width:"100%",boxSizing:"border-box"}}/>
+              <button onClick={async()=>{if(!otpCode)return;const{error}=await supabase.auth.verifyOtp({email:otpEmail,token:otpCode,type:'email'});if(error)showToast(t('otpError'));else{setOtpOpen(false);setOtpCode("");}}}
+                style={{padding:"14px",background:"var(--red)",color:"#fff",border:"none",borderRadius:12,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>
+                {t('otpVerify')}
+              </button>
+              <button onClick={()=>{setOtpOpen(false);setOtpCode("");}} style={{padding:"10px",background:"none",border:"none",color:"var(--text3)",fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>{t('cancel')}</button>
+            </div>
+          </div>
+        )}
         <div className={`toast ${toastOn?"show":""} ${toast.type}`}>{toast.msg}</div>
       </div>
       </>
