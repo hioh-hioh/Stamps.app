@@ -2167,7 +2167,7 @@ const searchGeo = async (q) => {
                             <img src={coverUrl}
                               style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",display:"block"}}/>
                           ) : (
-                            <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:28}}>📁</div>
+                            <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:28}}></div>
                           )}
                           {f.id!=="all" && (
                             <div style={{position:"absolute",top:6,right:6}} onClick={e=>e.stopPropagation()}>
@@ -2989,7 +2989,7 @@ const searchGeo = async (q) => {
                     style={{display:"flex",alignItems:"center",gap:12,padding:"14px 0",
                       borderBottom:"1px solid var(--gray-50)",cursor:"pointer"}}>
                     <div style={{width:40,height:40,borderRadius:8,background:"var(--gray-100)",
-                      display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}}>📁</div>
+                      display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}}></div>
                     <div>
                       <div style={{fontSize:14,fontWeight:500,color:"var(--text)"}}>{f.title}</div>
                       <div style={{fontSize:12,color:"var(--text3)",marginTop:2}}>{f.ids.length} stamps</div>
