@@ -14,13 +14,13 @@ function FlyToRegistrar() {
   return null;
 }
 
-export default function MapView({ children }) {
+export default function MapView({ children, userLocation }) {
   return (
     <Map
       mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
       initialViewState={{
-        longitude: 139.7016,
-        latitude: 35.6580,
+        longitude: userLocation?.lng || 139.7016,
+        latitude: userLocation?.lat || 35.6580,
         zoom: 14,
       }}
       style={{ width: '100%', height: '100%' }}
