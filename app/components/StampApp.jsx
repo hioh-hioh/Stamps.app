@@ -1340,6 +1340,7 @@ const [creatorAvatar, setCreatorAvatar] = useState("");
   const [otpEmail, setOtpEmail]   = useState("");
   const [menuOpen, setMenuOpen]   = useState(false);
   const [selArcFolderName, setSelArcFolderName] = useState("");
+  const [arcMenuOpen, setArcMenuOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
   const [otpOpen, setOtpOpen]     = useState(false);
   const [otpCode, setOtpCode]     = useState("");
@@ -2545,7 +2546,7 @@ const searchGeo = async (q) => {
             {selArc.photos && selArc.photos.length > 0 ? (
               <div style={{marginTop:16,display:"flex",gap:6,overflowX:"auto",padding:"0 16px"}}>
                 {selArc.photos.map((url,i)=>(
-                  <img key={i} src={url} style={{maxWidth:"calc(100vw - 32px)",flexShrink:0,height:"auto",maxHeight:400,objectFit:"contain",display:"block",borderRadius:8}}/>
+                  <img key={i} src={url} style={{maxWidth:"calc(85vw - 32px)",flexShrink:0,height:"auto",maxHeight:340,objectFit:"contain",display:"block",borderRadius:8}}/>
                 ))}
               </div>
             ) : (
@@ -2553,16 +2554,9 @@ const searchGeo = async (q) => {
             )}
             <div className="arc-body">
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                <div className="arc-spot">{selArc.spot}</div>
-                <button onClick={async()=>{
-                  if(!confirm(t('confirmDeleteCheckinRecord'))) return;
-                  const {supabase} = await import("../../lib/supabase");
-                  await supabase.from("checkins").delete().eq("id", selArc.id);
-                  setArchives(a=>a.filter(e=>e.id!==selArc.id));
-                  setSelArc(null);
-                  showToast(t('deletedToast'));
-                }} style={{background:"none",border:"none",cursor:"pointer",color:"var(--text3)",padding:4}}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                <div className="arc-spot" style={{flex:1}}>{selArc.spot}</div>
+                <button onClick={()=>setArcMenuOpen(true)} style={{background:"none",border:"none",cursor:"pointer",color:"var(--text3)",padding:"4px 8px",alignSelf:"center",flexShrink:0}}>
+                  <svg width="20" height="4" viewBox="0 0 20 4" fill="none"><circle cx="2" cy="2" r="2" fill="currentColor"/><circle cx="10" cy="2" r="2" fill="currentColor"/><circle cx="18" cy="2" r="2" fill="currentColor"/></svg>
                 </button>
               </div>
               <div className="arc-sub">{selArc.sub}</div>
@@ -2863,7 +2857,7 @@ const searchGeo = async (q) => {
             return <>
               <div className="group-hd">
                 <button className="arc-back" onClick={()=>setSelGroup(null)}><Ic.Back/></button>
-                <h2 style={{whiteSpace:"normal",overflow:"visible",textOverflow:"unset"}}>{selGroup.title}</h2>
+                <h2 style={{whiteSpace:"normal",overflow:"visible",textOverflow:"unset"}}>{selGroup.id==="all"?"All":selGroup.title}</h2>
               </div>
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,padding:"0 16px",margin:"14px 0 4px"}}>
                 <span className="group-count">{items.length} stamps</span>
@@ -2881,7 +2875,7 @@ const searchGeo = async (q) => {
               <div className="group-masonry">
                 <div className="group-col">
                   {left.map((e,i)=>(
-                    <div key={e.id} className="group-cell" onClick={()=>{setSelArc(e);setSelArcFolderName(selGroup.title);}}>
+                    <div key={e.id} className="group-cell" onClick={()=>{setSelArc(e);setSelArcFolderName(selGroup.id==="all"?"All":selGroup.title);}}>
                       <div className="group-cell-img"
                         style={{height:leftHeights[i%leftHeights.length],background:e.color||"var(--gray-100)"}}>
                         {e.photos&&e.photos.length>0
@@ -3198,6 +3192,22 @@ const searchGeo = async (q) => {
         </nav>
 
         {/* ════ TOAST ════ */}
+        {arcMenuOpen && selArc && (
+          <div onClick={()=>setArcMenuOpen(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.3)",zIndex:9999,display:"flex",alignItems:"flex-end",justifyContent:"center"}}>
+            <div onClick={e=>e.stopPropagation()} style={{background:"#fff",borderRadius:"16px 16px 0 0",width:"100%",maxWidth:480,paddingBottom:"env(safe-area-inset-bottom)"}}>
+              <button onClick={async()=>{
+                  if(!confirm(t('confirmDeleteCheckinRecord'))) return;
+                  const {supabase} = await import("../../lib/supabase");
+                  await supabase.from("checkins").delete().eq("id", selArc.id);
+                  setArchives(a=>a.filter(e=>e.id!==selArc.id));
+                  setArcMenuOpen(false);
+                  setSelArc(null);
+                  showToast(t('deletedToast'));
+                }} style={{display:"block",width:"100%",textAlign:"center",padding:"16px",fontSize:15,color:"var(--red)",background:"none",border:"none",borderTop:"1px solid var(--gray-100)",cursor:"pointer",fontFamily:"inherit"}}>{t('delete')}</button>
+              <button onClick={()=>setArcMenuOpen(false)} style={{display:"block",width:"100%",textAlign:"center",padding:"16px",fontSize:15,color:"var(--text)",background:"none",border:"none",borderTop:"8px solid var(--gray-50)",cursor:"pointer",fontFamily:"inherit"}}>{t('cancel')}</button>
+            </div>
+          </div>
+        )}
         {menuOpen && (
           <div style={{position:"fixed",inset:0,background:"#fff",zIndex:9999,overflowY:"auto",animation:isDesktop?"none":"slideInRight 0.25s ease-out"}}>
             <div style={{display:"flex",alignItems:"center",padding:"14px 16px 12px",position:"sticky",top:0,background:"#fff",zIndex:10}}>
