@@ -1,5 +1,5 @@
 'use client'
-import Map, { useMap } from 'react-map-gl/mapbox'
+import Map, { useMap, Marker } from 'react-map-gl/mapbox'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { useEffect, useState } from 'react'
 
@@ -39,6 +39,14 @@ export default function MapView({ children, userLocation }) {
     >
       <FlyToRegistrar />
       <FlyToUserLocation userLocation={userLocation} />
+      {userLocation && (
+        <Marker longitude={userLocation.lng} latitude={userLocation.lat} anchor="center">
+          <div style={{position:'relative',width:20,height:20}}>
+            <div style={{position:'absolute',inset:0,borderRadius:'50%',background:'#4285F4',opacity:0.25,animation:'pulse 2s infinite'}}/>
+            <div style={{position:'absolute',top:4,left:4,width:12,height:12,borderRadius:'50%',background:'#4285F4',border:'2px solid #fff',boxShadow:'0 0 4px rgba(0,0,0,0.3)'}}/>
+          </div>
+        </Marker>
+      )}
       {children}
     </Map>
   )

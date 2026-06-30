@@ -274,6 +274,11 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 .nbtn.active{color:var(--red)}
 .nbtn-icon{width:24px;height:24px;margin-bottom:4px}
 
+@keyframes pulse{
+  0%{transform:scale(1);opacity:0.25}
+  70%{transform:scale(2.5);opacity:0}
+  100%{transform:scale(2.5);opacity:0}
+}
 @keyframes slideInRight{
   from{transform:translateX(100%);opacity:0.5}
   to{transform:translateX(0);opacity:1}
