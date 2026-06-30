@@ -2546,7 +2546,7 @@ const searchGeo = async (q) => {
             {selArc.photos && selArc.photos.length > 0 ? (
               <div style={{marginTop:16,display:"flex",gap:6,overflowX:"auto",padding:"0 16px",justifyContent:selArc.photos.length===1?"center":"flex-start"}}>
                 {selArc.photos.map((url,i)=>(
-                  <img key={i} src={url} style={{maxWidth:"calc(85vw - 32px)",flexShrink:0,height:"auto",maxHeight:340,objectFit:"contain",display:"block",borderRadius:12,overflow:"hidden"}}/>
+                  <img key={i} src={url} style={{maxWidth:"calc(85vw - 32px)",flexShrink:0,height:340,objectFit:"contain",display:"block",borderRadius:12,overflow:"hidden"}}/>
                 ))}
               </div>
             ) : (
