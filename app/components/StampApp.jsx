@@ -105,6 +105,10 @@ const T = {
   savedEmptyLine1:      { ja:"保存したスポットがここに表示されます", en:"Spots you save will appear here", zh:"已保存的地点会显示在这里" },
   savedEmptyLine2:      { ja:"ピンを選択してブックマークしましょう", en:"Tap a pin to bookmark it", zh:"点击图钉即可收藏" },
   myPageTitle:          { ja:"マイページ", en:"My Page", zh:"我的页面" },
+  menuContactUs:         { ja:"お問い合わせ", en:"Contact Us", zh:"联系我们" },
+  menuReportBug:         { ja:"不具合を報告", en:"Report Bug", zh:"报告问题" },
+  menuAbout:             { ja:"Stamps.について", en:"About Stamps.", zh:"关于 Stamps." },
+  menuPrivacy:           { ja:"プライバシーポリシー", en:"Privacy Policy", zh:"隐私政策" },
   loginDescription:      { ja:"マイページにログインすると、スタンプのチェックイン記録や共有、整理ができます。", en:"Log in to record, share, and organize your stamp check-ins.", zh:"登录后即可记录、分享和整理您的印章打卡。" },
   loginWithGoogle:      { ja:"Googleでログイン", en:"Log in with Google", zh:"使用Google登录" },
   loginWithEmail:       { ja:"メールアドレスでログイン", en:"Email address", zh:"邮箱登录" },
@@ -1320,6 +1324,7 @@ const [creatorAvatar, setCreatorAvatar] = useState("");
   const [toast, setToast]         = useState({msg:"",type:""});
   const [toastOn, setToastOn]     = useState(false);
   const [otpEmail, setOtpEmail]   = useState("");
+  const [menuOpen, setMenuOpen]   = useState(false);
   const [otpOpen, setOtpOpen]     = useState(false);
   const [otpCode, setOtpCode]     = useState("");
   const [mounted, setMounted]     = useState(false);
@@ -2098,6 +2103,9 @@ const searchGeo = async (q) => {
         {/* ════ MYPAGE ════ */}
         {tab==="mypage" && (
           <div className="mypage-screen">
+            <button onClick={()=>setMenuOpen(true)} style={{position:"absolute",top:isNative?56:16,right:16,zIndex:30,background:"none",border:"none",padding:8,cursor:"pointer"}}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="21" height="14" viewBox="0 0 21 14" fill="none"><path d="M0 13.5V11.25H20.25V13.5H0ZM0 7.875V5.625H20.25V7.875H0ZM0 2.25V0H20.25V2.25H0Z" fill="#5D5D5D"/></svg>
+            </button>
             {!user ? (
               <>
               <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",height:"70vh",gap:16,padding:"0 32px",textAlign:"center"}}>
@@ -3214,6 +3222,16 @@ const searchGeo = async (q) => {
         </nav>
 
         {/* ════ TOAST ════ */}
+        {menuOpen && (
+          <div onClick={()=>setMenuOpen(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.5)",zIndex:9999,display:"flex",alignItems:"flex-start",justifyContent:"flex-end",padding:`${isNative?56:16}px 16px 0 0`}}>
+            <div onClick={e=>e.stopPropagation()} style={{background:"#fff",borderRadius:12,boxShadow:"0 4px 16px rgba(0,0,0,0.15)",width:200,overflow:"hidden"}}>
+              <a href="mailto:support@stampsapp.app" style={{display:"block",padding:"14px 16px",fontSize:14,color:"var(--text)",textDecoration:"none",borderBottom:"1px solid var(--gray-100)"}}>{t('menuContactUs')}</a>
+              <a href="mailto:support@stampsapp.app?subject=Bug%20Report" style={{display:"block",padding:"14px 16px",fontSize:14,color:"var(--text)",textDecoration:"none",borderBottom:"1px solid var(--gray-100)"}}>{t('menuReportBug')}</a>
+              <a href="https://stampsapp.vercel.app/about" style={{display:"block",padding:"14px 16px",fontSize:14,color:"var(--text)",textDecoration:"none",borderBottom:"1px solid var(--gray-100)"}}>{t('menuAbout')}</a>
+              <a href="https://stampsapp.vercel.app/privacy" style={{display:"block",padding:"14px 16px",fontSize:14,color:"var(--text)",textDecoration:"none"}}>{t('menuPrivacy')}</a>
+            </div>
+          </div>
+        )}
         {mounted && otpOpen && (
           <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.5)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",padding:"0 24px"}}>
             <div style={{background:"#fff",borderRadius:16,padding:24,width:"100%",maxWidth:360,display:"flex",flexDirection:"column",gap:12}}>
