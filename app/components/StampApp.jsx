@@ -274,6 +274,10 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 .nbtn.active{color:var(--red)}
 .nbtn-icon{width:24px;height:24px;margin-bottom:4px}
 
+@keyframes slideInRight{
+  from{transform:translateX(100%);opacity:0.5}
+  to{transform:translateX(0);opacity:1}
+}
 /* ── SEARCH BAR ── */
 .sbar{
   position:absolute;top:16px;left:16px;right:16px;z-index:20;
@@ -3224,7 +3228,7 @@ const searchGeo = async (q) => {
 
         {/* ════ TOAST ════ */}
         {menuOpen && (
-          <div style={{position:"fixed",inset:0,background:"#fff",zIndex:9999,overflowY:"auto"}}>
+          <div style={{position:"fixed",inset:0,background:"#fff",zIndex:9999,overflowY:"auto",animation:"slideInRight 0.25s ease-out"}}>
             <div style={{display:"flex",alignItems:"center",padding:"14px 16px 12px",position:"sticky",top:0,background:"#fff",zIndex:10}}>
               <button onClick={()=>setMenuOpen(false)} style={{background:"none",border:"none",cursor:"pointer",color:"var(--text2)",display:"flex",padding:0}}>
                 <Ic.Back/>
