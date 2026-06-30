@@ -359,7 +359,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   background:var(--white);
   border-radius:var(--r-lg) var(--r-lg) 0 0;
   box-shadow:0 -4px 20px rgba(0,0,0,.12);
-  max-height:360px;overflow-y:auto;padding-bottom:12px;
+  max-height:480px;overflow-y:auto;padding-bottom:24px;
   transform:translateY(0);transition:transform .3s cubic-bezier(.4,0,.2,1);z-index:29
 }
 .saved-panel.hidden{transform:translateY(110%)}
@@ -1937,7 +1937,7 @@ const searchGeo = async (q) => {
               </button>
               <button className={`map-filter-btn ${mapFilter==="saved"?"on":""}`}
                 onClick={()=>{setMapFilter("saved");setShowSaved(true);}}>
-                <BookmarkSVG active={mapFilter==="saved"} size={14}/> {t('filterSaved')}{savedSpots.length>0?` (${savedSpots.length})`:""}
+                <BookmarkSVG active={mapFilter==="saved"} size={14}/> {t('filterSaved')}
               </button>
               <button className={`map-filter-btn ${mapFilter==="checkedin"?"on":""}`}
                 onClick={()=>{setMapFilter("checkedin");setShowSaved(false);}}>
@@ -1953,7 +1953,7 @@ const searchGeo = async (q) => {
               }}
               style={{
                 position:"fixed",
-                bottom:(showSaved&&mapFilter==="saved")?`calc(${90 + 52 + 12 + 360}px + env(safe-area-inset-bottom))`:`calc(${90 + 52 + 12}px + env(safe-area-inset-bottom))`,
+                bottom:(showSaved&&mapFilter==="saved")?`calc(${90 + 52 + 12 + 220}px + env(safe-area-inset-bottom))`:`calc(${90 + 52 + 12}px + env(safe-area-inset-bottom))`,
                 right:"max(20px, calc(50vw - 175px))",
                 width:52, height:52,
                 background:"none", border:"none", cursor:"pointer",
@@ -1985,46 +1985,8 @@ const searchGeo = async (q) => {
               </svg>
             </button>
             {/* FAB */}
-            <button onClick={()=>{
-                if(!navigator.geolocation) return;
-                navigator.geolocation.getCurrentPosition(pos=>{
-                  if(window.__mapboxFlyTo) window.__mapboxFlyTo(pos.coords.longitude, pos.coords.latitude);
-                });
-              }}
-              style={{
-                position:"fixed",
-                bottom:`calc(${90 + 52 + 12}px + env(safe-area-inset-bottom))`,
-                right:"max(20px, calc(50vw - 175px))",
-                width:52, height:52,
-                background:"none", border:"none", cursor:"pointer",
-                padding:0, zIndex:50,
-              }}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 52 52" fill="none">
-                <g filter="url(#filter0_d_190_2664)">
-                  <rect x="6" y="4" width="40" height="40" rx="20" fill="white"/>
-                  <mask id="mask0_190_2664" style={{maskType:"alpha"}} maskUnits="userSpaceOnUse" x="14" y="12" width="25" height="25">
-                    <rect x="14" y="12" width="24.5" height="24.5" fill="#D9D9D9"/>
-                  </mask>
-                  <g mask="url(#mask0_190_2664)">
-                    <path d="M25.1667 32.625V30.9583C23.4306 30.7639 21.941 30.0451 20.6979 28.8021C19.4549 27.559 18.7361 26.0694 18.5417 24.3333H16.875V22.6667H18.5417C18.7361 20.9306 19.4549 19.441 20.6979 18.1979C21.941 16.9549 23.4306 16.2361 25.1667 16.0417V14.375H26.8333V16.0417C28.5694 16.2361 30.059 16.9549 31.3021 18.1979C32.5451 19.441 33.2639 20.9306 33.4583 22.6667H35.125V24.3333H33.4583C33.2639 26.0694 32.5451 27.559 31.3021 28.8021C30.059 30.0451 28.5694 30.7639 26.8333 30.9583V32.625H25.1667ZM30.125 27.625C31.2639 26.4861 31.8333 25.1111 31.8333 23.5C31.8333 21.8889 31.2639 20.5139 30.125 19.375C28.9861 18.2361 27.6111 17.6667 26 17.6667C24.3889 17.6667 23.0139 18.2361 21.875 19.375C20.7361 20.5139 20.1667 21.8889 20.1667 23.5C20.1667 25.1111 20.7361 26.4861 21.875 27.625C23.0139 28.7639 24.3889 29.3333 26 29.3333C27.6111 29.3333 28.9861 28.7639 30.125 27.625ZM23.6458 25.8542C22.9931 25.2014 22.6667 24.4167 22.6667 23.5C22.6667 22.5833 22.9931 21.7986 23.6458 21.1458C24.2986 20.4931 25.0833 20.1667 26 20.1667C26.9167 20.1667 27.7014 20.4931 28.3542 21.1458C29.0069 21.7986 29.3333 22.5833 29.3333 23.5C29.3333 24.4167 29.0069 25.2014 28.3542 25.8542C27.7014 26.5069 26.9167 26.8333 26 26.8333C25.0833 26.8333 24.2986 26.5069 23.6458 25.8542Z" fill="#616168"/>
-                  </g>
-                </g>
-                <defs>
-                  <filter id="filter0_d_190_2664" x="0" y="0" width="52" height="52" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-                    <feFlood floodOpacity="0" result="BackgroundImageFix"/>
-                    <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-                    <feOffset dy="2"/>
-                    <feGaussianBlur stdDeviation="3"/>
-                    <feComposite in2="hardAlpha" operator="out"/>
-                    <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.03 0"/>
-                    <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_190_2664"/>
-                    <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_190_2664" result="shape"/>
-                  </filter>
-                </defs>
-              </svg>
-            </button>
             <button className="fab"
-              style={{bottom:(showSaved&&mapFilter==="saved")?"calc(450px + env(safe-area-inset-bottom))":undefined,transition:"bottom .3s cubic-bezier(.4,0,.2,1)"}}
+              style={{bottom:(showSaved&&mapFilter==="saved")?`calc(${90 + 220}px + env(safe-area-inset-bottom))`:undefined,transition:"bottom .3s cubic-bezier(.4,0,.2,1)"}}
               onClick={()=>setNewCiOpen(true)}>+</button>
 
             {/* bottom sheet */}
