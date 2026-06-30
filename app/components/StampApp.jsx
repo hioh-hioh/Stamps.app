@@ -1953,12 +1953,11 @@ const searchGeo = async (q) => {
               }}
               style={{
                 position:"fixed",
-                display:(showSaved&&mapFilter==="saved")?"none":"block",
                 bottom:`calc(${90 + 52 + 12}px + env(safe-area-inset-bottom))`,
                 right:"max(20px, calc(50vw - 175px))",
                 width:52, height:52,
                 background:"none", border:"none", cursor:"pointer",
-                padding:0, zIndex:50,
+                padding:0, zIndex:(showSaved&&mapFilter==="saved")?5:50,
                 transition:"bottom .3s cubic-bezier(.4,0,.2,1)",
               }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 52 52" fill="none">
@@ -1987,7 +1986,7 @@ const searchGeo = async (q) => {
             </button>
             {/* FAB */}
             <button className="fab"
-              style={{bottom:(showSaved&&mapFilter==="saved")?`calc(${90 + 220}px + env(safe-area-inset-bottom))`:undefined,transition:"bottom .3s cubic-bezier(.4,0,.2,1)"}}
+              style={{zIndex:(showSaved&&mapFilter==="saved")?5:50,transition:"bottom .3s cubic-bezier(.4,0,.2,1)"}}
               onClick={()=>setNewCiOpen(true)}>+</button>
 
             {/* bottom sheet */}
