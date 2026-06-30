@@ -726,12 +726,12 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 /* Grid view */
 .photo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px;padding:0 16px}
 .gcell{
-  aspect-ratio:1;background:var(--gray-100);
+  background:var(--gray-100);
   overflow:hidden;cursor:pointer;position:relative;
   border-radius:8px;
   display:flex;align-items:center;justify-content:center
 }
-.gcell img{width:100%;height:100%;object-fit:cover;display:block}
+.gcell img{width:100%;height:auto;object-fit:contain;display:block}
 
 /* List view */
 .list-view{display:flex;flex-direction:column;gap:8px;margin-top:12px;padding:0 16px}
