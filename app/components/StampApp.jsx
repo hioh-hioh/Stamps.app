@@ -2555,7 +2555,7 @@ const searchGeo = async (q) => {
             <div className="arc-body">
               <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between"}}>
                 <div className="arc-spot" style={{flex:1}}>{selArc.spot}</div>
-                <button onClick={()=>setArcMenuOpen(true)} style={{background:"none",border:"none",cursor:"pointer",color:"var(--text3)",padding:"4px 8px 4px 0",alignSelf:"flex-start",flexShrink:0}}>
+                <button onClick={()=>setArcMenuOpen(true)} style={{background:"none",border:"none",cursor:"pointer",color:"var(--text3)",padding:"8px 8px 4px 0",alignSelf:"flex-start",flexShrink:0}}>
                   <svg width="20" height="4" viewBox="0 0 20 4" fill="none"><circle cx="2" cy="2" r="2" fill="currentColor"/><circle cx="10" cy="2" r="2" fill="currentColor"/><circle cx="18" cy="2" r="2" fill="currentColor"/></svg>
                 </button>
               </div>
