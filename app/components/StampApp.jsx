@@ -109,6 +109,11 @@ const T = {
   menuReportBug:         { ja:"不具合を報告", en:"Report Bug", zh:"报告问题" },
   menuAbout:             { ja:"Stamps.について", en:"About Stamps.", zh:"关于 Stamps." },
   menuPrivacy:           { ja:"プライバシーポリシー", en:"Privacy Policy", zh:"隐私政策" },
+  menuAccount:           { ja:"アカウント", en:"Account", zh:"账户" },
+  menuProfile:           { ja:"プロフィール", en:"Profile", zh:"个人资料" },
+  menuLike:              { ja:"いいね", en:"Like", zh:"喜欢" },
+  menuSupport:           { ja:"サポート", en:"Support", zh:"支持" },
+  menuAboutSection:      { ja:"このアプリについて", en:"About", zh:"关于" },
   loginDescription:      { ja:"マイページにログインすると、スタンプのチェックイン記録や共有、整理ができます。", en:"Log in to record, share, and organize your stamp check-ins.", zh:"登录后即可记录、分享和整理您的印章打卡。" },
   loginWithGoogle:      { ja:"Googleでログイン", en:"Log in with Google", zh:"使用Google登录" },
   loginWithEmail:       { ja:"メールアドレスでログイン", en:"Email address", zh:"邮箱登录" },
@@ -2145,10 +2150,6 @@ const searchGeo = async (q) => {
                       ? <img src={profile.avatar_url} style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:"50%"}}/>
                       : <Ic.User s={36}/>}
                   </div>
-                  <button className="edit-btn" onClick={()=>{
-                    setEditDraft({name:profile.name,location:profile.location,bio:profile.bio,avatar_url:profile.avatar_url||""});
-                    setProfileEditOpen(true);
-                  }}><Ic.Edit/></button>
                 </div>
               </div>
             </div>
@@ -3223,12 +3224,34 @@ const searchGeo = async (q) => {
 
         {/* ════ TOAST ════ */}
         {menuOpen && (
-          <div onClick={()=>setMenuOpen(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.5)",zIndex:9999,display:"flex",alignItems:"flex-start",justifyContent:"flex-end",padding:`${isNative?56:16}px 16px 0 0`}}>
-            <div onClick={e=>e.stopPropagation()} style={{background:"#fff",borderRadius:12,boxShadow:"0 4px 16px rgba(0,0,0,0.15)",width:200,overflow:"hidden"}}>
-              <a href="mailto:support@stampsapp.app" style={{display:"block",padding:"14px 16px",fontSize:14,color:"var(--text)",textDecoration:"none",borderBottom:"1px solid var(--gray-100)"}}>{t('menuContactUs')}</a>
-              <a href="mailto:support@stampsapp.app?subject=Bug%20Report" style={{display:"block",padding:"14px 16px",fontSize:14,color:"var(--text)",textDecoration:"none",borderBottom:"1px solid var(--gray-100)"}}>{t('menuReportBug')}</a>
-              <a href="https://stampsapp.vercel.app/about" style={{display:"block",padding:"14px 16px",fontSize:14,color:"var(--text)",textDecoration:"none",borderBottom:"1px solid var(--gray-100)"}}>{t('menuAbout')}</a>
-              <a href="https://stampsapp.vercel.app/privacy" style={{display:"block",padding:"14px 16px",fontSize:14,color:"var(--text)",textDecoration:"none"}}>{t('menuPrivacy')}</a>
+          <div style={{position:"fixed",inset:0,background:"#fff",zIndex:9999,overflowY:"auto"}}>
+            <div style={{display:"flex",alignItems:"center",padding:"14px 16px 12px",position:"sticky",top:0,background:"#fff",zIndex:10}}>
+              <button onClick={()=>setMenuOpen(false)} style={{background:"none",border:"none",cursor:"pointer",color:"var(--text2)",display:"flex",padding:0}}>
+                <Ic.Back/>
+              </button>
+            </div>
+            <div style={{display:"flex",flexDirection:"column",gap:40,padding:"8px 16px 40px"}}>
+              <div>
+                <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}><span style={{width:6,height:6,borderRadius:"50%",background:"var(--red)"}}/><span style={{fontSize:14,fontWeight:700}}>{t('menuAccount')}</span></div>
+                <div style={{border:"1px solid var(--gray-200)",borderRadius:12,overflow:"hidden"}}>
+                  <button onClick={()=>{setEditDraft({name:profile.name,location:profile.location,bio:profile.bio,avatar_url:profile.avatar_url||""});setMenuOpen(false);setProfileEditOpen(true);}} style={{display:"block",width:"100%",textAlign:"left",padding:"14px 16px",fontSize:14,color:"var(--text)",background:"none",border:"none",borderBottom:"1px solid var(--gray-100)",cursor:"pointer",fontFamily:"inherit"}}>{t('menuProfile')}</button>
+                  <button onClick={()=>{setMenuOpen(false);}} style={{display:"block",width:"100%",textAlign:"left",padding:"14px 16px",fontSize:14,color:"var(--text)",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>{t('menuLike')}</button>
+                </div>
+              </div>
+              <div>
+                <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}><span style={{width:6,height:6,borderRadius:"50%",background:"var(--red)"}}/><span style={{fontSize:14,fontWeight:700}}>{t('menuSupport')}</span></div>
+                <div style={{border:"1px solid var(--gray-200)",borderRadius:12,overflow:"hidden"}}>
+                  <a href="mailto:support@stampsapp.app" style={{display:"block",padding:"14px 16px",fontSize:14,color:"var(--text)",textDecoration:"none",borderBottom:"1px solid var(--gray-100)"}}>{t('menuContactUs')}</a>
+                  <a href="mailto:support@stampsapp.app?subject=Bug%20Report" style={{display:"block",padding:"14px 16px",fontSize:14,color:"var(--text)",textDecoration:"none"}}>{t('menuReportBug')}</a>
+                </div>
+              </div>
+              <div>
+                <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}><span style={{width:6,height:6,borderRadius:"50%",background:"var(--red)"}}/><span style={{fontSize:14,fontWeight:700}}>{t('menuAboutSection')}</span></div>
+                <div style={{border:"1px solid var(--gray-200)",borderRadius:12,overflow:"hidden"}}>
+                  <a href="https://stampsapp.vercel.app/about" style={{display:"block",padding:"14px 16px",fontSize:14,color:"var(--text)",textDecoration:"none",borderBottom:"1px solid var(--gray-100)"}}>{t('menuAbout')}</a>
+                  <a href="https://stampsapp.vercel.app/privacy" style={{display:"block",padding:"14px 16px",fontSize:14,color:"var(--text)",textDecoration:"none"}}>{t('menuPrivacy')}</a>
+                </div>
+              </div>
             </div>
           </div>
         )}
