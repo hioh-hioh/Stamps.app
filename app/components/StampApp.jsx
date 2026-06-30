@@ -1334,6 +1334,7 @@ const [creatorAvatar, setCreatorAvatar] = useState("");
   const [toastOn, setToastOn]     = useState(false);
   const [otpEmail, setOtpEmail]   = useState("");
   const [menuOpen, setMenuOpen]   = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
   const [otpOpen, setOtpOpen]     = useState(false);
   const [otpCode, setOtpCode]     = useState("");
   const [mounted, setMounted]     = useState(false);
@@ -1353,7 +1354,7 @@ const [creatorAvatar, setCreatorAvatar] = useState("");
     if(!cat) return "";
     return CATEGORY_LABELS[lang]?.[cat] || CATEGORY_LABELS.ja[cat] || cat;
   };
-useEffect(()=>{ setMounted(true); },[]);
+useEffect(()=>{ setMounted(true); setIsDesktop(window.innerWidth>768); },[]);
 useEffect(()=>{
     supabase.auth.getSession().then(({data:{session}})=>{
       setUser(session?.user ?? null);
@@ -3228,7 +3229,7 @@ const searchGeo = async (q) => {
 
         {/* ════ TOAST ════ */}
         {menuOpen && (
-          <div style={{position:"fixed",inset:0,background:"#fff",zIndex:9999,overflowY:"auto",animation:"slideInRight 0.25s ease-out"}}>
+          <div style={{position:"fixed",inset:0,background:"#fff",zIndex:9999,overflowY:"auto",animation:isDesktop?"none":"slideInRight 0.25s ease-out"}}>
             <div style={{display:"flex",alignItems:"center",padding:"14px 16px 12px",position:"sticky",top:0,background:"#fff",zIndex:10}}>
               <button onClick={()=>setMenuOpen(false)} style={{background:"none",border:"none",cursor:"pointer",color:"var(--text2)",display:"flex",padding:0}}>
                 <Ic.Back/>
