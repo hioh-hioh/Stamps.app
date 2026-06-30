@@ -359,7 +359,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   background:var(--white);
   border-radius:var(--r-lg) var(--r-lg) 0 0;
   box-shadow:0 -4px 20px rgba(0,0,0,.12);
-  max-height:360px;overflow-y:auto;
+  max-height:360px;overflow-y:auto;padding-bottom:12px;
   transform:translateY(0);transition:transform .3s cubic-bezier(.4,0,.2,1);z-index:29
 }
 .saved-panel.hidden{transform:translateY(110%)}
@@ -1168,7 +1168,7 @@ const BookmarkSVG = ({ active = false, size = 12 }) => (
       <rect width="12" height="12" fill="#D9D9D9"/>
     </mask>
     <g mask="url(#mask_bm)">
-      <path d="M2.5 10.5V2.5C2.5 2.225 2.59792 1.98958 2.79375 1.79375C2.98958 1.59792 3.225 1.5 3.5 1.5H8.5C8.775 1.5 9.01042 1.59792 9.20625 1.79375C9.40208 1.98958 9.5 2.225 9.5 2.5V10.5L6 9L2.5 10.5Z" fill={active ? "#C5C5C5" : "#808080"}/>
+      <path d="M2.5 10.5V2.5C2.5 2.225 2.59792 1.98958 2.79375 1.79375C2.98958 1.59792 3.225 1.5 3.5 1.5H8.5C8.775 1.5 9.01042 1.59792 9.20625 1.79375C9.40208 1.98958 9.5 2.225 9.5 2.5V10.5L6 9L2.5 10.5Z" fill={active ? "#fff" : "#808080"}/>
     </g>
   </svg>
 );
@@ -1953,11 +1953,12 @@ const searchGeo = async (q) => {
               }}
               style={{
                 position:"fixed",
-                bottom:`calc(${90 + 52 + 12}px + env(safe-area-inset-bottom))`,
+                bottom:(showSaved&&mapFilter==="saved")?`calc(${90 + 52 + 12 + 360}px + env(safe-area-inset-bottom))`:`calc(${90 + 52 + 12}px + env(safe-area-inset-bottom))`,
                 right:"max(20px, calc(50vw - 175px))",
                 width:52, height:52,
                 background:"none", border:"none", cursor:"pointer",
                 padding:0, zIndex:50,
+                transition:"bottom .3s cubic-bezier(.4,0,.2,1)",
               }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 52 52" fill="none">
                 <g filter="url(#filter0_d_190_2664)">
@@ -2023,6 +2024,7 @@ const searchGeo = async (q) => {
               </svg>
             </button>
             <button className="fab"
+              style={{bottom:(showSaved&&mapFilter==="saved")?"calc(450px + env(safe-area-inset-bottom))":undefined,transition:"bottom .3s cubic-bezier(.4,0,.2,1)"}}
               onClick={()=>setNewCiOpen(true)}>+</button>
 
             {/* bottom sheet */}
@@ -2093,14 +2095,14 @@ const searchGeo = async (q) => {
             {/* Saved spots panel */}
             <div className={`saved-panel ${showSaved&&mapFilter==="saved"?"":"hidden"}`}>
               <div className="saved-panel-hd">
-                <h3>🔖 {t('savedSpotsHeader')} ({savedSpots.length})</h3>
+                <h3>{t('savedSpotsHeader')} ({savedSpots.length})</h3>
                 <button className="saved-panel-close" onClick={()=>{setShowSaved(false);setMapFilter("all");}}>×</button>
               </div>
               {savedSpots.length===0
                 ? <div className="saved-empty">{t('savedEmptyLine1')}<br/><span style={{fontSize:11,marginTop:4,display:"block"}}>{t('savedEmptyLine2')}</span></div>
                 : savedSpots.map(s=>(
                   <div key={s.id} className="saved-item" onClick={()=>{setSelSpot(s);setShowSaved(false);}}>
-                    <div className="saved-item-icon"></div>
+                    <div className="saved-item-icon">{window.__publicPhotos?.[s.name] ? <img src={window.__publicPhotos[s.name]} style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:8}}/> : null}</div>
                     <div className="saved-item-info">
                       <h4>{s.name}</h4>
                       <p>{catLabel(s.category)}　{s.area}</p>
