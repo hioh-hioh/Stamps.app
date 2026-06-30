@@ -17,6 +17,12 @@ export const metadata: Metadata = {
   description: "駅や記念スタンプを共有、記録、整理できるWebアプリ",
   appleWebApp: {
     title: "Stamps.",
+    statusBarStyle: "default",
+  },
+  icons: {
+    apple: [
+      { url: "/icon-512-v2.png", sizes: "512x512", type: "image/png" },
+    ],
   },
   other: {
     google: "notranslate",
