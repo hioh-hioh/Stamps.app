@@ -3194,7 +3194,7 @@ const searchGeo = async (q) => {
         {/* ════ TOAST ════ */}
         {arcMenuOpen && selArc && (
           <div onClick={()=>setArcMenuOpen(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.3)",zIndex:9999,display:"flex",alignItems:"flex-end",justifyContent:"center"}}>
-            <div onClick={e=>e.stopPropagation()} style={{background:"#fff",borderRadius:"16px 16px 0 0",width:"100%",maxWidth:480,paddingBottom:"env(safe-area-inset-bottom)"}}>
+            <div onClick={e=>e.stopPropagation()} style={{background:"#fff",borderRadius:"16px 16px 0 0",width:"100%",maxWidth:480,margin:"0 auto",paddingBottom:"env(safe-area-inset-bottom)"}}>
               <button onClick={async()=>{
                   if(!confirm(t('confirmDeleteCheckinRecord'))) return;
                   const {supabase} = await import("../../lib/supabase");
@@ -3203,8 +3203,8 @@ const searchGeo = async (q) => {
                   setArcMenuOpen(false);
                   setSelArc(null);
                   showToast(t('deletedToast'));
-                }} style={{display:"block",width:"100%",textAlign:"center",padding:"16px",fontSize:15,color:"var(--red)",background:"none",border:"none",borderTop:"1px solid var(--gray-100)",cursor:"pointer",fontFamily:"inherit"}}>{t('delete')}</button>
-              <button onClick={()=>setArcMenuOpen(false)} style={{display:"block",width:"100%",textAlign:"center",padding:"16px",fontSize:15,color:"var(--text)",background:"none",border:"none",borderTop:"8px solid var(--gray-50)",cursor:"pointer",fontFamily:"inherit"}}>{t('cancel')}</button>
+                }} style={{display:"block",width:"100%",textAlign:"center",padding:"16px",fontSize:15,color:"var(--red)",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>{t('delete')}</button>
+              <button onClick={()=>setArcMenuOpen(false)} style={{display:"block",width:"100%",textAlign:"center",padding:"16px",fontSize:15,color:"var(--text)",background:"none",border:"none",borderTop:"1px solid var(--gray-300)",cursor:"pointer",fontFamily:"inherit"}}>{t('cancel')}</button>
             </div>
           </div>
         )}
