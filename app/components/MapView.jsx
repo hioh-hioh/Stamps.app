@@ -14,6 +14,17 @@ function FlyToRegistrar() {
   return null;
 }
 
+function FlyToUserLocation({ userLocation }) {
+  const { current: map } = useMap();
+  const [done, setDone] = useState(false);
+  useEffect(() => {
+    if (!map || !userLocation || done) return;
+    map.flyTo({ center: [userLocation.lng, userLocation.lat], zoom: 14 });
+    setDone(true);
+  }, [map, userLocation, done]);
+  return null;
+}
+
 export default function MapView({ children, userLocation }) {
   return (
     <Map
@@ -27,6 +38,7 @@ export default function MapView({ children, userLocation }) {
       mapStyle="mapbox://styles/kthhtm/cmptvkv4f006501su5hqm3cp2"
     >
       <FlyToRegistrar />
+      <FlyToUserLocation userLocation={userLocation} />
       {children}
     </Map>
   )
