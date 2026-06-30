@@ -1339,6 +1339,7 @@ const [creatorAvatar, setCreatorAvatar] = useState("");
   const [toastOn, setToastOn]     = useState(false);
   const [otpEmail, setOtpEmail]   = useState("");
   const [menuOpen, setMenuOpen]   = useState(false);
+  const [selArcFolderName, setSelArcFolderName] = useState("");
   const [isDesktop, setIsDesktop] = useState(false);
   const [otpOpen, setOtpOpen]     = useState(false);
   const [otpCode, setOtpCode]     = useState("");
@@ -2539,12 +2540,12 @@ const searchGeo = async (q) => {
           {selArc && <>
             <div className="arc-hd">
               <button className="arc-back" onClick={()=>setSelArc(null)}><Ic.Back/></button>
-              <h2>{t('checkinRecordsTitle')}</h2>
+              <h2>{selArcFolderName || t('checkinRecordsTitle')}</h2>
             </div>
             {selArc.photos && selArc.photos.length > 0 ? (
-              <div style={{marginTop:16,display:"flex",gap:6,overflowX:"auto"}}>
+              <div style={{marginTop:16,display:"flex",gap:6,overflowX:"auto",padding:"0 16px"}}>
                 {selArc.photos.map((url,i)=>(
-                  <img key={i} src={url} style={{width:"100vw",flexShrink:0,height:260,objectFit:"cover",display:"block"}}/>
+                  <img key={i} src={url} style={{maxWidth:"calc(100vw - 32px)",flexShrink:0,height:"auto",maxHeight:400,objectFit:"contain",display:"block",borderRadius:8}}/>
                 ))}
               </div>
             ) : (
@@ -2880,7 +2881,7 @@ const searchGeo = async (q) => {
               <div className="group-masonry">
                 <div className="group-col">
                   {left.map((e,i)=>(
-                    <div key={e.id} className="group-cell" onClick={()=>setSelArc(e)}>
+                    <div key={e.id} className="group-cell" onClick={()=>{setSelArc(e);setSelArcFolderName(selGroup.title);}}>
                       <div className="group-cell-img"
                         style={{height:leftHeights[i%leftHeights.length],background:e.color||"var(--gray-100)"}}>
                         {e.photos&&e.photos.length>0
@@ -2894,7 +2895,7 @@ const searchGeo = async (q) => {
                 </div>
                 <div className="group-col">
                   {right.map((e,i)=>(
-                    <div key={e.id} className="group-cell" onClick={()=>setSelArc(e)}>
+                    <div key={e.id} className="group-cell" onClick={()=>{setSelArc(e);setSelArcFolderName(selGroup.title);}}>
                       <div className="group-cell-img"
                         style={{height:rightHeights[i%rightHeights.length],background:e.color||"var(--gray-100)"}}>
                         {e.photos&&e.photos.length>0
