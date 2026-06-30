@@ -1953,7 +1953,8 @@ const searchGeo = async (q) => {
               }}
               style={{
                 position:"fixed",
-                bottom:(showSaved&&mapFilter==="saved")?`calc(${90 + 52 + 12 + 220}px + env(safe-area-inset-bottom))`:`calc(${90 + 52 + 12}px + env(safe-area-inset-bottom))`,
+                display:(showSaved&&mapFilter==="saved")?"none":"block",
+                bottom:`calc(${90 + 52 + 12}px + env(safe-area-inset-bottom))`,
                 right:"max(20px, calc(50vw - 175px))",
                 width:52, height:52,
                 background:"none", border:"none", cursor:"pointer",
