@@ -3079,8 +3079,8 @@ const searchGeo = async (q) => {
                       }).eq("id",editingCheckin.spot_id);
                       setSelSpot(s=>s?{...s,hours:editHours||s.hours,location:editLocation||s.location}:s);
                     }
-                    setArchives(a=>a.map(x=>x.id===editingCheckin.id?{...x,note:editNote,photos:editPhotos,hasImg:editPhotos.length>0,limited:editLimited,dateFrom:editDateFrom,dateTo:editDateTo}:x));
-                    setSpotCheckins(a=>a.map(x=>x.id===editingCheckin.id?{...x,note:editNote,photos:editPhotos,hasImg:editPhotos.length>0,limited:editLimited,dateFrom:editDateFrom,dateTo:editDateTo}:x));
+                    setArchives(a=>a.map(x=>x.id===editingCheckin.id?{...x,note:editNote,photos:editPhotos,hasImg:editPhotos.length>0,limited:editLimited,eventName:editEventName||"",dateFrom:editDateFrom,dateTo:editDateTo}:x));
+                    setSpotCheckins(a=>a.map(x=>x.id===editingCheckin.id?{...x,note:editNote,photos:editPhotos,hasImg:editPhotos.length>0,limited:editLimited,eventName:editEventName||"",dateFrom:editDateFrom,dateTo:editDateTo}:x));
                     setEditingCheckin(null);
                     showToast(t('profileSaved'),"ok");
                   }}>{t('saveAction')}</button>
