@@ -2397,7 +2397,7 @@ const searchGeo = async (q) => {
                               <span className="limited-badge">LIMITED</span>
                               {current.eventName && <span style={{fontSize:12,color:"#fff",fontWeight:600,textShadow:"0 1px 3px rgba(0,0,0,0.6)"}}>{current.eventName}</span>}
                             </div>
-                            {current.dateFrom && <span style={{fontSize:12,color:"#fff",textShadow:"0 1px 3px rgba(0,0,0,0.6)"}}>{current.dateFrom} → {current.dateTo||t('tbd')}</span>}
+                            {current.dateFrom && <span style={{fontSize:12,color:"#fff",textShadow:"0 1px 3px rgba(0,0,0,0.6)",paddingLeft:current.eventName?72:0}}>{current.dateFrom} → {current.dateTo||t('tbd')}</span>}
                           </div>
                         )}
                       </div>
