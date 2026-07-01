@@ -3236,7 +3236,14 @@ const searchGeo = async (q) => {
                 <div style={{border:"1px solid var(--gray-200)",borderRadius:12,overflow:"hidden"}}>
                   <button onClick={()=>{setEditDraft({name:profile.name,location:profile.location,bio:profile.bio,avatar_url:profile.avatar_url||""});setMenuOpen(false);setProfileEditOpen(true);}} style={{display:"block",width:"100%",textAlign:"left",padding:"14px 16px",fontSize:14,color:"var(--text)",background:"none",border:"none",borderBottom:"1px solid var(--gray-100)",cursor:"pointer",fontFamily:"inherit"}}>{t('menuProfile')}</button>
                   <button onClick={()=>{supabase.auth.signOut();setMenuOpen(false);}} style={{display:"block",width:"100%",textAlign:"left",padding:"14px 16px",fontSize:14,color:"var(--text)",background:"none",border:"none",borderBottom:"1px solid var(--gray-100)",cursor:"pointer",fontFamily:"inherit"}}>{t('menuLogout')}</button>
-                  <button onClick={async()=>{if(!confirm("アカウントを削除しますか？この操作は取り消せません。"))return;await supabase.auth.admin?.deleteUser?.(user?.id||"").catch(()=>{});await supabase.auth.signOut();setMenuOpen(false);}} style={{display:"block",width:"100%",textAlign:"left",padding:"14px 16px",fontSize:14,color:"var(--red)",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>{t('menuDeleteAccount')}</button>
+                  <button onClick={async()=>{
+                    if(!confirm("アカウントを削除しますか？この操作は取り消せません。"))return;
+                    const {data:{user:u}} = await supabase.auth.getUser();
+                    if(!u) return;
+                    const res = await fetch("/api/delete-account",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({userId:u.id})});
+                    if((await res.json()).ok){await supabase.auth.signOut();setMenuOpen(false);}
+                    else showToast("削除に失敗しました");
+                  }} style={{display:"block",width:"100%",textAlign:"left",padding:"14px 16px",fontSize:14,color:"var(--red)",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>{t('menuDeleteAccount')}</button>
                 </div>
               </div>
               <div>
