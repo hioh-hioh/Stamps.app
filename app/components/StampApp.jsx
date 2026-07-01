@@ -2392,13 +2392,16 @@ const searchGeo = async (q) => {
                           }}
                           onClick={()=>setPhotoViewer({posts:photoEntries.map((e,i)=>({id:`detail-${i}`,hasImg:true,photos:[e.url],color:"#000",note:e.note,user:e.user})),postIdx:detailPhotoIdx||0,imgIdx:0})}/>
                         {current.limited && (
-                          <div style={{position:"absolute",left:12,bottom:12,display:"flex",flexDirection:"column",alignItems:"flex-start",gap:4}}>
-                            <div style={{display:"flex",alignItems:"center",gap:8}}>
-                              <span className="limited-badge">LIMITED</span>
-                              {current.eventName && <span style={{fontSize:12,color:"#fff",fontWeight:600,textShadow:"0 1px 3px rgba(0,0,0,0.6)"}}>{current.eventName}</span>}
+                          <>
+                            <div style={{position:"absolute",bottom:0,left:0,right:0,height:80,borderRadius:"0 0 8px 8px",background:"linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 100%)",pointerEvents:"none"}}/>
+                            <div style={{position:"absolute",left:12,bottom:12,display:"flex",flexDirection:"column",alignItems:"flex-start",gap:4}}>
+                              <div style={{display:"flex",alignItems:"center",gap:8}}>
+                                <span className="limited-badge">LIMITED</span>
+                                {current.eventName && <span style={{fontSize:12,color:"#fff",fontWeight:600}}>{current.eventName}</span>}
+                              </div>
+                              {current.dateFrom && <span style={{fontSize:12,color:"#fff",marginTop:-4,paddingLeft:current.eventName?72:0}}>{current.dateFrom} → {current.dateTo||t('tbd')}</span>}
                             </div>
-                            {current.dateFrom && <span style={{fontSize:12,color:"#fff",textShadow:"0 1px 3px rgba(0,0,0,0.6)",paddingLeft:current.eventName?72:0}}>{current.dateFrom} → {current.dateTo||t('tbd')}</span>}
-                          </div>
+                          </>
                         )}
                       </div>
                       {photos.length>1 && (
