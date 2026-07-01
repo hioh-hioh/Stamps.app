@@ -21,7 +21,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div style={{maxWidth:680,margin:"0 auto",padding:"0 16px 40px",fontSize:14,color:"#222",fontFamily:"inherit"}}>
+    <div style={{padding:"0 16px 40px",fontSize:14,color:"#222",fontFamily:"inherit"}}>
       <div style={{position:"sticky",top:0,background:"#fff",zIndex:10,padding:"12px 0 8px",marginBottom:8}}>
         <button onClick={()=>step===2?setStep(1):window.history.back()}
           style={{background:"none",border:"none",cursor:"pointer",color:"#666",display:"flex",padding:0}}>
