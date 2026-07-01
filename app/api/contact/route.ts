@@ -8,7 +8,7 @@ export async function POST(req: Request) {
   try {
     await resend.emails.send({
       from: "Stamps. <onboarding@resend.dev>",
-      to: "support@stampsapp.app",
+      to: process.env.CONTACT_EMAIL!,
       subject: `[Stamps.お問い合わせ] ${purpose}`,
       text: `目的: ${purpose}\nお名前: ${name||"未入力"}\nメール: ${email||"未入力"}\n\n${message}`,
     });
