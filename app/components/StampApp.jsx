@@ -2391,10 +2391,12 @@ const searchGeo = async (q) => {
                           }}
                           onClick={()=>setPhotoViewer({posts:photoEntries.map((e,i)=>({id:`detail-${i}`,hasImg:true,photos:[e.url],color:"#000",note:e.note,user:e.user})),postIdx:detailPhotoIdx||0,imgIdx:0})}/>
                         {current.limited && (
-                          <div style={{position:"absolute",left:12,bottom:12,display:"flex",flexDirection:"column",alignItems:"flex-start",gap:4}}>
+                          <div style={{position:"absolute",left:12,bottom:12,display:"flex",alignItems:"flex-end",gap:8}}>
                             <span className="limited-badge">LIMITED</span>
-                            {current.eventName && <span style={{fontSize:12,color:"#fff",fontWeight:600,textShadow:"0 1px 3px rgba(0,0,0,0.5)"}}>{current.eventName}</span>}
-                            {current.dateFrom && <span style={{fontSize:12,color:"#fff",textShadow:"0 1px 3px rgba(0,0,0,0.5)"}}>{current.dateFrom} → {current.dateTo||t('tbd')}</span>}
+                            <div style={{display:"flex",flexDirection:"column",gap:2}}>
+                              {current.eventName && <span style={{fontSize:12,color:"#fff",fontWeight:600,textShadow:"0 1px 3px rgba(0,0,0,0.6)"}}>{current.eventName}</span>}
+                              {current.dateFrom && <span style={{fontSize:12,color:"#fff",textShadow:"0 1px 3px rgba(0,0,0,0.6)"}}>{current.dateFrom} → {current.dateTo||t('tbd')}</span>}
+                            </div>
                           </div>
                         )}
                       </div>
