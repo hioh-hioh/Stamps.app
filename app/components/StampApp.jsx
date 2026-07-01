@@ -2402,7 +2402,7 @@ const searchGeo = async (q) => {
                                   {current.dateFrom && <span style={{fontSize:12,color:"#fff"}}>{current.dateFrom} → {current.dateTo||t('tbd')}</span>}
                                 </div>
                               ) : (
-                                current.dateFrom && <span style={{fontSize:12,color:"#fff"}}>{current.dateFrom} → {current.dateTo||t('tbd')}</span>
+                                current.dateFrom && <span style={{fontSize:12,color:"#fff",alignSelf:"center"}}>{current.dateFrom} → {current.dateTo||t('tbd')}</span>
                               )}
                             </div>
                           </>
