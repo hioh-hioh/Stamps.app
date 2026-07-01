@@ -21,7 +21,9 @@ export default function ContactPage() {
   };
 
   return (
-    <div style={{padding:"0 16px 40px",fontSize:14,color:"#222",fontFamily:"inherit"}}>
+    <>
+    <style>{`@keyframes slideInRight{from{transform:translateX(100%)}to{transform:translateX(0)}}`}</style>
+    <div style={{padding:"0 16px 40px",fontSize:14,color:"#222",fontFamily:"inherit",animation:"slideInRight 0.25s ease-out"}}>
       <div style={{position:"sticky",top:0,background:"#fff",zIndex:10,padding:"12px 0 8px",marginBottom:8}}>
         <button onClick={()=>step===2?setStep(1):window.history.back()}
           style={{background:"none",border:"none",cursor:"pointer",color:"#666",display:"flex",padding:0}}>
@@ -72,5 +74,6 @@ export default function ContactPage() {
         </div>
       )}
     </div>
+    </>
   );
 }
