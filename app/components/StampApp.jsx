@@ -109,8 +109,12 @@ const T = {
   menuReportBug:         { ja:"不具合を報告", en:"Report Bug", zh:"报告问题" },
   menuAbout:             { ja:"Stamps.について", en:"About Stamps.", zh:"关于 Stamps." },
   menuPrivacy:           { ja:"プライバシーポリシー", en:"Privacy Policy", zh:"隐私政策" },
+  menuLogout:            { ja:"ログアウト", en:"Log out", zh:"退出登录" },
+  menuDeleteAccount:     { ja:"アカウント削除", en:"Delete Account", zh:"删除账户" },
+  menuTerms:             { ja:"利用規約", en:"Terms of Use", zh:"使用条款" },
+  menuVersion:           { ja:"バージョン", en:"Version", zh:"版本" },
   menuAccount:           { ja:"アカウント", en:"Account", zh:"账户" },
-  menuProfile:           { ja:"プロフィール", en:"Profile", zh:"个人资料" },
+  menuProfile:           { ja:"プロフィール編集", en:"Edit Profile", zh:"编辑资料" },
   menuLike:              { ja:"いいね", en:"Like", zh:"喜欢" },
   menuSupport:           { ja:"サポート", en:"Support", zh:"支持" },
   menuAboutSection:      { ja:"このアプリについて", en:"About", zh:"关于" },
@@ -3230,7 +3234,9 @@ const searchGeo = async (q) => {
               <div>
                 <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}><span style={{width:6,height:6,borderRadius:"50%",background:"var(--red)"}}/><span style={{fontSize:14,fontWeight:700}}>{t('menuAccount')}</span></div>
                 <div style={{border:"1px solid var(--gray-200)",borderRadius:12,overflow:"hidden"}}>
-                  <button onClick={()=>{setEditDraft({name:profile.name,location:profile.location,bio:profile.bio,avatar_url:profile.avatar_url||""});setMenuOpen(false);setProfileEditOpen(true);}} style={{display:"block",width:"100%",textAlign:"left",padding:"14px 16px",fontSize:14,color:"var(--text)",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>{t('menuProfile')}</button>
+                  <button onClick={()=>{setEditDraft({name:profile.name,location:profile.location,bio:profile.bio,avatar_url:profile.avatar_url||""});setMenuOpen(false);setProfileEditOpen(true);}} style={{display:"block",width:"100%",textAlign:"left",padding:"14px 16px",fontSize:14,color:"var(--text)",background:"none",border:"none",borderBottom:"1px solid var(--gray-100)",cursor:"pointer",fontFamily:"inherit"}}>{t('menuProfile')}</button>
+                  <button onClick={()=>{supabase.auth.signOut();setMenuOpen(false);}} style={{display:"block",width:"100%",textAlign:"left",padding:"14px 16px",fontSize:14,color:"var(--text)",background:"none",border:"none",borderBottom:"1px solid var(--gray-100)",cursor:"pointer",fontFamily:"inherit"}}>{t('menuLogout')}</button>
+                  <button onClick={async()=>{if(!confirm("アカウントを削除しますか？この操作は取り消せません。"))return;await supabase.auth.admin?.deleteUser?.(user?.id||"").catch(()=>{});await supabase.auth.signOut();setMenuOpen(false);}} style={{display:"block",width:"100%",textAlign:"left",padding:"14px 16px",fontSize:14,color:"var(--red)",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>{t('menuDeleteAccount')}</button>
                 </div>
               </div>
               <div>
@@ -3243,8 +3249,10 @@ const searchGeo = async (q) => {
               <div>
                 <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}><span style={{width:6,height:6,borderRadius:"50%",background:"var(--red)"}}/><span style={{fontSize:14,fontWeight:700}}>{t('menuAboutSection')}</span></div>
                 <div style={{border:"1px solid var(--gray-200)",borderRadius:12,overflow:"hidden"}}>
-                  <a href="https://stampsapp.vercel.app/about" style={{display:"block",padding:"14px 16px",fontSize:14,color:"var(--text)",textDecoration:"none",borderBottom:"1px solid var(--gray-100)"}}>{t('menuAbout')}</a>
-                  <a href="https://stampsapp.vercel.app/privacy" style={{display:"block",padding:"14px 16px",fontSize:14,color:"var(--text)",textDecoration:"none"}}>{t('menuPrivacy')}</a>
+                  <a href="/about" style={{display:"block",padding:"14px 16px",fontSize:14,color:"var(--text)",textDecoration:"none",borderBottom:"1px solid var(--gray-100)"}}>{t('menuAbout')}</a>
+                  <a href="/terms" style={{display:"block",padding:"14px 16px",fontSize:14,color:"var(--text)",textDecoration:"none",borderBottom:"1px solid var(--gray-100)"}}>{t('menuTerms')}</a>
+                  <a href="/privacy" style={{display:"block",padding:"14px 16px",fontSize:14,color:"var(--text)",textDecoration:"none",borderBottom:"1px solid var(--gray-100)"}}>{t('menuPrivacy')}</a>
+                  <div style={{padding:"14px 16px",fontSize:14,color:"var(--text3)"}}>{t('menuVersion')} 1.0.0</div>
                 </div>
               </div>
             </div>
