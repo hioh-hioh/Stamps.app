@@ -2,9 +2,11 @@
 export default function PrivacyPage() {
   return (
     <div style={{maxWidth:680,margin:"0 auto",padding:"40px 20px",lineHeight:1.8,fontSize:14,color:"#222"}}>
-      <button onClick={()=>window.history.back()} style={{background:"none",border:"none",cursor:"pointer",color:"#666",display:"flex",padding:0,marginBottom:24}}>
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
-      </button>
+      <div style={{position:"sticky",top:0,background:"#fff",zIndex:10,padding:"12px 0 8px",marginBottom:16}}>
+        <button onClick={()=>window.history.back()} style={{background:"none",border:"none",cursor:"pointer",color:"#666",display:"flex",padding:0}}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+        </button>
+      </div>
       <h1 style={{fontSize:22,fontWeight:700,marginBottom:24}}>プライバシーポリシー</h1>
 
       <p style={{marginBottom:24}}>
