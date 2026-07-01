@@ -1412,6 +1412,7 @@ useEffect(()=>{
         photos: d.photo_urls||[],
         color: d.color||"#E1F5EE",
         limited: d.limited||false,
+        eventName: d.event_name||"",
         dateFrom: d.date_from||"",
         dateTo: d.date_to||"",
       })));
