@@ -41,7 +41,7 @@ export default function ContactPage() {
 
       {sent ? (
         <div style={{marginTop:40,textAlign:"center",color:"#444",lineHeight:1.8}}>
-          <img src="/stamp_logo.png" style={{width:64,height:64,borderRadius:16,background:"#FBFFF5",marginBottom:16}}/>
+          <img src="/stamp_logo.png" style={{width:83,height:83,borderRadius:20,background:"#FBFFF5",marginBottom:16,display:"block",margin:"0 auto 16px"}}/>
           <p style={{fontWeight:600,fontSize:16}}>送信しました！</p>
           <p style={{color:"#888",fontSize:14}}>お問い合わせありがとうございます。<br/>内容を確認次第ご連絡いたします。</p>
         </div>
