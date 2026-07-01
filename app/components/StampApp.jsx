@@ -3220,7 +3220,7 @@ const searchGeo = async (q) => {
           </div>
         )}
         {menuOpen && (
-          <div style={{position:"fixed",inset:0,background:"#fff",zIndex:9999,overflowY:"auto",animation:isDesktop?"none":"slideInRight 0.25s ease-out"}}>
+          <div style={{position:"fixed",inset:0,background:"#fff",zIndex:9999,overflowY:"auto",animation:"slideInRight 0.25s ease-out"}}>
             <div style={{display:"flex",alignItems:"center",padding:"14px 16px 12px",position:"sticky",top:0,background:"#fff",zIndex:10}}>
               <button onClick={()=>setMenuOpen(false)} style={{background:"none",border:"none",cursor:"pointer",color:"var(--text2)",display:"flex",padding:0}}>
                 <Ic.Back/>
@@ -3230,8 +3230,7 @@ const searchGeo = async (q) => {
               <div>
                 <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}><span style={{width:6,height:6,borderRadius:"50%",background:"var(--red)"}}/><span style={{fontSize:14,fontWeight:700}}>{t('menuAccount')}</span></div>
                 <div style={{border:"1px solid var(--gray-200)",borderRadius:12,overflow:"hidden"}}>
-                  <button onClick={()=>{setEditDraft({name:profile.name,location:profile.location,bio:profile.bio,avatar_url:profile.avatar_url||""});setMenuOpen(false);setProfileEditOpen(true);}} style={{display:"block",width:"100%",textAlign:"left",padding:"14px 16px",fontSize:14,color:"var(--text)",background:"none",border:"none",borderBottom:"1px solid var(--gray-100)",cursor:"pointer",fontFamily:"inherit"}}>{t('menuProfile')}</button>
-                  <button onClick={()=>{setMenuOpen(false);}} style={{display:"block",width:"100%",textAlign:"left",padding:"14px 16px",fontSize:14,color:"var(--text)",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>{t('menuLike')}</button>
+                  <button onClick={()=>{setEditDraft({name:profile.name,location:profile.location,bio:profile.bio,avatar_url:profile.avatar_url||""});setMenuOpen(false);setProfileEditOpen(true);}} style={{display:"block",width:"100%",textAlign:"left",padding:"14px 16px",fontSize:14,color:"var(--text)",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>{t('menuProfile')}</button>
                 </div>
               </div>
               <div>
