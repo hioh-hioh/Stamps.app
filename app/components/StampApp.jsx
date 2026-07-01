@@ -2374,7 +2374,7 @@ const searchGeo = async (q) => {
               <div className="ov-body" style={{paddingTop:16}}>
                 {/* 投稿済み写真（メイン1枚＋ドット） */}
                 {(()=>{
-                  const photoEntries = spotPosts.flatMap(a=>(a.photos||[]).filter(Boolean).map(url=>({url, limited:a.limited, dateFrom:a.dateFrom, dateTo:a.dateTo, note:a.note, user:a.user})));
+                  const photoEntries = spotPosts.flatMap(a=>(a.photos||[]).filter(Boolean).map(url=>({url, limited:a.limited, eventName:a.eventName||"", dateFrom:a.dateFrom, dateTo:a.dateTo, note:a.note, user:a.user})));
                   if(photoEntries.length===0) return null;
                   const photos = photoEntries.map(e=>e.url);
                   const current = photoEntries[detailPhotoIdx||0];
@@ -2391,9 +2391,10 @@ const searchGeo = async (q) => {
                           }}
                           onClick={()=>setPhotoViewer({posts:photoEntries.map((e,i)=>({id:`detail-${i}`,hasImg:true,photos:[e.url],color:"#000",note:e.note,user:e.user})),postIdx:detailPhotoIdx||0,imgIdx:0})}/>
                         {current.limited && (
-                          <div style={{position:"absolute",left:12,bottom:12,display:"flex",alignItems:"center",gap:6}}>
+                          <div style={{position:"absolute",left:12,bottom:12,display:"flex",flexDirection:"column",alignItems:"flex-start",gap:4}}>
                             <span className="limited-badge">LIMITED</span>
-                            {current.dateFrom && <span style={{fontSize:12,color:"#fff"}}>{current.dateFrom} → {current.dateTo||t('tbd')}</span>}
+                            {current.eventName && <span style={{fontSize:12,color:"#fff",fontWeight:600,textShadow:"0 1px 3px rgba(0,0,0,0.5)"}}>{current.eventName}</span>}
+                            {current.dateFrom && <span style={{fontSize:12,color:"#fff",textShadow:"0 1px 3px rgba(0,0,0,0.5)"}}>{current.dateFrom} → {current.dateTo||t('tbd')}</span>}
                           </div>
                         )}
                       </div>
