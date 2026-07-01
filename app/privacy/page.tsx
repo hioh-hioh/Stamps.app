@@ -5,6 +5,10 @@ export const metadata = {
 export default function PrivacyPage() {
   return (
     <div style={{maxWidth:680,margin:"0 auto",padding:"40px 20px",lineHeight:1.8,fontSize:15,color:"#222"}}>
+      <a href="/" style={{display:"inline-flex",alignItems:"center",gap:6,marginBottom:24,color:"#666",textDecoration:"none",fontSize:14}}>
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        戻る
+      </a>
       <h1 style={{fontSize:22,fontWeight:700,marginBottom:24}}>プライバシーポリシー</h1>
 
       <p style={{marginBottom:24}}>
