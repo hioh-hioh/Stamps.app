@@ -3236,8 +3236,8 @@ const searchGeo = async (q) => {
               <div>
                 <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}><span style={{width:6,height:6,borderRadius:"50%",background:"var(--red)"}}/><span style={{fontSize:14,fontWeight:700}}>{t('menuSupport')}</span></div>
                 <div style={{border:"1px solid var(--gray-200)",borderRadius:12,overflow:"hidden"}}>
-                  <a href="mailto:support@stampsapp.app" style={{display:"block",padding:"14px 16px",fontSize:14,color:"var(--text)",textDecoration:"none",borderBottom:"1px solid var(--gray-100)"}}>{t('menuContactUs')}</a>
-                  <a href="mailto:support@stampsapp.app?subject=Bug%20Report" style={{display:"block",padding:"14px 16px",fontSize:14,color:"var(--text)",textDecoration:"none"}}>{t('menuReportBug')}</a>
+                  <a href="/contact" style={{display:"block",padding:"14px 16px",fontSize:14,color:"var(--text)",textDecoration:"none",borderBottom:"1px solid var(--gray-100)"}}>{t('menuContactUs')}</a>
+                  <a href="/contact" style={{display:"block",padding:"14px 16px",fontSize:14,color:"var(--text)",textDecoration:"none"}}>{t('menuReportBug')}</a>
                 </div>
               </div>
               <div>
