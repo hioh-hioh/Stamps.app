@@ -1,15 +1,21 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const purposes = [
   { id: "feedback", label: "ご意見・ご感想" },
   { id: "spot",     label: "スポット情報の修正・追加" },
   { id: "bug",      label: "不具合を報告" },
+  { id: "other",    label: "その他" },
 ];
 
 export default function ContactPage() {
   const [step, setStep]       = useState<1|2>(1);
   const [purpose, setPurpose] = useState("");
+
+  useEffect(()=>{
+    const p = new URLSearchParams(window.location.search).get("purpose");
+    if(p){ setPurpose(p); setStep(2); }
+  },[]);
   const [name, setName]       = useState("");
   const [email, setEmail]     = useState("");
   const [message, setMessage] = useState("");
