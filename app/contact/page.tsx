@@ -14,10 +14,18 @@ export default function ContactPage() {
   const [email, setEmail]     = useState("");
   const [message, setMessage] = useState("");
 
-  const handleSubmit = () => {
-    const subject = encodeURIComponent(`[Stamps.] ${purposes.find(p=>p.id===purpose)?.label||""}`);
-    const body = encodeURIComponent(`お名前: ${name||"未入力"}\nメール: ${email||"未入力"}\n\n${message}`);
-    window.location.href = `mailto:support@stampsapp.app?subject=${subject}&body=${body}`;
+  const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+
+  const handleSubmit = async () => {
+    setSending(true);
+    const res = await fetch("/api/contact", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({ purpose: purposes.find(p=>p.id===purpose)?.label||"", name, email, message }),
+    });
+    setSending(false);
+    if(res.ok) setSent(true);
   };
 
   return (
@@ -31,7 +39,14 @@ export default function ContactPage() {
         </button>
       </div>
 
-      {step===1 && (
+      {sent ? (
+        <div style={{marginTop:40,textAlign:"center",color:"#444",lineHeight:1.8}}>
+          <div style={{fontSize:32,marginBottom:16}}>✉️</div>
+          <p style={{fontWeight:600,fontSize:16}}>送信しました！</p>
+          <p style={{color:"#888",fontSize:14}}>お問い合わせありがとうございます。<br/>内容を確認次第ご連絡いたします。</p>
+        </div>
+      ) : null}
+      {!sent && step===1 && (
         <div>
           <h1 style={{fontSize:20,fontWeight:700,marginBottom:8,marginTop:20}}>お問い合わせ</h1>
           <p style={{color:"#888",marginBottom:28,lineHeight:1.7}}>お問い合わせの目的を選択してください。</p>
@@ -46,7 +61,7 @@ export default function ContactPage() {
         </div>
       )}
 
-      {step===2 && (
+      {!sent && step===2 && (
         <div>
           <h1 style={{fontSize:20,fontWeight:700,marginBottom:8,marginTop:20}}>お問い合わせ</h1>
           <p style={{color:"#888",marginBottom:28,lineHeight:1.7}}>{purposes.find(p=>p.id===purpose)?.label}</p>
@@ -67,8 +82,8 @@ export default function ContactPage() {
                 style={{width:"100%",padding:"12px 14px",borderRadius:10,border:"1.5px solid #ddd",fontSize:14,fontFamily:"inherit",boxSizing:"border-box",outline:"none",resize:"vertical"}}/>
             </div>
             <button onClick={handleSubmit} disabled={!message.trim()}
-              style={{padding:"14px",borderRadius:12,border:"none",background:message.trim()?"#E8452A":"#ddd",color:"#fff",fontSize:15,fontWeight:600,cursor:message.trim()?"pointer":"default",fontFamily:"inherit"}}>
-              送信する
+              style={{padding:"14px",borderRadius:12,border:"none",background:message.trim()&&!sending?"#E8452A":"#ddd",color:"#fff",fontSize:15,fontWeight:600,cursor:message.trim()&&!sending?"pointer":"default",fontFamily:"inherit"}}>
+              {sending?"送信中...":"送信する"}
             </button>
           </div>
         </div>
