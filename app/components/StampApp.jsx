@@ -1860,7 +1860,7 @@ const searchGeo = async (q) => {
         {/* ════ LIST ════ */}
         {tab==="list" && (()=>{
           const LIST_TAGS = [
-            {id:"All", label:t('tagAll'), filter:()=>true, sort:(a,b)=>0},
+            {id:"All", label:t('tagAll'), filter:()=>true, sort:(a,b)=>a.dist!=null&&b.dist!=null?a.dist-b.dist:a.dist!=null?-1:1},
             {id:"New", label:t('tagNew'), filter:()=>true, sort:(a,b)=>new Date(b.spot_created_at||0)-new Date(a.spot_created_at||0)},
             {id:"Station", label:t('tagStation'), filter:s=>["train_station","transit_station","subway_station"].includes(s.category), sort:(a,b)=>0},
             {id:"Castle", label:t('tagCastle'), filter:s=>s.category==="castle", sort:(a,b)=>0},
