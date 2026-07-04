@@ -498,6 +498,9 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 
 /* ══════ MAP ══════ */
 .map-screen{flex:1;position:relative;overflow:hidden;height:calc(844px - 68px)}
+@media (min-width:601px){
+  .map-screen{height:100dvh}
+}
 .map-canvas{position:absolute;inset:0;background:#E8EEF4}
 
 .map-pin{
