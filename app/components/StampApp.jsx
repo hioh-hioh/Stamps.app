@@ -274,14 +274,15 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   .frame{width:100%;height:100dvh;box-shadow:none}
 }
 @media (min-width:601px){
-  body{background:var(--white)}
-  .frame{width:100%;height:100dvh;box-shadow:none;padding-left:68px}
+  body{background:var(--white);padding-left:68px}
+  .frame{width:100%;height:100dvh;box-shadow:none}
   .bnav{
     left:0!important;top:0;bottom:0;right:auto;
     width:68px;transform:none!important;
     flex-direction:column;justify-content:flex-start;
     border-top:none;border-right:1px solid var(--border);
-    padding:72px 0 16px;gap:4px;align-items:center
+    padding:72px 0 16px;gap:4px;align-items:center;
+    padding-left:8px
   }
   .nbtn{width:48px;height:48px;border-radius:12px;font-size:10px;padding:4px 0}
   .nbtn.active{background:var(--gray-100)}
