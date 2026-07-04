@@ -113,6 +113,17 @@ const T = {
   menuDeleteAccount:     { ja:"アカウント削除", en:"Delete Account", zh:"删除账户" },
   menuTerms:             { ja:"利用規約", en:"Terms of Use", zh:"使用条款" },
   menuVersion:           { ja:"バージョン", en:"Version", zh:"版本" },
+  tagAll:                { ja:"すべて", en:"All", zh:"全部" },
+  tagNew:                { ja:"新着", en:"New", zh:"最新" },
+  tagStation:            { ja:"駅", en:"Station", zh:"车站" },
+  tagCastle:             { ja:"城", en:"Castle", zh:"城堡" },
+  tagMuseum:             { ja:"博物館", en:"Museum", zh:"博物馆" },
+  tagPark:               { ja:"公園", en:"Park", zh:"公园" },
+  tagChiyoda:            { ja:"千代田区", en:"Chiyoda", zh:"千代田区" },
+  tagHakodate:           { ja:"函館", en:"Hakodate", zh:"函馆" },
+  tagShibuya:            { ja:"渋谷", en:"Shibuya", zh:"涩谷" },
+  tagTaito:              { ja:"台東区", en:"Taito", zh:"台东区" },
+  tagKanazawa:           { ja:"金沢", en:"Kanazawa", zh:"金泽" },
   menuAccount:           { ja:"アカウント", en:"Account", zh:"账户" },
   menuProfile:           { ja:"プロフィール編集", en:"Edit Profile", zh:"编辑资料" },
   menuLike:              { ja:"いいね", en:"Like", zh:"喜欢" },
@@ -1848,19 +1859,40 @@ const searchGeo = async (q) => {
         )}
         {/* ════ LIST ════ */}
         {tab==="list" && (()=>{
-          const areas = [...new Set(dbSpots.map(s=>s.area).filter(Boolean))];
+          const LIST_TAGS = [
+            {id:"All", label:t('tagAll'), filter:()=>true, sort:(a,b)=>0},
+            {id:"New", label:t('tagNew'), filter:()=>true, sort:(a,b)=>new Date(b.spot_created_at||0)-new Date(a.spot_created_at||0)},
+            {id:"Station", label:t('tagStation'), filter:s=>["train_station","transit_station","subway_station"].includes(s.category), sort:(a,b)=>0},
+            {id:"Castle", label:t('tagCastle'), filter:s=>s.category==="castle", sort:(a,b)=>0},
+            {id:"Museum", label:t('tagMuseum'), filter:s=>["museum","history_museum","art_museum"].includes(s.category), sort:(a,b)=>0},
+            {id:"Park", label:t('tagPark'), filter:s=>["park","garden"].includes(s.category), sort:(a,b)=>0},
+            {id:"Chiyoda", label:t('tagChiyoda'), filter:s=>s.area==="千代田区"||s.area==="Chiyoda City", sort:(a,b)=>0},
+            {id:"Hakodate", label:t('tagHakodate'), filter:s=>s.area==="函館市", sort:(a,b)=>0},
+            {id:"Shibuya", label:t('tagShibuya'), filter:s=>s.area==="渋谷区", sort:(a,b)=>0},
+            {id:"Taito", label:t('tagTaito'), filter:s=>s.area==="台東区", sort:(a,b)=>0},
+            {id:"Kanazawa", label:t('tagKanazawa'), filter:s=>s.area==="金沢市", sort:(a,b)=>0},
+          ];
           const [listArea, setListArea] = [catSel, setCatSel];
+          const activeTag = LIST_TAGS.find(t=>t.id===listArea) || LIST_TAGS[0];
           const filtered = dbSpots
-            .filter(s=> listArea==="All" || s.area===listArea || s.category===listArea)
+            .filter(activeTag.filter)
             .map(s=>{
               const dist = userLocation ? calcDist(userLocation.lat, userLocation.lng, s.lat, s.lng) : null;
               return {...s, dist};
             })
-            .sort((a,b)=> a.dist!=null && b.dist!=null ? a.dist-b.dist : 0);
+            .sort(activeTag.sort);
           return (
             <div style={{display:"flex",flexDirection:"column",height:"100%",overflow:"hidden"}}>
-              <div style={{flex:1,overflowY:"auto",padding:`${isNative?52:8}px 16px 120px`}}>
-                <div style={{fontSize:13,fontWeight:700,color:"var(--text)",marginTop:12,marginBottom:8}}>{dbSpots.length.toLocaleString()} Stamps.</div>
+              <div style={{overflowX:"auto",whiteSpace:"nowrap",padding:`${isNative?52:12}px 16px 0`,display:"flex",gap:8,scrollbarWidth:"none"}}>
+                {LIST_TAGS.map(tag=>(
+                  <button key={tag.id} onClick={()=>setListArea(tag.id)}
+                    style={{display:"inline-block",padding:"6px 14px",borderRadius:20,border:`1.5px solid ${listArea===tag.id?"var(--red)":"var(--gray-200)"}`,background:listArea===tag.id?"var(--red)":"#fff",color:listArea===tag.id?"#fff":"var(--text)",fontSize:13,fontWeight:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0}}>
+                    {tag.label}
+                  </button>
+                ))}
+              </div>
+              <div style={{flex:1,overflowY:"auto",padding:"8px 16px 120px"}}>
+                <div style={{fontSize:13,fontWeight:700,color:"var(--text)",marginTop:12,marginBottom:8}}>{filtered.length.toLocaleString()} Stamps.</div>
                 {filtered.length===0 && <div style={{color:"var(--text3)",textAlign:"center",marginTop:40}}>{t('noSpots')}</div>}
                 {filtered.map(s=>{
                   const latestPhoto = archives.find(a=>a.spot===s.name&&a.photos?.length>0)?.photos?.[0] || window.__publicPhotos?.[s.name];
