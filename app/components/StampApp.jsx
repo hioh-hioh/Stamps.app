@@ -1907,7 +1907,7 @@ const searchGeo = async (q) => {
               <div style={{overflowX:"auto",whiteSpace:"nowrap",padding:`${isNative?52:20}px 16px 8px`,display:"flex",gap:8,scrollbarWidth:"none",position:"sticky",top:0,background:"#fff",zIndex:10}}>
                 {LIST_TAGS.map(tag=>(
                   <button key={tag.id} onClick={()=>setListArea(tag.id)}
-                    style={{display:"inline-block",padding:"6px 14px",borderRadius:20,border:`1.5px solid ${listArea===tag.id?"var(--red)":"var(--gray-200)"}`,background:listArea===tag.id?"var(--red)":"#fff",color:listArea===tag.id?"#fff":"var(--text)",fontSize:13,fontWeight:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0}}>
+                    style={{display:"inline-block",padding:"6px 14px",borderRadius:20,border:`1.5px solid ${listArea===tag.id?"var(--red)":"var(--gray-200)"}`,background:listArea===tag.id?"var(--red)":"#fff",color:listArea===tag.id?"#fff":"var(--text)",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0}}>
                     {tag.label}
                   </button>
                 ))}
