@@ -1891,7 +1891,7 @@ const searchGeo = async (q) => {
                   </button>
                 ))}
               </div>
-              <div style={{flex:1,overflowY:"auto",padding:"8px 16px 120px"}}>
+              <div style={{flex:1,overflowY:"auto",padding:"16px 16px 120px"}}>
                 <div style={{fontSize:13,fontWeight:700,color:"var(--text)",marginTop:12,marginBottom:8}}>{filtered.length.toLocaleString()} Stamps.</div>
                 {filtered.length===0 && <div style={{color:"var(--text3)",textAlign:"center",marginTop:40}}>{t('noSpots')}</div>}
                 {filtered.map(s=>{
