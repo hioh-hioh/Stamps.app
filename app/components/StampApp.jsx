@@ -1032,9 +1032,10 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 }
 .nearby-item:active{background:var(--gray-50)}
 .nearby-icon{
-  width:44px;height:44px;border-radius:50%;
-  background:var(--red-bg);flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-size:20px
+  width:52px;height:52px;border-radius:10px;
+  background:var(--gray-100);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  overflow:hidden;
 }
 .nearby-info{flex:1;min-width:0}
 .nearby-info h4{font-size:14px;font-weight:500;color:var(--text);
@@ -2675,6 +2676,7 @@ const searchGeo = async (q) => {
                         if(window.__mapboxFlyTo) window.__mapboxFlyTo(s.lng, s.lat);
                         setSelSpot(s); setTab("map");
                       }}>
+                        <div className="nearby-icon">{s.cover_url ? <img src={s.cover_url} style={{width:"100%",height:"100%",objectFit:"cover"}}/> : catLabel(s.category)}</div>
                         <div className="nearby-info"><h4>{s.name}</h4><p>{catLabel(s.category)}　{s.area}</p></div>
                         <div className="nearby-dist">{s.dist!=null && fmtDist(s.dist)}</div>
                       </div>
@@ -2687,6 +2689,7 @@ const searchGeo = async (q) => {
                         if(window.__mapboxFlyTo) window.__mapboxFlyTo(s.lng, s.lat);
                         setSelSpot(s); setTab("map");
                       }}>
+                        <div className="nearby-icon">{s.cover_url ? <img src={s.cover_url} style={{width:"100%",height:"100%",objectFit:"cover"}}/> : catLabel(s.category)}</div>
                         <div className="nearby-info"><h4>{s.name}</h4><p>{catLabel(s.category)}　{s.area}</p></div>
                         <div className="nearby-dist">{s.dist!=null && fmtDist(s.dist)}</div>
                       </div>
