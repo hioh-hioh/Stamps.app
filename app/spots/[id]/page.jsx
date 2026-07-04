@@ -28,6 +28,7 @@ export async function generateMetadata({ params }) {
   const { id } = await params;
   const spot = await getSpot(id);
   if (!spot) return { title: "スポットが見つかりません | Stamps.app" };
+  const { data: checkins } = await supabase.from("checkins").select("event_name").eq("spot_id", spot.id).not("event_name","is",null);
   const catEn: Record<string,string> = {
     train_station:"Train Station", transit_station:"Station", subway_station:"Subway Station",
     museum:"Museum", art_museum:"Art Museum", history_museum:"History Museum",
@@ -37,12 +38,15 @@ export async function generateMetadata({ params }) {
     restaurant:"Restaurant", cafe:"Cafe", book_store:"Bookstore", gift_shop:"Gift Shop",
   };
   const catEnLabel = catEn[spot.category] || "Stamp Spot";
+  const eventNames = (checkins||[]).map(c=>c.event_name).filter(Boolean);
+  const uniqueEvents = [...new Set(eventNames)];
+  const eventText = uniqueEvents.length > 0 ? uniqueEvents.join(", ") : "";
   const title = `${spot.name} | Japan Stamp Rally | Stamps.`;
-  const description = `Collect a stamp at ${spot.name} in ${spot.area || "Japan"}. ${catEnLabel} stamp spot. ${spot.location || ""} ${spot.hours || ""}`.trim();
+  const description = `Collect a stamp at ${spot.name} in ${spot.area || "Japan"}. ${catEnLabel} stamp spot.${eventText ? ` ${eventText}.` : ""} ${spot.location || ""} ${spot.hours || ""}`.trim();
   return {
     title,
     description,
-    keywords: `${spot.name}, stamp rally, Japan stamp, スタンプラリー, ${spot.area || ""}, ${catEnLabel}`,
+    keywords: `${spot.name}, stamp rally, Japan stamp, スタンプラリー, ${spot.area || ""}, ${catEnLabel}${eventText ? `, ${eventText}` : ""}`,
     openGraph: {
       title,
       description,
