@@ -28,9 +28,32 @@ export async function generateMetadata({ params }) {
   const { id } = await params;
   const spot = await getSpot(id);
   if (!spot) return { title: "スポットが見つかりません | Stamps.app" };
+  const catEn: Record<string,string> = {
+    train_station:"Train Station", transit_station:"Station", subway_station:"Subway Station",
+    museum:"Museum", art_museum:"Art Museum", history_museum:"History Museum",
+    castle:"Castle", park:"Park", garden:"Garden", tourist_attraction:"Tourist Attraction",
+    tourist_information_center:"Tourist Information", shrine:"Shrine", temple:"Temple",
+    shopping_mall:"Shopping Mall", department_store:"Department Store", hotel:"Hotel",
+    restaurant:"Restaurant", cafe:"Cafe", book_store:"Bookstore", gift_shop:"Gift Shop",
+  };
+  const catEnLabel = catEn[spot.category] || "Stamp Spot";
+  const title = `${spot.name} | Japan Stamp Rally | Stamps.`;
+  const description = `Collect a stamp at ${spot.name} in ${spot.area || "Japan"}. ${catEnLabel} stamp spot. ${spot.location || ""} ${spot.hours || ""}`.trim();
   return {
-    title: `${spot.name} | Stamps.app`,
-    description: `${spot.name}のスタンプ情報。${spot.location || ""} ${spot.hours || ""}`.trim(),
+    title,
+    description,
+    keywords: `${spot.name}, stamp rally, Japan stamp, スタンプラリー, ${spot.area || ""}, ${catEnLabel}`,
+    openGraph: {
+      title,
+      description,
+      images: [],
+      type: "website",
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
+    },
   };
 }
 
