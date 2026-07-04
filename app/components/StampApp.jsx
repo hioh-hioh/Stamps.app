@@ -280,7 +280,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
     left:0!important;top:0;bottom:0;right:auto;
     width:68px!important;transform:none!important;
     flex-direction:column;justify-content:flex-start;
-    border-top:none;border-right:1px solid var(--border);
+    border-top:none!important;border-right:1px solid var(--border);
     padding:16px 0;gap:8px;align-items:center;
     justify-content:flex-start;width:68px!important;
     background:var(--white)
