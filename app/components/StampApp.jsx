@@ -278,7 +278,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   .frame{width:calc(100vw - 68px);height:100dvh;box-shadow:none;margin:0 0 0 68px;overflow:visible}
   .bnav{
     left:0!important;top:0;bottom:0;right:auto;
-    width:68px;transform:none!important;
+    width:68px!important;transform:none!important;
     flex-direction:column;justify-content:flex-start;
     border-top:none;border-right:1px solid var(--border);
     padding:72px 0 16px;gap:4px;align-items:center;
