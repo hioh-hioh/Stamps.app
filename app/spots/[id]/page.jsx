@@ -29,7 +29,7 @@ export async function generateMetadata({ params }) {
   const spot = await getSpot(id);
   if (!spot) return { title: "スポットが見つかりません | Stamps.app" };
   const { data: checkins } = await supabase.from("checkins").select("event_name").eq("spot_id", spot.id).not("event_name","is",null);
-  const catEn: Record<string,string> = {
+  const catEn = {
     train_station:"Train Station", transit_station:"Station", subway_station:"Subway Station",
     museum:"Museum", art_museum:"Art Museum", history_museum:"History Museum",
     castle:"Castle", park:"Park", garden:"Garden", tourist_attraction:"Tourist Attraction",
