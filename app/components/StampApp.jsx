@@ -2677,7 +2677,7 @@ const searchGeo = async (q) => {
                         if(window.__mapboxFlyTo) window.__mapboxFlyTo(s.lng, s.lat);
                         setSelSpot(s); setTab("map");
                       }}>
-                        <div className="nearby-icon">{s.cover_url ? <img src={s.cover_url} style={{width:"100%",height:"100%",objectFit:"cover"}}/> : catLabel(s.category)}</div>
+                        {(()=>{const ph=archives.find(a=>a.spot===s.name&&a.photos?.length>0)?.photos?.[0]||window.__publicPhotos?.[s.name]||s.cover_url; return <div className="nearby-icon">{ph?<img src={ph} style={{width:"100%",height:"100%",objectFit:"cover"}}/>:<span style={{fontSize:22}}>🗺️</span>}</div>})()}
                         <div className="nearby-info"><h4>{s.name}</h4><p>{catLabel(s.category)}　{s.area}</p></div>
                         <div className="nearby-dist">{s.dist!=null && fmtDist(s.dist)}</div>
                       </div>
@@ -2690,7 +2690,7 @@ const searchGeo = async (q) => {
                         if(window.__mapboxFlyTo) window.__mapboxFlyTo(s.lng, s.lat);
                         setSelSpot(s); setTab("map");
                       }}>
-                        <div className="nearby-icon">{s.cover_url ? <img src={s.cover_url} style={{width:"100%",height:"100%",objectFit:"cover"}}/> : catLabel(s.category)}</div>
+                        {(()=>{const ph=archives.find(a=>a.spot===s.name&&a.photos?.length>0)?.photos?.[0]||window.__publicPhotos?.[s.name]||s.cover_url; return <div className="nearby-icon">{ph?<img src={ph} style={{width:"100%",height:"100%",objectFit:"cover"}}/>:<span style={{fontSize:22}}>🗺️</span>}</div>})()}
                         <div className="nearby-info"><h4>{s.name}</h4><p>{catLabel(s.category)}　{s.area}</p></div>
                         <div className="nearby-dist">{s.dist!=null && fmtDist(s.dist)}</div>
                       </div>
