@@ -281,8 +281,8 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
     width:68px!important;transform:none!important;
     flex-direction:column;justify-content:flex-start;
     border-top:none;border-right:1px solid var(--border);
-    padding:72px 0 16px;gap:4px;align-items:center;
-    padding-left:8px
+    padding:16px 0 16px;gap:4px;align-items:center;
+    justify-content:flex-start
   }
   .nbtn{width:48px;height:48px;border-radius:12px;font-size:10px;padding:4px 0}
   .nbtn.active{background:var(--gray-100)}
