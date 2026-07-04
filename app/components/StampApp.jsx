@@ -3248,7 +3248,7 @@ const searchGeo = async (q) => {
         )}
 
         <nav className="bnav">
-          {isDesktop && <img src="/stamp_logo.png" style={{width:36,height:36,borderRadius:9,marginBottom:8,position:"absolute",top:16,left:"50%",transform:"translateX(-50%)"}}/>}
+          {isDesktop && <img src="/stamp_logo.png" style={{width:36,height:36,borderRadius:9,marginBottom:12,flexShrink:0}}/>}
           <button className={`nbtn ${tab==="home"?"active":""}`} onClick={()=>switchTab("home")}>
             <Ic.NavTimeline a={tab==="home"}/> Timeline
           </button>
