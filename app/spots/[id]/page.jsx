@@ -50,7 +50,7 @@ export async function generateMetadata({ params }) {
     openGraph: {
       title,
       description,
-      images: [],
+      images: [{ url: "https://stampsapp.vercel.app/stamp_logo.png", width: 512, height: 512, alt: "Stamps." }],
       type: "website",
     },
     twitter: {
