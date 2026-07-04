@@ -282,7 +282,8 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
     flex-direction:column;justify-content:flex-start;
     border-top:none;border-right:1px solid var(--border);
     padding:16px 0;gap:8px;align-items:center;
-    justify-content:flex-start;width:68px!important
+    justify-content:flex-start;width:68px!important;
+    background:var(--white)
   }
   .nbtn{width:44px;height:44px;border-radius:12px;font-size:0px;padding:0;display:flex;align-items:center;justify-content:center;margin:0 auto}
   .nbtn.active{background:var(--gray-100)}
@@ -3248,7 +3249,7 @@ const searchGeo = async (q) => {
         )}
 
         <nav className="bnav">
-          {isDesktop && <img src="/stamp_logo.png" style={{width:36,height:36,borderRadius:9,marginBottom:12,flexShrink:0}}/>}
+          {isDesktop && <img src="/stamp_logo.png" style={{width:36,height:36,borderRadius:9,marginBottom:12,flexShrink:0,display:"block",margin:"0 auto 12px"}}/>}
           <button className={`nbtn ${tab==="home"?"active":""}`} onClick={()=>switchTab("home")}>
             <Ic.NavTimeline a={tab==="home"}/> Timeline
           </button>
