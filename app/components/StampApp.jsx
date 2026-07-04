@@ -267,12 +267,15 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   display:flex;flex-direction:column;
   border-radius:0;box-shadow:var(--sh-lg)
 }
+@media (min-width:601px){
+  .frame{margin:0 0 0 68px}
+}
 @media (max-width:600px){
   .frame{width:100%;height:100dvh;box-shadow:none}
 }
 @media (min-width:601px){
   body{background:var(--white)}
-  .frame{width:calc(100vw - 68px);height:100dvh;box-shadow:none;margin-left:68px;overflow:visible}
+  .frame{width:calc(100vw - 68px);height:100dvh;box-shadow:none;margin:0 0 0 68px;overflow:visible}
   .bnav{
     left:0!important;top:0;bottom:0;right:auto;
     width:68px;transform:none!important;
