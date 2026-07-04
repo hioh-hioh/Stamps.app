@@ -1495,6 +1495,7 @@ useEffect(()=>{
       hours: s.hours||"", location: s.location||"",
       creator_name: s.creator_name||"", created_by: s.created_by||"",
       spot_created_at: s.created_at||"", spot_updated_at: s.updated_at||"",
+      cover_url: s.cover_url||"",
       checkins: 0, reviews: [], comment: "",
       stampUpdatedAt: null, stampUpdatedBy: null,
     }));
