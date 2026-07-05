@@ -2439,7 +2439,7 @@ const searchGeo = async (q) => {
                   <Ic.Back/>
                 </button>
               </div>
-              <div className="ov-body" style={{paddingTop:16,display:isDesktop?"grid":"block",gridTemplateColumns:isDesktop?"3fr 2fr":"unset",gap:isDesktop?32:0,alignItems:"start",maxWidth:isDesktop?"100%":"unset",padding:isDesktop?"0 24px 40px":"16px 16px"}}>
+              <div className="ov-body" style={{paddingTop:16}}>
                 {/* 投稿済み写真（メイン1枚＋ドット） */}
                 {(()=>{
                   const photoEntries = spotPosts.flatMap(a=>(a.photos||[]).filter(Boolean).map(url=>({url, limited:a.limited, eventName:a.eventName||"", dateFrom:a.dateFrom, dateTo:a.dateTo, note:a.note, user:a.user})));
@@ -2449,7 +2449,7 @@ const searchGeo = async (q) => {
                   return (
                     <div style={{width:"100%",marginBottom:16}}>
                       <div style={{position:"relative"}}>
-                        <img src={current.url} style={{width:"100%",height:isDesktop?480:280,borderRadius:8,objectFit:"cover",display:"block",cursor:"pointer",background:"var(--gray-100)"}}
+                        <img src={current.url} style={{width:"100%",height:280,borderRadius:8,objectFit:"cover",display:"block",cursor:"pointer",background:"var(--gray-100)"}}
                           onTouchStart={e=>{e.currentTarget._startX=e.touches[0].clientX;}}
                           onTouchEnd={e=>{
                             const diff = e.changedTouches[0].clientX - e.currentTarget._startX;
@@ -2481,11 +2481,9 @@ const searchGeo = async (q) => {
                     </div>
                   );
                 })()}
-                {/* 右カラム：スポット情報すべて */}
-                <div>
                 {/* タイトル＋ブックマーク */}
 <div style={{display:"flex",alignItems:"center",width:"100%"}}>
-  <div className="ov-name" style={{flex:1,margin:0,textAlign:isDesktop?"left":"center"}}>{selSpot.name}</div>
+  <div className="ov-name" style={{flex:1,margin:0,textAlign:"center"}}>{selSpot.name}</div>
 </div>
 <div className="ov-sub" style={{display:"flex",gap:8,marginTop:-4,justifyContent:"flex-start"}}>
   <span>{catLabel(selSpot.category)}</span>
@@ -2605,9 +2603,8 @@ const searchGeo = async (q) => {
                     {selSpot.area}
                   </div>
                 </div>
-                </div>
               </div>
-            </>;
+          </>
           })()}
         </div>
 
@@ -2967,7 +2964,6 @@ const searchGeo = async (q) => {
                   </div>
                 ))}
               </div>
-            </div>
             </>;
           })()}
         </div>
