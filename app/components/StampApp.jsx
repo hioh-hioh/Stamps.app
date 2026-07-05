@@ -2605,7 +2605,6 @@ const searchGeo = async (q) => {
                     {selSpot.area}
                   </div>
                 </div>
-            </div>
                 </div>
               </div>
             </>
