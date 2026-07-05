@@ -2481,9 +2481,11 @@ const searchGeo = async (q) => {
                     </div>
                   );
                 })()}
+                {/* 右カラム：スポット情報すべて */}
+                <div>
                 {/* タイトル＋ブックマーク */}
 <div style={{display:"flex",alignItems:"center",width:"100%"}}>
-  <div className="ov-name" style={{flex:1,margin:0,textAlign:"center"}}>{selSpot.name}</div>
+  <div className="ov-name" style={{flex:1,margin:0,textAlign:isDesktop?"left":"center"}}>{selSpot.name}</div>
 </div>
 <div className="ov-sub" style={{display:"flex",gap:8,marginTop:-4,justifyContent:"flex-start"}}>
   <span>{catLabel(selSpot.category)}</span>
@@ -2964,6 +2966,7 @@ const searchGeo = async (q) => {
                   </div>
                 ))}
               </div>
+            </div>{/* 右カラム終了 */}
             </>;
           })()}
         </div>
