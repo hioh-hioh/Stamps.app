@@ -930,8 +930,11 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 }
 .group-col{display:flex;flex-direction:column;gap:8px;flex:1;min-width:0}
 @media (min-width:601px){
-  .group-masonry{display:flex;gap:12px;padding:16px}
-  .group-cell-img{height:auto!important}
+  .group-masonry{display:block;columns:5;column-gap:12px;padding:16px 24px 16px 16px}
+  .group-col{display:contents}
+  .group-cell{break-inside:avoid;margin-bottom:12px}
+  .group-cell-img{height:auto!important;aspect-ratio:unset!important}
+  .group-cell-img img{width:100%;height:auto!important;object-fit:contain!important;display:block}
 }
 .group-cell{
   cursor:pointer;position:relative
