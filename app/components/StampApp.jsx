@@ -2064,6 +2064,9 @@ const searchGeo = async (q) => {
               {selSpot && (()=>{
                 const spotPosts = spotCheckins.filter(a=>a.hasImg);
                 const nearbyToSpot = selSpot.lat&&selSpot.lng ? [...dbSpots].filter(s=>s.id!==selSpot.id&&s.lat&&s.lng).map(s=>({...s,dist:calcDist(selSpot.lat,selSpot.lng,s.lat,s.lng)})).sort((a,b)=>a.dist-b.dist).slice(0,5) : [];
+                const selSpotEventName = spotCheckins.find(c=>c.eventName)?.eventName||"";
+                const sameEventSpots = selSpotEventName ? dbSpots.filter(s=>s.id!==selSpot.id&&spotCheckins.some(c=>c.eventName===selSpotEventName&&c.spot===s.name)).slice(0,5) : [];
+                const relatedSpots = [...new Map([...sameEventSpots,...nearbyToSpot].map(s=>[s.id,s])).values()].slice(0,6);
                 const allPhotoPosts = [
                   {id:"mock-0", spot:selSpot.name, emoji:"", color:"var(--red-bg)", hasImg:true, note:selSpot.comment, date:""},
                   ...spotPosts
@@ -2121,11 +2124,11 @@ const searchGeo = async (q) => {
                         </div>
                       </div>
                     </div>
-                    {isDesktop && nearbyToSpot.length>0 && (
+                    {isDesktop && relatedSpots.length>0 && (
                       <div style={{borderLeft:"1px solid var(--border)",paddingLeft:20}}>
-                        <div style={{fontSize:13,fontWeight:700,color:"var(--text)",marginBottom:10}}>近くのスタンプ</div>
+                        <div style={{fontSize:13,fontWeight:700,color:"var(--text)",marginBottom:10}}>{selSpotEventName?"関連・近くのスタンプ":"近くのスタンプ"}</div>
                         <div style={{display:"flex",flexDirection:"column",gap:8}}>
-                          {nearbyToSpot.map(s=>{
+                          {relatedSpots.map(s=>{
                             const ph = archives.find(a=>a.spot===s.name&&a.photos?.length>0)?.photos?.[0]||window.__publicPhotos?.[s.name]||s.cover_url;
                             return (
                               <div key={s.id} onClick={()=>setSelSpot(s)} style={{display:"flex",alignItems:"center",gap:10,cursor:"pointer",padding:"6px 8px",borderRadius:8,background:"var(--gray-50)"}}>
