@@ -2607,7 +2607,8 @@ const searchGeo = async (q) => {
                 </div>
                 </div>
               </div>
-            </>
+            <>;
+          })()}
         </div>
 
         {/* ════ ARCHIVE DETAIL ════ */}
