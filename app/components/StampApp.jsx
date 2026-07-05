@@ -285,7 +285,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
     justify-content:flex-start;width:68px!important;
     background:var(--white)
   }
-  .nbtn{width:44px;height:44px;border-radius:12px;font-size:0px;padding:0;display:flex;align-items:center;justify-content:center;margin:0 auto}
+  .nbtn{width:52px;height:44px;border-radius:12px;font-size:0px;padding:0;display:flex;align-items:center;justify-content:center;margin:0 auto}
   .nbtn.active{background:var(--gray-100)}
 }
 
@@ -3249,7 +3249,8 @@ const searchGeo = async (q) => {
         )}
 
         <nav className="bnav">
-          {isDesktop && <img src="/stamp_logo.png" style={{width:36,height:36,borderRadius:9,marginBottom:12,flexShrink:0,display:"block",margin:"0 auto 12px"}}/>}
+          {isDesktop && <img src="/stamp_logo.png" style={{width:36,height:36,borderRadius:9,flexShrink:0,display:"block",margin:"0 auto 12px"}}/>}
+          {isDesktop && <div style={{flex:1}}/>}
           <button className={`nbtn ${tab==="home"?"active":""}`} onClick={()=>switchTab("home")}>
             <Ic.NavTimeline a={tab==="home"}/> Timeline
           </button>
@@ -3262,6 +3263,9 @@ const searchGeo = async (q) => {
           <button className={`nbtn ${tab==="mypage"?"active":""}`} onClick={()=>switchTab("mypage")}>
             <Ic.NavUser a={tab==="mypage"}/> My Page
           </button>
+          {isDesktop && <button className="nbtn" onClick={()=>setMenuOpen(true)} style={{marginTop:"auto"}}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>}
         </nav>
 
         {/* ════ TOAST ════ */}
