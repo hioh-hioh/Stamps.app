@@ -275,6 +275,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 }
 @media (min-width:601px){
   body{background:var(--white)}
+  .fab{bottom:24px;right:24px}
   .frame{width:calc(100vw - 68px);height:100dvh;box-shadow:none;margin:0 0 0 68px;overflow:visible}
   .bnav{
     left:0!important;top:0;bottom:0;right:auto;
@@ -2019,8 +2020,8 @@ const searchGeo = async (q) => {
               }}
               style={{
                 position:"fixed",
-                bottom:`calc(${90 + 52 + 12}px + env(safe-area-inset-bottom))`,
-                right:"max(20px, calc(50vw - 175px))",
+                bottom:isDesktop?"88px":`calc(${90 + 52 + 12}px + env(safe-area-inset-bottom))`,
+                right:isDesktop?"24px":"max(20px, calc(50vw - 175px))",
                 width:52, height:52,
                 background:"none", border:"none", cursor:"pointer",
                 padding:0, zIndex:(showSaved&&mapFilter==="saved")?5:50,
