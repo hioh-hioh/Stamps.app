@@ -2202,7 +2202,7 @@ const searchGeo = async (q) => {
               ];
               return (
                 <div style={{padding:"20px 16px 100px"}}>
-                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
+                  <div style={{display:"grid",gridTemplateColumns:isDesktop?"repeat(5,1fr)":"1fr 1fr 1fr",gap:isDesktop?6:8}}>
                     {allFolders.map(f=>{
                       const coverUrl = f.cover_url || f.items.find(e=>e.photos&&e.photos.length>0)?.photos[0];
                       return (
