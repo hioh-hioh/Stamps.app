@@ -2060,15 +2060,16 @@ const searchGeo = async (q) => {
               onClick={()=>setNewCiOpen(true)}>+</button>
 
             {/* bottom sheet */}
-            <div className={`bsheet ${selSpot?"":"hidden"}`}>
+            <div className={`bsheet ${selSpot?"":"hidden"}`} style={isDesktop?{width:"100%",maxWidth:680,left:"50%",transform:"translateX(-50%)"}:{}}>
               {selSpot && (()=>{
                 const spotPosts = spotCheckins.filter(a=>a.hasImg);
+                const nearbyToSpot = selSpot.lat&&selSpot.lng ? [...dbSpots].filter(s=>s.id!==selSpot.id&&s.lat&&s.lng).map(s=>({...s,dist:calcDist(selSpot.lat,selSpot.lng,s.lat,s.lng)})).sort((a,b)=>a.dist-b.dist).slice(0,5) : [];
                 const allPhotoPosts = [
                   {id:"mock-0", spot:selSpot.name, emoji:"", color:"var(--red-bg)", hasImg:true, note:selSpot.comment, date:""},
                   ...spotPosts
                 ];
                 return (
-                  <div className="bsheet-card" style={{position:"relative"}}
+                  <div className="bsheet-card" style={{position:"relative",display:isDesktop?"grid":"block",gridTemplateColumns:isDesktop?"1fr 1fr":"unset",gap:isDesktop?20:0}}
   onTouchStart={e=>{e.currentTarget._startY=e.touches[0].clientY;}}
   onTouchEnd={e=>{
     const diff = e.changedTouches[0].clientY - e.currentTarget._startY;
@@ -2120,6 +2121,27 @@ const searchGeo = async (q) => {
                         </div>
                       </div>
                     </div>
+                    {isDesktop && nearbyToSpot.length>0 && (
+                      <div style={{borderLeft:"1px solid var(--border)",paddingLeft:20}}>
+                        <div style={{fontSize:13,fontWeight:700,color:"var(--text)",marginBottom:10}}>近くのスタンプ</div>
+                        <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                          {nearbyToSpot.map(s=>{
+                            const ph = archives.find(a=>a.spot===s.name&&a.photos?.length>0)?.photos?.[0]||window.__publicPhotos?.[s.name]||s.cover_url;
+                            return (
+                              <div key={s.id} onClick={()=>setSelSpot(s)} style={{display:"flex",alignItems:"center",gap:10,cursor:"pointer",padding:"6px 8px",borderRadius:8,background:"var(--gray-50)"}}>
+                                <div style={{width:40,height:40,borderRadius:8,overflow:"hidden",background:"var(--gray-100)",flexShrink:0}}>
+                                  {ph?<img src={ph} style={{width:"100%",height:"100%",objectFit:"cover"}}/>:<span style={{fontSize:20,display:"flex",alignItems:"center",justifyContent:"center",height:"100%"}}>📍</span>}
+                                </div>
+                                <div style={{minWidth:0}}>
+                                  <div style={{fontSize:12,fontWeight:600,color:"var(--text)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name}</div>
+                                  <div style={{fontSize:11,color:"var(--text3)"}}>{fmtDist(s.dist)}</div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 );
               })()}
@@ -2461,16 +2483,10 @@ const searchGeo = async (q) => {
                         {current.limited && (
                           <>
                             <div style={{position:"absolute",bottom:0,left:0,right:0,height:80,borderRadius:"0 0 8px 8px",background:"linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 100%)",pointerEvents:"none"}}/>
-                            <div style={{position:"absolute",left:12,bottom:12,display:"flex",alignItems:"flex-start",gap:8}}>
+                            <div style={{position:"absolute",left:12,bottom:12,display:"flex",flexDirection:"column",alignItems:"flex-start",gap:4}}>
                               <span className="limited-badge">LIMITED</span>
-                              {current.eventName ? (
-                                <div style={{display:"flex",flexDirection:"column",gap:2}}>
-                                  <span style={{fontSize:12,color:"#fff",fontWeight:600,lineHeight:"24px"}}>{current.eventName}</span>
-                                  {current.dateFrom && <span style={{fontSize:12,color:"#fff"}}>{current.dateFrom} → {current.dateTo||t('tbd')}</span>}
-                                </div>
-                              ) : (
-                                current.dateFrom && <span style={{fontSize:12,color:"#fff",alignSelf:"center"}}>{current.dateFrom} → {current.dateTo||t('tbd')}</span>
-                              )}
+                              {current.eventName && <span style={{fontSize:12,color:"#fff",fontWeight:600}}>{current.eventName}</span>}
+                              {current.dateFrom && <span style={{fontSize:12,color:"#fff"}}>{current.dateFrom} → {current.dateTo||t('tbd')}</span>}
                             </div>
                           </>
                         )}
