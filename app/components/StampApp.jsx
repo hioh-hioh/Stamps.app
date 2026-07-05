@@ -275,7 +275,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 }
 @media (min-width:601px){
   body{background:var(--white)}
-  .fab{bottom:24px;right:24px}
+  .fab{bottom:24px!important;right:24px!important}
   .frame{width:calc(100vw - 68px);height:100dvh;box-shadow:none;margin:0 0 0 68px;overflow:visible}
   .bnav{
     left:0!important;top:0;bottom:0;right:auto;
