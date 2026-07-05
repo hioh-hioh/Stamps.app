@@ -928,6 +928,10 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   align-items:flex-start
 }
 .group-col{display:flex;flex-direction:column;gap:8px;flex:1;min-width:0}
+@media (min-width:601px){
+  .group-masonry{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;padding:16px}
+  .group-col{display:contents}
+}
 .group-cell{
   cursor:pointer;position:relative
 }
@@ -2202,7 +2206,7 @@ const searchGeo = async (q) => {
               ];
               return (
                 <div style={{padding:"20px 16px 100px"}}>
-                  <div style={{display:"grid",gridTemplateColumns:isDesktop?"repeat(5,1fr)":"1fr 1fr 1fr",gap:isDesktop?6:8}}>
+                  <div style={{display:"grid",gridTemplateColumns:isDesktop?"repeat(5,1fr)":"1fr 1fr 1fr",gap:isDesktop?12:8}}>
                     {allFolders.map(f=>{
                       const coverUrl = f.cover_url || f.items.find(e=>e.photos&&e.photos.length>0)?.photos[0];
                       return (
