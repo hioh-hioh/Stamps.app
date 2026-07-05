@@ -2967,7 +2967,7 @@ const searchGeo = async (q) => {
                   </div>
                 ))}
               </div>
-            </div>{/* 右カラム終了 */}
+            </div>
             </>;
           })()}
         </div>
