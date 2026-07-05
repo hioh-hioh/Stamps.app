@@ -2439,7 +2439,7 @@ const searchGeo = async (q) => {
                   <Ic.Back/>
                 </button>
               </div>
-              <div className="ov-body" style={{paddingTop:16,display:isDesktop?"grid":"block",gridTemplateColumns:isDesktop?"3fr 2fr":"unset",gap:isDesktop?32:0,alignItems:"start",maxWidth:isDesktop?"100%":"unset",padding:isDesktop?"0 24px 40px":"16px 0"}}>
+              <div className="ov-body" style={{paddingTop:16,display:isDesktop?"grid":"block",gridTemplateColumns:isDesktop?"3fr 2fr":"unset",gap:isDesktop?32:0,alignItems:"start",maxWidth:isDesktop?"100%":"unset",padding:isDesktop?"0 24px 40px":"16px 16px"}}>
                 {/* 投稿済み写真（メイン1枚＋ドット） */}
                 {(()=>{
                   const photoEntries = spotPosts.flatMap(a=>(a.photos||[]).filter(Boolean).map(url=>({url, limited:a.limited, eventName:a.eventName||"", dateFrom:a.dateFrom, dateTo:a.dateTo, note:a.note, user:a.user})));
