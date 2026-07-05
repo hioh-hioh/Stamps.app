@@ -930,8 +930,8 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 }
 .group-col{display:flex;flex-direction:column;gap:8px;flex:1;min-width:0}
 @media (min-width:601px){
-  .group-masonry{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;padding:16px}
-  .group-col{display:contents}
+  .group-masonry{display:flex;gap:12px;padding:16px}
+  .group-cell-img{height:auto!important}
 }
 .group-cell{
   cursor:pointer;position:relative
@@ -2950,34 +2950,22 @@ const searchGeo = async (q) => {
                 )}
               </div>
               <div className="group-masonry">
-                <div className="group-col">
-                  {left.map((e,i)=>(
-                    <div key={e.id} className="group-cell" onClick={()=>{setSelArc(e);setSelArcFolderName(selGroup.id==="all"?"All":selGroup.title);}}>
-                      <div className="group-cell-img"
-                        style={{height:leftHeights[i%leftHeights.length],background:e.color||"var(--gray-100)"}}>
-                        {e.photos&&e.photos.length>0
-                          ? <img src={e.photos[0]} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
-                          : <span style={{fontSize:32,opacity:0.3}}>{e.emoji}</span>
-                        }
+                {(isDesktop ? Array.from({length:5},(_,ci)=>imgItems.filter((_,i)=>i%5===ci)) : [left,right]).map((col,ci)=>(
+                  <div key={ci} className="group-col">
+                    {col.map((e,i)=>(
+                      <div key={e.id} className="group-cell" onClick={()=>{setSelArc(e);setSelArcFolderName(selGroup.id==="all"?"All":selGroup.title);}}>
+                        <div className="group-cell-img"
+                          style={{height:isDesktop?"auto":(ci===0?leftHeights[i%leftHeights.length]:rightHeights[i%rightHeights.length]),background:e.color||"var(--gray-100)"}}>
+                          {e.photos&&e.photos.length>0
+                            ? <img src={e.photos[0]} style={{width:"100%",height:"100%",objectFit:isDesktop?"contain":"cover",display:"block"}}/>
+                            : <span style={{fontSize:32,opacity:0.3}}>{e.emoji}</span>
+                          }
+                        </div>
+                        <div className="group-cell-label">{e.spot}</div>
                       </div>
-                      <div className="group-cell-label">{e.spot}</div>
-                    </div>
-                  ))}
-                </div>
-                <div className="group-col">
-                  {right.map((e,i)=>(
-                    <div key={e.id} className="group-cell" onClick={()=>{setSelArc(e);setSelArcFolderName(selGroup.title);}}>
-                      <div className="group-cell-img"
-                        style={{height:rightHeights[i%rightHeights.length],background:e.color||"var(--gray-100)"}}>
-                        {e.photos&&e.photos.length>0
-                          ? <img src={e.photos[0]} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
-                          : <span style={{fontSize:32,opacity:0.3}}>{e.emoji}</span>
-                        }
-                      </div>
-                      <div className="group-cell-label">{e.spot}</div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                ))}
               </div>
             </>;
           })()}
