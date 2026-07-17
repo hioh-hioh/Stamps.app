@@ -7,7 +7,7 @@ export async function POST(req) {
 
   try {
     await resend.emails.send({
-      from: "Stamps. <notify@stampsjp.com>",
+      from: "Stamps. <onboarding@resend.dev>",
       to: process.env.CONTACT_EMAIL,
       subject: "【Stamps.】新しい通報がありました",
       text: `通報がありました。
