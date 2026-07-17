@@ -716,7 +716,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 
 /* ══════ MYPAGE ══════ */
 .mypage-screen{flex:1;overflow-y:auto;padding-bottom:120px;background:var(--white);height:calc(844px - 68px)}
-.profile-hd{padding:28px 16px 0}
+.profile-hd{padding:88px 16px 0}
 .prof-row{display:flex;align-items:center;gap:15px;align-self:stretch}
 .avatar{
   width:56px;height:56px;border-radius:50%;
