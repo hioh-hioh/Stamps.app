@@ -2178,13 +2178,7 @@ const searchGeo = async (q) => {
               </>
             ) : (
               <>
-              <div style={{padding:"8px 16px 0",marginTop:isNative?44:20,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                <button onClick={()=>supabase.auth.signOut()}
-                  style={{background:"none",border:"none",color:"var(--text3)",fontSize:12,cursor:"pointer",fontFamily:"inherit"}}>
-                  {t('logout')}
-                </button>
-              </div>
-            <div className="profile-hd">
+              <div className="profile-hd" style={{marginTop:isNative?44:20}}>
               <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",gap:15}}>
                 <div style={{flex:1,minWidth:0,paddingBottom:4}}>
                   <div className="prof-name">{profile.name}</div>
