@@ -93,6 +93,10 @@ const T = {
   checkinComplete:      { ja:"チェックイン完了！", en:"Checked in!", zh:"打卡完成！" },
   noCheckinRecords:      { ja:"チェックインの記録がありません", en:"No check-in records yet", zh:"暂无打卡记录" },
   confirmDeleteCheckin:  { ja:"削除しますか？", en:"Delete this?", zh:"要删除吗？" },
+  reportPost:            { ja:"通報する", en:"Report", zh:"举报" },
+  reportSent:            { ja:"通報しました", en:"Report sent", zh:"已举报" },
+  confirmBlockUser:      { ja:"このユーザーをブロックしますか？", en:"Block this user?", zh:"要屏蔽这个用户吗？" },
+  userBlocked:           { ja:"ブロックしました", en:"User blocked", zh:"已屏蔽" },
   noSpots:              { ja:"スポットがありません", en:"No spots", zh:"没有地点" },
   searchStampPlaceholder:{ ja:"Search Stamp / スタンプ検索", en:"Search Stamp", zh:"搜索印章" },
   filterAll:             { ja:"すべて", en:"All", zh:"全部" },
@@ -2531,24 +2535,43 @@ const searchGeo = async (q) => {
                               ))}
                             </div>
                           )}
-                          {user && archives.some(a=>a.id===post.id) && (
+                          {user && (
                             <div style={{position:"relative"}} onClick={e=>e.stopPropagation()}>
                               <button onClick={()=>setTimelineMenu(m=>m===post.id?null:post.id)}
                                 style={{background:"none",border:"none",cursor:"pointer",color:"var(--text3)",fontSize:16,padding:"0 4px"}}>•••</button>
                               {timelineMenu===post.id && (
-                                <div style={{position:"absolute",bottom:24,left:0,background:"#fff",borderRadius:8,boxShadow:"0 2px 12px rgba(0,0,0,.15)",zIndex:20,overflow:"hidden",minWidth:120}}>
-                                  <button onClick={()=>{
-                                    setEditingCheckin({id:post.id,spot_id:selSpot?.id,note:post.note,photos:post.photos||[]});
-                                    setEditNote(post.note||"");
-                                    setEditPhotos(post.photos||[]);
-                                    setEditLimited(post.limited||false);
-                                    setEditEventName(post.eventName||"");
-                                    setEditDateFrom(post.dateFrom||"");
-                                    setEditDateTo(post.dateTo||"");
-                                    setEditHours(selSpot?.hours||"");
-                                    setEditLocation(selSpot?.location||"");
-                                    setTimelineMenu(null);
-                                  }} style={{display:"block",width:"100%",padding:"10px 16px",background:"none",border:"none",textAlign:"left",fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>編集</button>
+                                <div style={{position:"absolute",bottom:24,left:0,background:"#fff",borderRadius:8,boxShadow:"0 2px 12px rgba(0,0,0,.15)",zIndex:20,overflow:"hidden",minWidth:140}}>
+                                  {archives.some(a=>a.id===post.id) ? (
+                                    <button onClick={()=>{
+                                      setEditingCheckin({id:post.id,spot_id:selSpot?.id,note:post.note,photos:post.photos||[]});
+                                      setEditNote(post.note||"");
+                                      setEditPhotos(post.photos||[]);
+                                      setEditLimited(post.limited||false);
+                                      setEditEventName(post.eventName||"");
+                                      setEditDateFrom(post.dateFrom||"");
+                                      setEditDateTo(post.dateTo||"");
+                                      setEditHours(selSpot?.hours||"");
+                                      setEditLocation(selSpot?.location||"");
+                                      setTimelineMenu(null);
+                                    }} style={{display:"block",width:"100%",padding:"10px 16px",background:"none",border:"none",textAlign:"left",fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>編集</button>
+                                  ) : (
+                                    <>
+                                      <button onClick={async()=>{
+                                        const {supabase} = await import("../../lib/supabase");
+                                        await supabase.from("reports").insert({reporter_id:user.id,target_type:"checkin",target_id:String(post.id),reason:"user_report"});
+                                        setTimelineMenu(null);
+                                        showToast(t('reportSent'));
+                                      }} style={{display:"block",width:"100%",padding:"10px 16px",background:"none",border:"none",textAlign:"left",fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>{t('reportPost')}</button>
+                                      <button onClick={async()=>{
+                                        if(!post.user_id) return;
+                                        if(!confirm(t('confirmBlockUser'))) return;
+                                        const {supabase} = await import("../../lib/supabase");
+                                        await supabase.from("blocked_users").insert({blocker_id:user.id,blocked_id:post.user_id});
+                                        setTimelineMenu(null);
+                                        showToast(t('userBlocked'));
+                                      }} style={{display:"block",width:"100%",padding:"10px 16px",background:"none",border:"none",textAlign:"left",fontSize:13,color:"var(--red)",cursor:"pointer",fontFamily:"inherit"}}>{t('blockUser')}</button>
+                                    </>
+                                  )}
                                 </div>
                               )}
                             </div>
