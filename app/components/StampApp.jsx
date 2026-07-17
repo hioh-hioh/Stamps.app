@@ -860,7 +860,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   padding:16px;border-bottom:1px solid var(--border);
   position:sticky;top:0;background:var(--white);z-index:10
 }
-.pe-hd.native{padding-top:44px}
+.pe-hd.native{padding-top:64px}
 .pe-hd h2{font-size:16px;font-weight:700;flex:1}
 .pe-save{
   background:var(--red);color:#fff;border:none;
@@ -955,7 +955,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   padding:16px;border-bottom:1px solid var(--border);
   position:sticky;top:0;background:var(--white);z-index:10
 }
-.arc-hd.native{padding-top:44px}
+.arc-hd.native{padding-top:64px}
 .arc-hd h2{font-size:16px;font-weight:700;flex:1}
 .arc-back{background:none;border:none;cursor:pointer;color:var(--text2);display:flex}
 .arc-img{
@@ -1105,7 +1105,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   padding:16px;border-bottom:1px solid var(--border);
   position:sticky;top:0;background:var(--white);z-index:10
 }
-.new-ci-hd.native{padding-top:44px}
+.new-ci-hd.native{padding-top:64px}
 .new-ci-hd h2{font-size:16px;font-weight:700;flex:1}
 .spot-search-box{
   display:flex;align-items:center;gap:10px;
@@ -2274,7 +2274,7 @@ const searchGeo = async (q) => {
         {/* ════ CHECKIN FORM OVERLAY ════ */}
         <div className={`overlay ${overlay==="form"?"open":""}`} style={{overflowY:"auto"}}>
           {selSpot && overlay==="form" && <>
-            <div style={{display:"flex",alignItems:"center",padding:"14px 16px 12px",position:"sticky",top:0,background:"var(--white)",zIndex:10}}>
+            <div style={{display:"flex",alignItems:"center",padding:`${isNative?64:14}px 16px 12px`,position:"sticky",top:0,background:"var(--white)",zIndex:10}}>
               <button className="ov-back" style={{position:"static",background:"none",border:"none",cursor:"pointer",color:"var(--text2)",display:"flex",padding:0}} onClick={closeOv}>
                 <Ic.Back/>
               </button>
@@ -2437,7 +2437,7 @@ const searchGeo = async (q) => {
             const allPosts = [...spotPosts, ...mockPosts];
             return <>
               {/* ── ヘッダー: 戻るボタン左上 ── */}
-              <div style={{display:"flex",alignItems:"center",padding:"14px 16px 12px",position:"sticky",top:0,background:"var(--white)",zIndex:10}}>
+              <div style={{display:"flex",alignItems:"center",padding:`${isNative?64:14}px 16px 12px`,position:"sticky",top:0,background:"var(--white)",zIndex:10}}>
                 <button className="ov-back" style={{position:"static",background:"none",border:"none",cursor:"pointer",color:"var(--text2)",display:"flex",padding:0}} onClick={closeOv}>
                   <Ic.Back/>
                 </button>
@@ -2763,7 +2763,7 @@ const searchGeo = async (q) => {
 
         {/* ════ NEW CHECKIN OVERLAY ════ */}
         <div className={`new-ci-overlay ${newCiOpen?"open":""}`}>
-          <div className="new-ci-hd">
+          <div className={`new-ci-hd ${isNative?"native":""}`}>
             <button className="arc-back" onClick={()=>{setNewCiOpen(false);setSpotSearch("");}}><Ic.Back/></button>
             <h2>{t('selectSpotTitle')}</h2>
           </div>
@@ -2932,7 +2932,7 @@ const searchGeo = async (q) => {
             const left  = imgItems.filter((_,i)=>i%2===0);
             const right = imgItems.filter((_,i)=>i%2===1);
             return <>
-              <div className="group-hd" style={{paddingTop:isNative?44:16}}>
+              <div className="group-hd" style={{paddingTop:isNative?64:16}}>
                 <button className="arc-back" onClick={()=>setSelGroup(null)}><Ic.Back/></button>
                 <h2 style={{whiteSpace:"normal",overflow:"visible",textOverflow:"unset"}}>{selGroup.id==="all"?"All":selGroup.title}</h2>
               </div>
@@ -3280,7 +3280,7 @@ const searchGeo = async (q) => {
         )}
         {menuOpen && (
           <div style={{position:"fixed",inset:0,background:"#fff",zIndex:9999,overflowY:"auto",animation:"slideInRight 0.25s ease-out"}}>
-            <div style={{display:"flex",alignItems:"center",padding:`${isNative?44:14}px 16px 12px`,position:"sticky",top:0,background:"#fff",zIndex:10}}>
+            <div style={{display:"flex",alignItems:"center",padding:`${isNative?64:14}px 16px 12px`,position:"sticky",top:0,background:"#fff",zIndex:10}}>
               <button onClick={()=>setMenuOpen(false)} style={{background:"none",border:"none",cursor:"pointer",color:"var(--text2)",display:"flex",padding:0}}>
                 <Ic.Back/>
               </button>
