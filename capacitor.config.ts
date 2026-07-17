@@ -9,7 +9,9 @@ const config: CapacitorConfig = {
     cleartext: false
   },
   ios: {
-    scheme: 'com.stampsapp.app'
+    scheme: 'com.stampsapp.app',
+    allowsLinkPreview: false,
+    handleApplicationNotifications: false,
   },
   plugins: {
     GoogleAuth: {

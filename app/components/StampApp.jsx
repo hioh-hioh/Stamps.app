@@ -1912,7 +1912,7 @@ const searchGeo = async (q) => {
             .sort(activeTag.sort);
           return (
             <div style={{display:"flex",flexDirection:"column",height:"100%",overflow:"hidden"}}>
-              <div style={{overflowX:"auto",whiteSpace:"nowrap",padding:`${isNative?52:20}px 16px 8px`,display:"flex",gap:8,scrollbarWidth:"none",position:"sticky",top:0,background:"#fff",zIndex:10}}>
+              <div style={{overflowX:"auto",whiteSpace:"nowrap",padding:`${isNative?52:20}px 16px 8px`,marginTop:40,display:"flex",gap:8,scrollbarWidth:"none",position:"sticky",top:0,background:"#fff",zIndex:10}}>
                 {LIST_TAGS.map(tag=>(
                   <button key={tag.id} onClick={()=>setListArea(tag.id)}
                     style={{display:"inline-block",padding:"6px 14px",borderRadius:20,border:`1px solid ${listArea===tag.id?"var(--red)":"var(--gray-200)"}`,boxShadow:"none",background:listArea===tag.id?"var(--red)":"var(--white)",color:listArea===tag.id?"#fff":"var(--text2)",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0}}>
