@@ -2188,7 +2188,7 @@ const searchGeo = async (q) => {
                   <div className="prof-bio">{profile.bio}</div>
                   <div style={{fontSize:11,color:"var(--text3)",marginTop:6}}>Post: {archives.filter(a=>a.photos?.length>0).length}　Checkin: {archives.length}</div>
                 </div>
-                <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:6}}>
+                <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:6,marginTop:-20}}>
                   <div className="avatar">
                     {profile.avatar_url
                       ? <img src={profile.avatar_url} style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:"50%"}}/>
