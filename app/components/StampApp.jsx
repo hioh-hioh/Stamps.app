@@ -1366,6 +1366,7 @@ const [nearbyGeoLoading, setNearbyGeoLoading] = useState(false);
 const [geoLoading, setGeoLoading] = useState(false);
 const [sessionToken] = useState(()=>crypto.randomUUID());
 const [user, setUser] = useState(null);
+  const [blockedIds, setBlockedIds] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
   const [locLoading, setLocLoading] = useState(false);
   const [photoViewer, setPhotoViewer] = useState(null);
@@ -1417,7 +1418,10 @@ useEffect(()=>{ setMounted(true); setIsDesktop(window.innerWidth>768); },[]);
 useEffect(()=>{
     supabase.auth.getSession().then(({data:{session}})=>{
       setUser(session?.user ?? null);
-      if(session?.user){ loadCheckins(session.user.id); loadProfile(session.user.id); loadFolders(session.user.id); loadSavedSpots(session.user.id); }
+      if(session?.user){ loadCheckins(session.user.id); loadProfile(session.user.id); loadFolders(session.user.id); loadSavedSpots(session.user.id);
+        supabase.from("blocked_users").select("blocked_id").eq("blocker_id", session.user.id)
+          .then(({data})=> setBlockedIds((data||[]).map(d=>d.blocked_id)));
+      }
     });
     loadSpots();
     if(navigator.geolocation){
@@ -1443,8 +1447,9 @@ useEffect(()=>{
   useEffect(()=>{
     if(!selSpot?.id){ setSpotCheckins([]); return; }
     (async()=>{
-      const { data } = await supabase.from("checkins").select("*").eq("spot_id", String(selSpot.id)).order("created_at",{ascending:false});
-      if(!data){ setSpotCheckins([]); return; }
+      const { data:raw } = await supabase.from("checkins").select("*").eq("spot_id", String(selSpot.id)).order("created_at",{ascending:false});
+      const data = (raw||[]).filter(d=>!blockedIds.includes(d.user_id));
+      if(!data.length){ setSpotCheckins([]); return; }
       const userIds = [...new Set(data.map(d=>d.user_id).filter(Boolean))];
       let nameMap = {};
       let avatarMap = {};
