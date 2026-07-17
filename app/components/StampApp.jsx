@@ -2929,7 +2929,7 @@ const searchGeo = async (q) => {
             const left  = imgItems.filter((_,i)=>i%2===0);
             const right = imgItems.filter((_,i)=>i%2===1);
             return <>
-              <div className="group-hd">
+              <div className="group-hd" style={{paddingTop:isNative?44:16}}>
                 <button className="arc-back" onClick={()=>setSelGroup(null)}><Ic.Back/></button>
                 <h2 style={{whiteSpace:"normal",overflow:"visible",textOverflow:"unset"}}>{selGroup.id==="all"?"All":selGroup.title}</h2>
               </div>
