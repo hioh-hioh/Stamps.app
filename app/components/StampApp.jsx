@@ -1327,6 +1327,7 @@ export default function App() {
   const [ciDateTo, setCiDateTo]     = useState("");
   const [ciEventName, setCiEventName] = useState("");
   const [eventSuggestions, setEventSuggestions] = useState([]);
+  const [activeEventTags, setActiveEventTags] = useState([]);
   const [ciHours, setCiHours] = useState("");
   const [ciLocation, setCiLocation] = useState("");
   const [showSpotEdit, setShowSpotEdit] = useState(false);
@@ -1416,6 +1417,21 @@ const [creatorAvatar, setCreatorAvatar] = useState("");
     return CATEGORY_LABELS[lang]?.[cat] || CATEGORY_LABELS.ja[cat] || cat;
   };
 useEffect(()=>{ setMounted(true); setIsDesktop(window.innerWidth>768); },[]);
+useEffect(()=>{
+  supabase.from("checkins").select("event_name,date_from,date_to,spot_id").eq("limited",true).not("event_name","is",null)
+    .then(({data})=>{
+      const today = new Date().toISOString().slice(0,10);
+      const grouped = {};
+      (data||[]).forEach(d=>{
+        if(!d.event_name || !d.spot_id) return;
+        if(d.date_from && d.date_from > today) return;
+        if(d.date_to && d.date_to < today) return;
+        if(!grouped[d.event_name]) grouped[d.event_name] = new Set();
+        grouped[d.event_name].add(String(d.spot_id));
+      });
+      setActiveEventTags(Object.entries(grouped).map(([name,ids])=>({name, spotIds:ids})));
+    });
+},[]);
 useEffect(()=>{
     supabase.auth.getSession().then(({data:{session}})=>{
       setUser(session?.user ?? null);
@@ -1924,6 +1940,7 @@ const searchGeo = async (q) => {
             {id:"Shibuya", label:t('tagShibuya'), filter:s=>s.area==="渋谷区", sort:(a,b)=>0},
             {id:"Taito", label:t('tagTaito'), filter:s=>s.area==="台東区", sort:(a,b)=>0},
             {id:"Kanazawa", label:t('tagKanazawa'), filter:s=>s.area==="金沢市", sort:(a,b)=>0},
+            ...activeEventTags.map(ev=>({id:"Event:"+ev.name, label:ev.name, filter:s=>ev.spotIds.has(String(s.id)), sort:(a,b)=>0})),
           ];
           const [listArea, setListArea] = [catSel, setCatSel];
           const activeTag = LIST_TAGS.find(t=>t.id===listArea) || LIST_TAGS[0];
