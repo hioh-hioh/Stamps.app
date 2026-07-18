@@ -2383,7 +2383,7 @@ const searchGeo = async (q) => {
               {ciLimited && (
                 <>
                 {eventSuggestions.length>0 && (
-                  <div style={{display:"flex",gap:6,overflowX:"auto",marginTop:"4px",paddingBottom:2}}>
+                  <div style={{display:"flex",gap:6,overflowX:"auto",marginTop:"4px",paddingBottom:2,width:"100%",minWidth:0,WebkitOverflowScrolling:"touch"}}>
                     {eventSuggestions.map((ev,i)=>(
                       <button key={i} onClick={()=>{setCiEventName(ev.event_name);setCiDateFrom(ev.date_from||"");setCiDateTo(ev.date_to||"");}}
                         style={{flexShrink:0,padding:"6px 12px",borderRadius:16,border:"1px solid var(--gray-200)",background:"#fff",fontSize:12,color:"var(--text)",cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>
