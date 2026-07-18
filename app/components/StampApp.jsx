@@ -1326,6 +1326,7 @@ export default function App() {
   const [ciDateFrom, setCiDateFrom] = useState("");
   const [ciDateTo, setCiDateTo]     = useState("");
   const [ciEventName, setCiEventName] = useState("");
+  const [eventSuggestions, setEventSuggestions] = useState([]);
   const [ciHours, setCiHours] = useState("");
   const [ciLocation, setCiLocation] = useState("");
   const [showSpotEdit, setShowSpotEdit] = useState(false);
@@ -1582,7 +1583,18 @@ const searchGeo = async (q) => {
       setGeoLoading(false);
     }
   };
-  const openForm = (spot) => { setSelSpot(spot); setCiText(""); setHasPrev(false); setCiCat(""); setCiLimited(false); setCiDateFrom(""); setCiDateTo(""); setCiHours(spot.hours||""); setCiLocation(""); setShowSpotEdit(!isCheckedIn(spot)); setOverlay("form"); };
+  const openForm = (spot) => { setSelSpot(spot); setCiText(""); setHasPrev(false); setCiCat(""); setCiLimited(false); setCiDateFrom(""); setCiDateTo(""); setCiHours(spot.hours||""); setCiLocation(""); setShowSpotEdit(!isCheckedIn(spot)); setOverlay("form");
+    supabase.from("checkins").select("event_name,date_from,date_to").eq("limited",true).not("event_name","is",null).order("created_at",{ascending:false}).limit(50)
+      .then(({data})=>{
+        const seen = new Set();
+        const unique = (data||[]).filter(d=>{
+          if(!d.event_name || seen.has(d.event_name)) return false;
+          seen.add(d.event_name);
+          return true;
+        }).slice(0,8);
+        setEventSuggestions(unique);
+      });
+  };
   const openDetail = (spot) => {
     const cached = window.__spotsCache?.[spot.name];
     setSelSpot(cached ? {...spot, hours:cached.hours||spot.hours, location:cached.location||spot.location, creator_name:cached.creator_name||"", spot_created_at:cached.created_at||"", created_by:cached.created_by||""} : spot);
@@ -2370,6 +2382,16 @@ const searchGeo = async (q) => {
               </div>}
               {ciLimited && (
                 <>
+                {eventSuggestions.length>0 && (
+                  <div style={{display:"flex",gap:6,overflowX:"auto",marginTop:"4px",paddingBottom:2}}>
+                    {eventSuggestions.map((ev,i)=>(
+                      <button key={i} onClick={()=>{setCiEventName(ev.event_name);setCiDateFrom(ev.date_from||"");setCiDateTo(ev.date_to||"");}}
+                        style={{flexShrink:0,padding:"6px 12px",borderRadius:16,border:"1px solid var(--gray-200)",background:"#fff",fontSize:12,color:"var(--text)",cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>
+                        {ev.event_name}
+                      </button>
+                    ))}
+                  </div>
+                )}
                 <div style={{width:"100%",boxSizing:"border-box",marginTop:"4px"}}>
                   <input className="limited-date-input" placeholder="イベント名（任意）"
                     value={ciEventName} onChange={e=>setCiEventName(e.target.value)}
