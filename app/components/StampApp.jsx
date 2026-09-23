@@ -2237,9 +2237,10 @@ const searchGeo = async (q) => {
             {(()=>{
               const allFolders = [
                 { id:"all", title:t('filterAll'), items: archives },
-                ...folders.map(f=>({
+                  ...folders.map(f=>({
                   id: f.id,
                   title: f.title,
+                  cover_url: f.cover_url,
                   items: archives.filter(e=>f.ids.includes(e.id))
                 }))
               ];
