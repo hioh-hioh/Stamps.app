@@ -1383,6 +1383,7 @@ const [creatorAvatar, setCreatorAvatar] = useState("");
   const [showFolderModal, setShowFolderModal] = useState(false);
   const [folderCoverFile, setFolderCoverFile] = useState(null);
   const [folderCoverPreview, setFolderCoverPreview] = useState(null);
+  const [folderCoverRemoved, setFolderCoverRemoved] = useState(false);
   const [folderName, setFolderName]   = useState("");
   const [folderPhotos, setFolderPhotos] = useState([]); // mock photo list
   const [editingFolderId, setEditingFolderId] = useState(null);
@@ -3006,6 +3007,8 @@ const searchGeo = async (q) => {
                     if(!folder) return;
                     setFolderName(folder.title);
                     setFolderPhotos(archives.filter(a=>folder.ids.includes(a.id)));
+                    setFolderCoverPreview(folder.cover_url||null);
+                    setFolderCoverRemoved(false);
                     setEditingFolderId(folder.id);
                     setShowFolderModal(true);
                   }} style={{background:"none",border:"none",color:"var(--text2)",fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>{t('edit')}</button>
@@ -3242,7 +3245,7 @@ const searchGeo = async (q) => {
                     }}/>
                   </label>
                   {folderCoverPreview && (
-                    <button onClick={()=>{setFolderCoverPreview(null);setFolderCoverFile(null);}}
+                    <button onClick={()=>{setFolderCoverPreview(null);setFolderCoverFile(null);setFolderCoverRemoved(true);}}
                       style={{background:"none",border:"none",color:"var(--text3)",fontSize:12,cursor:"pointer"}}>削除</button>
                   )}
                 </div>
@@ -3285,8 +3288,9 @@ const searchGeo = async (q) => {
                       const ids = folderPhotos.map(p=>p.id);
                       const upd = {title:folderName.trim(), checkin_ids:ids};
                       if(coverUrl) upd.cover_url = coverUrl;
+                      else if(folderCoverRemoved) upd.cover_url = null;
                       await supabase.from("folders").update(upd).eq("id", editingFolderId);
-                      setFolders(f=>f.map(fo=>fo.id===editingFolderId?{...fo,title:folderName.trim(),ids,cover_url:coverUrl||fo.cover_url}:fo));
+                      setFolders(f=>f.map(fo=>fo.id===editingFolderId?{...fo,title:folderName.trim(),ids,cover_url:coverUrl||(folderCoverRemoved?null:fo.cover_url)}:fo));
                       setSelGroup(g=>g&&g.id===editingFolderId?{...g,title:folderName.trim(),items:folderPhotos}:g);
                     } else {
                       const ins = {user_id: user.id, title: folderName.trim(), checkin_ids: folderPhotos.map(p=>p.id)};
@@ -3294,7 +3298,7 @@ const searchGeo = async (q) => {
                       const { data, error } = await supabase.from("folders").insert(ins).select().single();
                       if(!error && data) setFolders(f=>[...f,{id:data.id,title:data.title,type:"custom",ids:data.checkin_ids||[],cover_url:data.cover_url||null}]);
                     }
-                    setFolderName(""); setFolderPhotos([]); setFolderCoverFile(null); setFolderCoverPreview(null); setShowFolderModal(false); setEditingFolderId(null);
+                    setFolderName(""); setFolderPhotos([]); setFolderCoverFile(null); setFolderCoverPreview(null); setFolderCoverRemoved(false); setShowFolderModal(false); setEditingFolderId(null);
                   }}>{editingFolderId ? t('saveAction') : t('createAction')}</button>
                 </div>
               <div style={{height:40}}/>
