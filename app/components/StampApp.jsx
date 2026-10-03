@@ -135,6 +135,7 @@ const T = {
   menuAboutSection:      { ja:"このアプリについて", en:"About", zh:"关于" },
   loginDescription:      { ja:"マイページにログインすると、スタンプのチェックイン記録や共有、整理ができます。", en:"Log in to record, share, and organize your stamp check-ins.", zh:"登录后即可记录、分享和整理您的印章打卡。" },
   loginWithGoogle:      { ja:"Googleでログイン", en:"Log in with Google", zh:"使用Google登录" },
+  loginWithApple:       { ja:"Appleでログイン", en:"Log in with Apple", zh:"使用Apple登录" },
   loginWithEmail:       { ja:"メールアドレスでログイン", en:"Email address", zh:"邮箱登录" },
   emailPlaceholder:     { ja:"メールアドレス", en:"Email address", zh:"邮箱地址" },
   emailSent:            { ja:"6桁のコードをメールに送信しました。", en:"We sent a 6-digit code to your email.", zh:"已向您的邮箱发送6位验证码。" },
@@ -2206,6 +2207,11 @@ const searchGeo = async (q) => {
                   style={{width:"100%",padding:"14px 24px",background:"var(--red)",color:"#fff",border:"none",borderRadius:12,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
                   <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#fff" d="M44.5 20H24v8.5h11.8C34.7 33.9 29.8 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"/></svg>
                   {t('loginWithGoogle')}
+                </button>
+                <button onClick={async()=>{try{const platform=Capacitor.getPlatform();if(platform==='web'){await supabase.auth.signInWithOAuth({provider:'apple',options:{redirectTo:'https://stampsapp.vercel.app/auth/callback'}});}else{const rawNonce=Array.from(crypto.getRandomValues(new Uint8Array(32))).map(b=>b.toString(16).padStart(2,'0')).join('');const encoder=new TextEncoder();const data=encoder.encode(rawNonce);const hashBuffer=await crypto.subtle.digest('SHA-256',data);const nonce=Array.from(new Uint8Array(hashBuffer)).map(b=>b.toString(16).padStart(2,'0')).join('');await SocialLogin.initialize({apple:{}});const r=await SocialLogin.login({provider:'apple',options:{scopes:['email','name'],nonce:nonce}});const idToken=r.result?.idToken;if(idToken){const{error}=await supabase.auth.signInWithIdToken({provider:'apple',token:idToken,nonce:rawNonce});if(error)console.error(error);}}}catch(e){console.error(e);}}}
+                  style={{width:"100%",padding:"14px 24px",background:"#000",color:"#fff",border:"none",borderRadius:12,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+                  <svg width="16" height="18" viewBox="0 0 814 1000"><path fill="#fff" d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-157.5 123.1s-88.1-40.7-168.8-40.7c-78.6 0-106.5 42-170.3 42s-108.3-57-159.5-127C42.5 790.7 0 663 0 541.8c0-194.4 126.4-297.5 250.8-297.5 68.6 0 125.6 42.6 169.8 42.6 42.1 0 106.2-45.9 185.5-45.9 30.4 0 139.6 2.8 212 105.9zM554.1 159.4c32.6-38.6 55.8-92.2 55.8-145.8 0-7.4-.6-14.9-1.9-21C556.7 1.8 489 42.8 448.9 85.5c-29.8 31.3-57.9 84.9-57.9 139.3 0 8.1 1.2 16.2 1.9 18.9 3.2.6 8.4 1.3 13.7 1.3 46.2 0 104.4-30.9 139.9-85.6z"/></svg>
+                  {t('loginWithApple')}
                 </button>
                 <div style={{width:"100%",display:"flex",alignItems:"center",gap:8}}><div style={{flex:1,height:1,background:"var(--gray-200)"}}/><span style={{fontSize:12,color:"var(--text3)"}}>or</span><div style={{flex:1,height:1,background:"var(--gray-200)"}}/></div>
                 <input id="magic-email" type="email" placeholder={t('emailPlaceholder')} style={{width:"100%",padding:"12px 16px",borderRadius:12,border:"1.5px solid var(--gray-200)",fontSize:16,fontFamily:"inherit",boxSizing:"border-box"}}/>
