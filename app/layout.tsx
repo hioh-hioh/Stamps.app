@@ -13,8 +13,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Stamps.",
-  description: "駅や記念スタンプを共有、記録、整理できるWebアプリ",
+  metadataBase: new URL("https://stampsapp.vercel.app"),
+  title: "Stamps. - スタンプラリー記録アプリ",
+  description: "駅や観光地、限定イベントのスタンプを記録・共有・整理できるスタンプラリーアプリ。訪れた場所を地図とタイムラインで振り返ろう。",
+  keywords: ["スタンプラリー", "記念スタンプ", "駅スタンプ", "観光", "御朱印", "スタンプ帳", "コレクション"],
   appleWebApp: {
     title: "Stamps.",
     statusBarStyle: "default",
@@ -23,6 +25,25 @@ export const metadata: Metadata = {
     apple: [
       { url: "/icon-512-v2.png", sizes: "512x512", type: "image/png" },
     ],
+  },
+  openGraph: {
+    title: "Stamps. - スタンプラリー記録アプリ",
+    description: "駅や観光地、限定イベントのスタンプを記録・共有・整理できるスタンプラリーアプリ。",
+    url: "https://stampsapp.vercel.app",
+    siteName: "Stamps.",
+    images: ["/icon-512-v2.png"],
+    locale: "ja_JP",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Stamps. - スタンプラリー記録アプリ",
+    description: "駅や観光地、限定イベントのスタンプを記録・共有・整理できるスタンプラリーアプリ。",
+    images: ["/icon-512-v2.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
   other: {
     google: "notranslate",
