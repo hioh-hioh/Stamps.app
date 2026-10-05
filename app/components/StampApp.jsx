@@ -1358,6 +1358,8 @@ export default function App() {
   const [selGroup, setSelGroup]   = useState(null); // {title, items[]}
   const [archives, setArchives]   = useState([]);
   const [spotCheckins, setSpotCheckins] = useState([]);
+  const [viewUser, setViewUser] = useState(null);
+  const [viewUserPosts, setViewUserPosts] = useState([]);
   const [catSel, setCatSel]       = useState("All");
   const [searchQ, setSearchQ]     = useState("");
   const [newCiOpen, setNewCiOpen] = useState(false);
@@ -1480,6 +1482,7 @@ useEffect(()=>{
       }
       setSpotCheckins(data.map(d=>({
         id: d.id,
+        user_id: d.user_id,
         user: nameMap[d.user_id] || t('guestUser'),
         avatar_url: avatarMap[d.user_id] || null,
         date: d.created_at ? new Date(d.created_at).toLocaleString("ja-JP",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}).replace(/\//g,"/") : "",
@@ -1620,6 +1623,16 @@ const searchGeo = async (q) => {
     setOverlay("detail");
   };
   const closeOv = () => setOverlay(null);
+  const openUserProfile = async (uid) => {
+    if(!uid) return;
+    setViewUser({id:uid, name:"", location:"", bio:"", avatar_url:""});
+    setViewUserPosts([]);
+    setOverlay("user");
+    const { data:p } = await supabase.from("profiles").select("id,name,location,bio,avatar_url").eq("id", uid).single();
+    if(p) setViewUser({id:uid, name:p.name||"", location:p.location||"", bio:p.bio||"", avatar_url:p.avatar_url||""});
+    const { data:cs } = await supabase.from("checkins").select("*").eq("user_id", uid).order("created_at",{ascending:false});
+    setViewUserPosts(cs||[]);
+  };
 
   const resizeImage = (file) => new Promise((resolve)=>{
     const img = new Image();
