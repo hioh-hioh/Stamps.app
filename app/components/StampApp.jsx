@@ -2489,6 +2489,39 @@ const searchGeo = async (q) => {
 
 
         {/* ════ DETAIL OVERLAY ════ */}
+        {/* ════ USER PROFILE ════ */}
+        <div className={`overlay ${overlay==="user"?"open":""}`} style={{overflowY:"auto"}}>
+          {viewUser && overlay==="user" && (
+            <>
+              <div style={{display:"flex",alignItems:"center",padding:`${isNative?64:14}px 16px 12px`,position:"sticky",top:0,background:"var(--white)",zIndex:10}}>
+                <button className="ov-back" style={{position:"static",background:"none",border:"none",cursor:"pointer",color:"var(--text2)",display:"flex",padding:0}} onClick={()=>setOverlay(selSpot?"detail":null)}>
+                  <Ic.Back/>
+                </button>
+              </div>
+              <div className="ov-body" style={{paddingTop:8}}>
+                <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:8,marginBottom:20}}>
+                  <div style={{width:80,height:80,borderRadius:"50%",background:"var(--gray-100)",overflow:"hidden",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                    {viewUser.avatar_url ? <img src={viewUser.avatar_url} style={{width:"100%",height:"100%",objectFit:"cover"}}/> : <Ic.User s={32}/>}
+                  </div>
+                  <div style={{fontSize:18,fontWeight:700,color:"var(--text)"}}>{viewUser.name||t('guestUser')}</div>
+                  {viewUser.location && <div style={{fontSize:12,color:"var(--text2)"}}>{viewUser.location}</div>}
+                  {viewUser.bio && <div style={{fontSize:13,color:"var(--text)",textAlign:"center",whiteSpace:"pre-wrap"}}>{viewUser.bio}</div>}
+                </div>
+                <div style={{fontSize:13,fontWeight:700,color:"var(--text)",marginBottom:8}}>{t('postsLabel')} ({viewUserPosts.length})</div>
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:4}}>
+                  {viewUserPosts.map(c=>{
+                    const url = (c.photo_urls||[])[0];
+                    return (
+                      <div key={c.id} style={{aspectRatio:"1",borderRadius:8,overflow:"hidden",background:c.color||"var(--red-bg)",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                        {url ? <img src={url} style={{width:"100%",height:"100%",objectFit:"cover"}}/> : <span style={{fontSize:28}}>{c.emoji}</span>}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
         <div className={`overlay ${overlay==="detail"?"open":""}`} style={{overflowY:"auto"}}>
           {selSpot && overlay==="detail" && (()=>{
             // このスポットへのチェックイン一覧
@@ -2572,7 +2605,7 @@ const searchGeo = async (q) => {
                       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"4px 12px",width:"100%"}}>
                       {(showAllPosts ? allPosts : allPosts.slice(0,2)).map((post,pi)=>(
                         <div key={post.id} className="spot-post-card" style={{display:"flex",flexDirection:"column",alignItems:"flex-start",gap:8,background:"#F7F7F7",borderRadius:8,padding:12,boxShadow:"none"}}>
-                          <div style={{display:"flex",alignItems:"center",gap:8,width:"100%"}}>
+                          <div onClick={()=>openUserProfile(post.user_id)} style={{display:"flex",alignItems:"center",gap:8,width:"100%",cursor:post.user_id?"pointer":"default"}}>
                             <div className="spot-post-avatar">
                               {post.avatar_url ? <img src={post.avatar_url} style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:"50%"}}/> : <Ic.User s={14}/>}
                             </div>
