@@ -1631,7 +1631,7 @@ const searchGeo = async (q) => {
     const { data:p } = await supabase.from("profiles").select("id,name,location,bio,avatar_url").eq("id", uid).single();
     if(p) setViewUser({id:uid, name:p.name||"", location:p.location||"", bio:p.bio||"", avatar_url:p.avatar_url||""});
     const { data:cs } = await supabase.from("checkins").select("*").eq("user_id", uid).order("created_at",{ascending:false});
-    setViewUserPosts(cs||[]);
+    setViewUserPosts((cs||[]).filter(c=>(c.photo_urls||[]).length>0));
   };
 
   const resizeImage = (file) => new Promise((resolve)=>{
