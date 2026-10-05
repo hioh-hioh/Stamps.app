@@ -6,6 +6,7 @@ import { supabase } from '../../lib/supabase'
 import { SocialLogin } from '@capgo/capacitor-social-login'
 import { Capacitor } from '@capacitor/core'
 import MapView from './MapView'
+import AppDownloadPopup from './AppDownloadPopup'
 import Map from 'react-map-gl/mapbox'
 // ══════════════════════════════════════════════
 // DATA
@@ -2195,6 +2196,7 @@ const searchGeo = async (q) => {
         {/* ════ MYPAGE ════ */}
         {tab==="mypage" && (
           <div className="mypage-screen">
+            <AppDownloadPopup />
             <button onClick={()=>setMenuOpen(true)} style={{position:"absolute",top:isNative?56:16,right:16,zIndex:30,background:"none",border:"none",padding:8,cursor:"pointer"}}>
               <svg xmlns="http://www.w3.org/2000/svg" width="21" height="14" viewBox="0 0 21 14" fill="none"><path d="M0 13.5V11.25H20.25V13.5H0ZM0 7.875V5.625H20.25V7.875H0ZM0 2.25V0H20.25V2.25H0Z" fill="#5D5D5D"/></svg>
             </button>
