@@ -3,7 +3,7 @@ import { MetadataRoute } from "next";
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: "https://stampsapp.vercel.app",
+      url: "https://www.stampsjp.com",
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 1,

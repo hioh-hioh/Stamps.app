@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://stampsapp.vercel.app"),
+  metadataBase: new URL("https://www.stampsjp.com"),
   title: "Stamps. - スタンプラリー記録アプリ",
   description: "駅や観光地、限定イベントのスタンプを記録・共有・整理できるスタンプラリーアプリ。訪れた場所を地図とタイムラインで振り返ろう。",
   keywords: ["スタンプラリー", "記念スタンプ", "駅スタンプ", "観光", "御朱印", "スタンプ帳", "コレクション"],
