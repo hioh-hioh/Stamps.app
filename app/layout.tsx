@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Stamps. - スタンプラリー記録アプリ",
     description: "駅や観光地、限定イベントのスタンプを記録・共有・整理できるスタンプラリーアプリ。",
-    url: "https://stampsapp.vercel.app",
+    url: "https://www.stampsjp.com",
     siteName: "Stamps.",
     images: ["/icon-512-v2.png"],
     locale: "ja_JP",
