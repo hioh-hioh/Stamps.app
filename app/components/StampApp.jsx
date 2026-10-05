@@ -1625,13 +1625,15 @@ const searchGeo = async (q) => {
   const closeOv = () => setOverlay(null);
   const openUserProfile = async (uid) => {
     if(!uid) return;
-    setViewUser({id:uid, name:"", location:"", bio:"", avatar_url:""});
+    setViewUser({id:uid, loading:true});
     setViewUserPosts([]);
     setOverlay("user");
-    const { data:p } = await supabase.from("profiles").select("id,name,location,bio,avatar_url").eq("id", uid).single();
-    if(p) setViewUser({id:uid, name:p.name||"", location:p.location||"", bio:p.bio||"", avatar_url:p.avatar_url||""});
-    const { data:cs } = await supabase.from("checkins").select("*").eq("user_id", uid).order("created_at",{ascending:false});
+    const [{ data:p }, { data:cs }] = await Promise.all([
+      supabase.from("profiles").select("id,name,location,bio,avatar_url").eq("id", uid).single(),
+      supabase.from("checkins").select("*").eq("user_id", uid).order("created_at",{ascending:false}),
+    ]);
     setViewUserPosts((cs||[]).filter(c=>(c.photo_urls||[]).length>0));
+    setViewUser({id:uid, loading:false, name:p?.name||"", location:p?.location||"", bio:p?.bio||"", avatar_url:p?.avatar_url||""});
   };
 
   const resizeImage = (file) => new Promise((resolve)=>{
@@ -2498,7 +2500,7 @@ const searchGeo = async (q) => {
                   <Ic.Back/>
                 </button>
               </div>
-              <div className="ov-body" style={{paddingTop:8}}>
+              <div className="ov-body" style={{paddingTop:8,visibility:viewUser.loading?"hidden":"visible"}}>
                 <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:8,marginBottom:20}}>
                   <div style={{width:80,height:80,borderRadius:"50%",background:"var(--gray-100)",overflow:"hidden",display:"flex",alignItems:"center",justifyContent:"center"}}>
                     {viewUser.avatar_url ? <img src={viewUser.avatar_url} style={{width:"100%",height:"100%",objectFit:"cover"}}/> : <Ic.User s={32}/>}
