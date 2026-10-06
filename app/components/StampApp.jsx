@@ -552,6 +552,8 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 .bsheet.hidden{display:none}
 @keyframes bsheetIn{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
 .bsheet-card{animation:bsheetIn .28s cubic-bezier(.2,.8,.2,1)}
+@keyframes bsheetOut{from{opacity:1;transform:translateY(0) scale(1)}to{opacity:0;transform:translateY(24px) scale(.97)}}
+.bsheet-card.closing{animation:bsheetOut .2s ease-in forwards}
 .bsheet-card{
   width:361px;
   background:#FCFCFC;
@@ -1409,6 +1411,11 @@ const [user, setUser] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
   const [locLoading, setLocLoading] = useState(false);
   const [photoViewer, setPhotoViewer] = useState(null);
+  const closeSheet = () => {
+    const el = document.querySelector(".bsheet-card");
+    if(el) el.classList.add("closing");
+    setTimeout(()=>{ if(el && el.isConnected && el.classList.contains("closing")) setSelSpot(null); }, 200);
+  };
   const [pvDrag, setPvDrag] = useState(0);
   const [pvDragging, setPvDragging] = useState(false);
   const closePhotoViewer = () => {
@@ -2237,10 +2244,10 @@ const searchGeo = async (q) => {
   onTouchStart={e=>{e.currentTarget._startY=e.touches[0].clientY;}}
   onTouchEnd={e=>{
     const diff = e.changedTouches[0].clientY - e.currentTarget._startY;
-    if(diff > 60) setSelSpot(null);
+    if(diff > 60) closeSheet();
   }}>
                    {/* closeボタン */}
-<button onClick={()=>setSelSpot(null)}
+<button onClick={closeSheet}
   style={{position:"absolute",top:12,right:12,
     background:"none",border:"none",cursor:"pointer",
     color:"var(--text3)",fontSize:18,lineHeight:1,
