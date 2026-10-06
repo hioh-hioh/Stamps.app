@@ -848,6 +848,10 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   animation:pvFade .22s ease-out
 }
 @keyframes pvFade{from{opacity:0}to{opacity:1}}
+@keyframes pvFadeOut{from{opacity:1}to{opacity:0}}
+@keyframes pvZoomOut{from{opacity:1;transform:scale(1)}to{opacity:0;transform:scale(.94)}}
+.photo-viewer.closing{animation:pvFadeOut .2s ease-in forwards}
+.photo-viewer.closing .photo-viewer-img{animation:pvZoomOut .2s ease-in forwards}
 @keyframes pvZoom{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
 .photo-viewer-img{
   animation:pvZoom .26s ease-out;
@@ -1396,6 +1400,11 @@ const [user, setUser] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
   const [locLoading, setLocLoading] = useState(false);
   const [photoViewer, setPhotoViewer] = useState(null);
+  const closePhotoViewer = () => {
+    const el = document.querySelector(".photo-viewer");
+    if(el) el.classList.add("closing");
+    setTimeout(()=>setPhotoViewer(null), 200);
+  };
   const [detailPhotoIdx, setDetailPhotoIdx] = useState(0);
   const [profile, setProfile] = useState({
     name:"", location:"", bio:"", avatar_url:""
@@ -3122,8 +3131,8 @@ const searchGeo = async (q) => {
           const imgIdx = photoViewer.imgIdx||0;
           const photoCount = post.photos?.length||0;
           return (
-            <div className="photo-viewer" onClick={()=>setPhotoViewer(null)}>
-              <button className="photo-viewer-close" onClick={()=>setPhotoViewer(null)}>×</button>
+            <div className="photo-viewer" onClick={closePhotoViewer}>
+              <button className="photo-viewer-close" onClick={closePhotoViewer}>×</button>
               <div className="photo-viewer-img" onClick={e=>e.stopPropagation()}
                 onTouchStart={e=>{e.currentTarget._startX=e.touches[0].clientX;}}
                 onTouchEnd={e=>{
