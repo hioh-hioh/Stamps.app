@@ -957,7 +957,8 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   z-index:310;overflow-y:auto;
   display:none
 }
-.group-overlay.open{display:block}
+.group-overlay.open{display:block;animation:ovSlideIn .28s ease-out}
+.group-overlay.open.closing{animation:ovSlideOut .22s ease-in forwards}
 .group-hd{
   display:flex;align-items:center;gap:12px;
   padding:16px;border-bottom:1px solid var(--border);
@@ -1140,7 +1141,10 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   z-index:250;overflow-y:auto;
   display:none
 }
-.new-ci-overlay.open{display:block}
+.new-ci-overlay.open{display:block;animation:ciSlideUp .3s cubic-bezier(.2,.8,.2,1)}
+.new-ci-overlay.open.closing{animation:ciSlideDown .22s ease-in forwards}
+@keyframes ciSlideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes ciSlideDown{from{transform:translateY(0);opacity:1}to{transform:translateY(40px);opacity:0}}
 .new-ci-hd{
   display:flex;align-items:center;gap:12px;
   padding:16px;border-bottom:1px solid var(--border);
@@ -1411,6 +1415,12 @@ const [user, setUser] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
   const [locLoading, setLocLoading] = useState(false);
   const [photoViewer, setPhotoViewer] = useState(null);
+  const closeAnimated = (selector, doClose) => {
+    const el = document.querySelector(selector);
+    if(!el){ doClose(); return; }
+    el.classList.add("closing");
+    setTimeout(()=>{ doClose(); el.classList.remove("closing"); }, 220);
+  };
   const closeSheet = () => {
     const el = document.querySelector(".bsheet-card");
     if(el) el.classList.add("closing");
@@ -2996,7 +3006,7 @@ const searchGeo = async (q) => {
         {/* ════ NEW CHECKIN OVERLAY ════ */}
         <div className={`new-ci-overlay ${newCiOpen?"open":""}`}>
           <div className={`new-ci-hd ${isNative?"native":""}`}>
-            <button className="arc-back" onClick={()=>{setNewCiOpen(false);setSpotSearch("");}}><Ic.Back/></button>
+            <button className="arc-back" onClick={()=>closeAnimated(".new-ci-overlay.open",()=>{setNewCiOpen(false);setSpotSearch("");})}><Ic.Back/></button>
             <h2>{t('selectSpotTitle')}</h2>
           </div>
           <div className="spot-search-box">
@@ -3165,7 +3175,7 @@ const searchGeo = async (q) => {
             const right = imgItems.filter((_,i)=>i%2===1);
             return <>
               <div className="group-hd" style={{paddingTop:isNative?64:16}}>
-                <button className="arc-back" onClick={()=>setSelGroup(null)}><Ic.Back/></button>
+                <button className="arc-back" onClick={()=>closeAnimated(".group-overlay.open",()=>setSelGroup(null))}><Ic.Back/></button>
                 <h2 style={{whiteSpace:"normal",overflow:"visible",textOverflow:"unset"}}>{selGroup.id==="all"?"All":selGroup.title}</h2>
               </div>
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,padding:"0 16px",margin:"14px 0 4px"}}>
