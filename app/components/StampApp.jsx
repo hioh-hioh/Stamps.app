@@ -321,6 +321,8 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 }
 .nbtn.active{color:var(--red);background:rgba(255,255,255,.7)}
 .nbtn-icon{width:24px;height:24px;margin-bottom:4px}
+.list-panel{scrollbar-width:none;-ms-overflow-style:none}
+.list-panel::-webkit-scrollbar{display:none}
 
 @keyframes pulse{
   0%{transform:scale(1);opacity:0.25}
@@ -2064,7 +2066,7 @@ const searchGeo = async (q) => {
           const renderPanel = (tag) => {
             const list = getFiltered(tag);
             return (
-              <div style={{height:"100%",overflowY:"auto",padding:"16px 16px 120px",boxSizing:"border-box"}}>
+              <div className="list-panel" style={{height:"100%",overflowY:"auto",padding:"16px 16px 120px",boxSizing:"border-box"}}>
                 <div style={{fontSize:13,fontWeight:700,color:"var(--text)",marginTop:12,marginBottom:8}}>{list.length.toLocaleString()} Stamps.</div>
                 {list.length===0 && <div style={{color:"var(--text3)",textAlign:"center",marginTop:40}}>{t('noSpots')}</div>}
                 {list.map(s=>{
