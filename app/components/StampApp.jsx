@@ -1,7 +1,7 @@
 'use client'
 'use client'
 import { Marker as MapMarker } from 'react-map-gl/mapbox'
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from '../../lib/supabase'
 import { SocialLogin } from '@capgo/capacitor-social-login'
 import { Capacitor } from '@capacitor/core'
@@ -1458,6 +1458,14 @@ const [creatorAvatar, setCreatorAvatar] = useState("");
     return CATEGORY_LABELS[lang]?.[cat] || CATEGORY_LABELS.ja[cat] || cat;
   };
 useEffect(()=>{ setMounted(true); setIsDesktop(window.innerWidth>768); },[]);
+const [listDragging, setListDragging] = useState(false);
+const listTouch = useRef(null);
+const listTrack = useRef(null);
+const listBusy = useRef(false);
+useEffect(()=>{
+  const el = document.querySelector('[data-listtag="'+catSel+'"]');
+  if(el && el.scrollIntoView) el.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"});
+},[catSel]);
 useEffect(()=>{
   supabase.from("checkins").select("event_name,date_from,date_to,spot_id").eq("limited",true).not("event_name","is",null)
     .then(({data})=>{
@@ -2006,27 +2014,60 @@ const searchGeo = async (q) => {
           ];
           const [listArea, setListArea] = [catSel, setCatSel];
           const activeTag = LIST_TAGS.find(t=>t.id===listArea) || LIST_TAGS[0];
-          const filtered = dbSpots
-            .filter(activeTag.filter)
+          const getFiltered = (tag) => dbSpots
+            .filter(tag.filter)
             .map(s=>{
               const dist = userLocation ? calcDist(userLocation.lat, userLocation.lng, s.lat, s.lng) : null;
               return {...s, dist};
             })
-            .sort(activeTag.sort);
-          return (
-            <div style={{display:"flex",flexDirection:"column",height:"100%",overflow:"hidden"}}>
-              <div style={{overflowX:"auto",whiteSpace:"nowrap",padding:`${isNative?52:20}px 16px 8px`,marginTop:40,display:"flex",gap:8,scrollbarWidth:"none",position:"sticky",top:0,background:"#fff",zIndex:10}}>
-                {LIST_TAGS.map(tag=>(
-                  <button key={tag.id} onClick={()=>setListArea(tag.id)}
-                    style={{display:"inline-block",padding:"6px 14px",borderRadius:20,border:`1px solid ${listArea===tag.id?"var(--red)":"var(--gray-200)"}`,boxShadow:"none",background:listArea===tag.id?"var(--red)":"var(--white)",color:listArea===tag.id?"#fff":"var(--text2)",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0}}>
-                    {tag.label}
-                  </button>
-                ))}
-              </div>
-              <div style={{flex:1,overflowY:"auto",padding:"16px 16px 120px"}}>
-                <div style={{fontSize:13,fontWeight:700,color:"var(--text)",marginTop:12,marginBottom:8}}>{filtered.length.toLocaleString()} Stamps.</div>
-                {filtered.length===0 && <div style={{color:"var(--text3)",textAlign:"center",marginTop:40}}>{t('noSpots')}</div>}
-                {filtered.map(s=>{
+            .sort(tag.sort);
+          const tagIdx = LIST_TAGS.findIndex(x=>x.id===activeTag.id);
+          const prevTag = LIST_TAGS[tagIdx-1];
+          const nextTag = LIST_TAGS[tagIdx+1];
+          const onListTS = (e)=>{
+            if(listBusy.current) return;
+            listTouch.current = {x:e.touches[0].clientX, y:e.touches[0].clientY, lock:null};
+          };
+          const onListTM = (e)=>{
+            const st = listTouch.current;
+            if(!st || listBusy.current) return;
+            const dx = e.touches[0].clientX - st.x;
+            const dy = e.touches[0].clientY - st.y;
+            if(st.lock===null){
+              if(Math.abs(dx)<8 && Math.abs(dy)<8) return;
+              st.lock = Math.abs(dx)>Math.abs(dy) ? "x" : "y";
+              if(st.lock==="x") setListDragging(true);
+            }
+            if(st.lock!=="x") return;
+            let d = dx;
+            if((dx>0&&!prevTag)||(dx<0&&!nextTag)) d = dx/3;
+            const el = listTrack.current;
+            if(el){ el.style.transition="none"; el.style.transform=`translateX(${d}px)`; }
+          };
+          const onListTE = (e)=>{
+            const st = listTouch.current;
+            listTouch.current = null;
+            if(!st || st.lock!=="x") return;
+            const el = listTrack.current;
+            const w = e.currentTarget.offsetWidth;
+            const dx = e.changedTouches[0].clientX - st.x;
+            const go = (dx>w*0.25&&prevTag) ? -1 : (dx<-w*0.25&&nextTag) ? 1 : 0;
+            listBusy.current = true;
+            if(el){ el.style.transition="transform .26s cubic-bezier(.4,0,.2,1)"; el.style.transform=`translateX(${-go*w}px)`; }
+            setTimeout(()=>{
+              if(go!==0) setListArea(LIST_TAGS[tagIdx+go].id);
+              if(el){ el.style.transition="none"; el.style.transform="translateX(0px)"; }
+              setListDragging(false);
+              listBusy.current = false;
+            }, 270);
+          };
+          const renderPanel = (tag) => {
+            const list = getFiltered(tag);
+            return (
+              <div style={{height:"100%",overflowY:"auto",padding:"16px 16px 120px",boxSizing:"border-box"}}>
+                <div style={{fontSize:13,fontWeight:700,color:"var(--text)",marginTop:12,marginBottom:8}}>{list.length.toLocaleString()} Stamps.</div>
+                {list.length===0 && <div style={{color:"var(--text3)",textAlign:"center",marginTop:40}}>{t('noSpots')}</div>}
+                {list.map(s=>{
                   const latestPhoto = archives.find(a=>a.spot===s.name&&a.photos?.length>0)?.photos?.[0] || window.__publicPhotos?.[s.name];
                   return (
                     <div key={s.id} onClick={()=>{setSelSpot(s); setOverlay("detail");}}
@@ -2047,6 +2088,26 @@ const searchGeo = async (q) => {
                     </div>
                   );
                 })}
+              </div>
+            );
+          };
+          return (
+            <div style={{display:"flex",flexDirection:"column",height:"100%",overflow:"hidden"}}>
+              <div style={{overflowX:"auto",whiteSpace:"nowrap",padding:`${isNative?52:20}px 16px 8px`,marginTop:40,display:"flex",gap:8,scrollbarWidth:"none",position:"sticky",top:0,background:"#fff",zIndex:10}}>
+                {LIST_TAGS.map(tag=>(
+                  <button key={tag.id} data-listtag={tag.id} onClick={()=>setListArea(tag.id)}
+                    style={{display:"inline-block",padding:"6px 14px",borderRadius:20,border:`1px solid ${listArea===tag.id?"var(--red)":"var(--gray-200)"}`,boxShadow:"none",background:listArea===tag.id?"var(--red)":"var(--white)",color:listArea===tag.id?"#fff":"var(--text2)",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",flexShrink:0}}>
+                    {tag.label}
+                  </button>
+                ))}
+              </div>
+              <div style={{flex:1,position:"relative",overflow:"hidden",touchAction:"pan-y"}}
+                onTouchStart={onListTS} onTouchMove={onListTM} onTouchEnd={onListTE} onTouchCancel={onListTE}>
+                <div ref={listTrack} style={{position:"absolute",inset:0}}>
+                  {listDragging && prevTag && <div style={{position:"absolute",inset:0,transform:"translateX(-100%)"}}>{renderPanel(prevTag)}</div>}
+                  <div key={activeTag.id} style={{position:"absolute",inset:0}}>{renderPanel(activeTag)}</div>
+                  {listDragging && nextTag && <div style={{position:"absolute",inset:0,transform:"translateX(100%)"}}>{renderPanel(nextTag)}</div>}
+                </div>
               </div>
             </div>
           );
