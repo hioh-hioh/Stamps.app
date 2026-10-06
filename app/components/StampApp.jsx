@@ -290,28 +290,35 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
     border-top:none!important;border-right:1px solid var(--border);
     padding:16px 0;gap:8px;align-items:center;
     justify-content:flex-start;width:68px!important;
-    background:var(--white)
+    background:var(--white)!important;
+    border-radius:0!important;box-shadow:none!important;
+    -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+    bottom:0!important
   }
   .nbtn{width:52px;height:44px;border-radius:12px;font-size:0px;padding:0;display:flex;align-items:center;justify-content:center;margin:0 auto}
-  .nbtn.active{background:var(--gray-100)}
+  .nbtn.active{background:var(--gray-100)!important}
 }
 
 /* ── NAV ── */
 .bnav{
-  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
-  width:min(390px, 100%);
-  display:flex;align-items:flex-start;
-  background:var(--white);
-  border-top:1px solid var(--border);
-  padding:8px 0;padding-bottom:calc(8px + env(safe-area-inset-bottom));z-index:999
+  position:fixed;bottom:calc(12px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);
+  width:min(340px, calc(100% - 32px));
+  display:flex;align-items:center;
+  background:rgba(255,255,255,.55);
+  -webkit-backdrop-filter:blur(22px) saturate(180%);
+  backdrop-filter:blur(22px) saturate(180%);
+  border:1px solid rgba(255,255,255,.75);
+  border-radius:999px;
+  box-shadow:0 8px 28px rgba(0,0,0,.14), inset 0 1px 0 rgba(255,255,255,.9);
+  padding:6px;z-index:999
 }
 .nbtn{
   flex:1;display:flex;flex-direction:column;align-items:center;
   gap:0;cursor:pointer;background:none;border:none;
-  color:var(--text3);font-size:11px;font-family:inherit;transition:color .2s;
-  padding:0
+  color:var(--text3);font-size:11px;font-family:inherit;transition:color .2s, background .2s;
+  padding:6px 0;border-radius:999px
 }
-.nbtn.active{color:var(--red)}
+.nbtn.active{color:var(--red);background:rgba(255,255,255,.7)}
 .nbtn-icon{width:24px;height:24px;margin-bottom:4px}
 
 @keyframes pulse{
