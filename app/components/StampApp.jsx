@@ -575,6 +575,11 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   display:none
 }
 .overlay.open{display:flex;flex-direction:column;animation:ovSlideIn .28s ease-out;}
+.overlay.open.closing{animation:ovSlideOut .22s ease-in forwards;}
+@keyframes ovSlideOut{
+  from{transform:translateX(0);opacity:1}
+  to{transform:translateX(40px);opacity:0}
+}
 @keyframes ovSlideIn{
   from{transform:translateX(40px);opacity:0}
   to{transform:translateX(0);opacity:1}
@@ -1628,6 +1633,12 @@ const searchGeo = async (q) => {
     setOverlay("detail");
   };
   const closeOv = () => setOverlay(null);
+  const closeDetail = () => {
+    const el = document.querySelector(".overlay.open");
+    if(!el){ setOverlay(null); return; }
+    el.classList.add("closing");
+    setTimeout(()=>{ setOverlay(null); el.classList.remove("closing"); }, 220);
+  };
   const openUserProfile = async (uid) => {
     if(!uid) return;
     setViewUser({id:uid, loading:true});
@@ -2543,7 +2554,7 @@ const searchGeo = async (q) => {
             return <>
               {/* ── ヘッダー: 戻るボタン左上 ── */}
               <div style={{display:"flex",alignItems:"center",padding:`${isNative?64:14}px 16px 12px`,position:"sticky",top:0,background:"var(--white)",zIndex:10}}>
-                <button className="ov-back" style={{position:"static",background:"none",border:"none",cursor:"pointer",color:"var(--text2)",display:"flex",padding:0}} onClick={closeOv}>
+                <button className="ov-back" style={{position:"static",background:"none",border:"none",cursor:"pointer",color:"var(--text2)",display:"flex",padding:0}} onClick={closeDetail}>
                   <Ic.Back/>
                 </button>
               </div>
