@@ -550,6 +550,8 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   z-index:60;padding:0 16px
 }
 .bsheet.hidden{display:none}
+@keyframes bsheetIn{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.bsheet-card{animation:bsheetIn .28s cubic-bezier(.2,.8,.2,1)}
 .bsheet-card{
   width:361px;
   background:#FCFCFC;
@@ -2231,7 +2233,7 @@ const searchGeo = async (q) => {
                   ...spotPosts
                 ];
                 return (
-                  <div className="bsheet-card" style={{position:"relative"}}
+                  <div key={selSpot.id} className="bsheet-card" style={{position:"relative"}}
   onTouchStart={e=>{e.currentTarget._startY=e.touches[0].clientY;}}
   onTouchEnd={e=>{
     const diff = e.changedTouches[0].clientY - e.currentTarget._startY;
