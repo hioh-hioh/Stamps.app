@@ -1487,6 +1487,7 @@ useEffect(()=>{
       setSpotCheckins(data.map(d=>({
         id: d.id,
         user_id: d.user_id,
+        spot_id: d.spot_id,
         user: nameMap[d.user_id] || t('guestUser'),
         avatar_url: avatarMap[d.user_id] || null,
         date: d.created_at ? new Date(d.created_at).toLocaleString("ja-JP",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}).replace(/\//g,"/") : "",
@@ -2531,7 +2532,7 @@ const searchGeo = async (q) => {
         <div className={`overlay ${overlay==="detail"?"open":""}`} style={{overflowY:"auto"}}>
           {selSpot && overlay==="detail" && (()=>{
             // このスポットへのチェックイン一覧
-            const spotPosts = spotCheckins;
+            const spotPosts = spotCheckins.filter(p=>String(p.spot_id)===String(selSpot.id));
             // モックレビューも投稿カード形式に変換
             const mockPosts = (selSpot.reviews||[]).filter(r=>r.text).map((r,i)=>({
               id:`mock-${i}`, spot:selSpot.name, note:r.text,
