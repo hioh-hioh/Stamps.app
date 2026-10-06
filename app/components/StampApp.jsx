@@ -1400,6 +1400,8 @@ const [user, setUser] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
   const [locLoading, setLocLoading] = useState(false);
   const [photoViewer, setPhotoViewer] = useState(null);
+  const [pvDrag, setPvDrag] = useState(0);
+  const [pvDragging, setPvDragging] = useState(false);
   const closePhotoViewer = () => {
     const el = document.querySelector(".photo-viewer");
     if(el) el.classList.add("closing");
@@ -3134,15 +3136,25 @@ const searchGeo = async (q) => {
             <div className="photo-viewer" onClick={closePhotoViewer}>
               <button className="photo-viewer-close" onClick={closePhotoViewer}>×</button>
               <div className="photo-viewer-img" onClick={e=>e.stopPropagation()}
-                onTouchStart={e=>{e.currentTarget._startX=e.touches[0].clientX;}}
+                onTouchStart={e=>{e.currentTarget._startX=e.touches[0].clientX;setPvDragging(true);setPvDrag(0);}}
+                onTouchMove={e=>{
+                  let d = e.touches[0].clientX - e.currentTarget._startX;
+                  if((imgIdx===0&&d>0)||(imgIdx===photoCount-1&&d<0)) d = d/3;
+                  setPvDrag(d);
+                }}
                 onTouchEnd={e=>{
                   const diff = e.changedTouches[0].clientX - e.currentTarget._startX;
+                  setPvDragging(false); setPvDrag(0);
                   if(diff > 50 && imgIdx>0) setPhotoViewer({...photoViewer,imgIdx:imgIdx-1});
                   if(diff < -50 && imgIdx<photoCount-1) setPhotoViewer({...photoViewer,imgIdx:imgIdx+1});
                 }}
                 style={{background:photoCount>0?"#000":(post.color||"var(--red-bg)"),display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
                 {photoCount>0
-                  ? <img src={post.photos[imgIdx]} style={{width:"100%",height:"auto",maxHeight:"80vh",objectFit:"contain"}}/>
+                  ? <div style={{display:"flex",alignItems:"center",width:"100%",transform:`translateX(calc(${-imgIdx*100}% + ${pvDrag}px))`,transition:pvDragging?"none":"transform .3s cubic-bezier(.4,0,.2,1)"}}>
+                      {post.photos.map((src,i)=>(
+                        <img key={i} src={src} style={{width:"100%",flexShrink:0,height:"auto",maxHeight:"80vh",objectFit:"contain"}}/>
+                      ))}
+                    </div>
                   : <span style={{fontSize:80}}>{post.emoji}</span>}
               </div>
               {photoCount>1 && (
