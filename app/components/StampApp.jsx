@@ -436,9 +436,9 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 
 .fab{
   position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));right:max(20px, calc(50vw - 175px));
-  width:52px;height:52px;border-radius:50%;
+  width:62px;height:62px;border-radius:50%;
   background:var(--red);color:var(--white);
-  border:none;cursor:pointer;font-size:26px;
+  border:none;cursor:pointer;font-size:31px;
   display:flex;align-items:center;justify-content:center;
   line-height:1;padding:3px 0 4px 0;
   box-shadow:var(--sh-md);z-index:50;transition:transform .15s
@@ -2136,10 +2136,7 @@ const searchGeo = async (q) => {
                 </defs>
               </svg>
             </button>
-            {/* FAB */}
-            <button className="fab"
-              style={{zIndex:(showSaved&&mapFilter==="saved")?5:50,transition:"bottom .3s cubic-bezier(.4,0,.2,1)"}}
-              onClick={()=>setNewCiOpen(true)}>+</button>
+
 
             {/* bottom sheet */}
             <div className={`bsheet ${selSpot?"":"hidden"}`}>
@@ -3384,6 +3381,13 @@ const searchGeo = async (q) => {
               </div>
             </div>
           </div>
+        )}
+
+        {/* FAB（全タブ共通） */}
+        {!overlay && !photoViewer && !newCiOpen && (
+          <button className="fab"
+            style={{zIndex:(tab==="map"&&showSaved&&mapFilter==="saved")?5:50}}
+            onClick={()=>setNewCiOpen(true)}>+</button>
         )}
 
         <nav className="bnav">
