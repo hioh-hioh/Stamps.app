@@ -120,6 +120,7 @@ const T = {
   menuVersion:           { ja:"バージョン", en:"Version", zh:"版本" },
   tagAll:                { ja:"すべて", en:"All", zh:"全部" },
   tagNew:                { ja:"新着", en:"New", zh:"最新" },
+  tagLimited:            { ja:"期間限定", en:"Limited", zh:"限定" },
   tagStation:            { ja:"駅", en:"Station", zh:"车站" },
   tagCastle:             { ja:"城", en:"Castle", zh:"城堡" },
   tagMuseum:             { ja:"博物館", en:"Museum", zh:"博物馆" },
@@ -1991,6 +1992,7 @@ const searchGeo = async (q) => {
           const LIST_TAGS = [
             {id:"All", label:t('tagAll'), filter:()=>true, sort:(a,b)=>a.dist!=null&&b.dist!=null?a.dist-b.dist:a.dist!=null?-1:1},
             {id:"New", label:t('tagNew'), filter:()=>true, sort:(a,b)=>new Date(b.spot_created_at||0)-new Date(a.spot_created_at||0)},
+            {id:"Limited", label:t('tagLimited'), filter:s=>activeEventTags.some(ev=>ev.spotIds.has(String(s.id))), sort:(a,b)=>a.dist!=null&&b.dist!=null?a.dist-b.dist:a.dist!=null?-1:1},
             {id:"Station", label:t('tagStation'), filter:s=>["train_station","transit_station","subway_station"].includes(s.category), sort:(a,b)=>0},
             {id:"Castle", label:t('tagCastle'), filter:s=>s.category==="castle", sort:(a,b)=>0},
             {id:"Museum", label:t('tagMuseum'), filter:s=>["museum","history_museum","art_museum"].includes(s.category), sort:(a,b)=>0},
