@@ -574,7 +574,11 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   z-index:200;overflow-y:auto;overflow-x:clip;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;
   display:none
 }
-.overlay.open{display:flex;flex-direction:column;}
+.overlay.open{display:flex;flex-direction:column;animation:ovSlideIn .28s ease-out;}
+@keyframes ovSlideIn{
+  from{transform:translateX(40px);opacity:0}
+  to{transform:translateX(0);opacity:1}
+}
 
 .ov-maparea{height:160px;flex-shrink:0;background:#E8EEF4;position:relative;overflow:hidden}
 .ov-sbar{
