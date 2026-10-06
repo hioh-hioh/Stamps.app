@@ -843,11 +843,15 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 /* Photo viewer overlay */
 .photo-viewer{
   position:fixed;inset:0;background:rgba(0,0,0,.92);
-  z-index:500;display:flex;align-items:center;justify-content:center;
+  z-index:1000;display:flex;align-items:center;justify-content:flex-start;
   flex-direction:column;gap:12px;
+  overflow-y:auto;
+  padding:calc(max(64px, env(safe-area-inset-top) + 16px) + 52px) 0 calc(24px + env(safe-area-inset-bottom));
   animation:pvFade .22s ease-out
 }
 @keyframes pvFade{from{opacity:0}to{opacity:1}}
+.photo-viewer > *{flex-shrink:0}
+.photo-viewer > :last-child{margin-bottom:auto}
 @keyframes pvFadeOut{from{opacity:1}to{opacity:0}}
 @keyframes pvZoomOut{from{opacity:1;transform:scale(1)}to{opacity:0;transform:scale(.94)}}
 .photo-viewer.closing{animation:pvFadeOut .2s ease-in forwards}
@@ -856,12 +860,12 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 .photo-viewer-img{
   animation:pvZoom .26s ease-out;
   width:calc(100vw - 32px);max-width:480px;
-  max-height:80vh;border-radius:12px;
+  max-height:58vh;margin-top:auto;border-radius:12px;
   background:#000;display:flex;align-items:center;
   justify-content:center;font-size:80px;overflow:hidden
 }
 .photo-viewer-close{
-  position:absolute;top:max(64px, calc(env(safe-area-inset-top) + 16px));right:20px;
+  position:fixed;top:max(64px, calc(env(safe-area-inset-top) + 16px));right:20px;z-index:1;
   background:rgba(255,255,255,.15);border:none;cursor:pointer;
   color:#fff;width:36px;height:36px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;font-size:20px
@@ -3152,7 +3156,7 @@ const searchGeo = async (q) => {
                 {photoCount>0
                   ? <div style={{display:"flex",alignItems:"center",width:"100%",transform:`translateX(calc(${-imgIdx*100}% + ${pvDrag}px))`,transition:pvDragging?"none":"transform .3s cubic-bezier(.4,0,.2,1)"}}>
                       {post.photos.map((src,i)=>(
-                        <img key={i} src={src} style={{width:"100%",flexShrink:0,height:"auto",maxHeight:"80vh",objectFit:"contain"}}/>
+                        <img key={i} src={src} style={{width:"100%",flexShrink:0,height:"auto",maxHeight:"58vh",objectFit:"contain"}}/>
                       ))}
                     </div>
                   : <span style={{fontSize:80}}>{post.emoji}</span>}
