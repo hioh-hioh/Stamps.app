@@ -844,16 +844,20 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 .photo-viewer{
   position:fixed;inset:0;background:rgba(0,0,0,.92);
   z-index:500;display:flex;align-items:center;justify-content:center;
-  flex-direction:column;gap:12px
+  flex-direction:column;gap:12px;
+  animation:pvFade .22s ease-out
 }
+@keyframes pvFade{from{opacity:0}to{opacity:1}}
+@keyframes pvZoom{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
 .photo-viewer-img{
+  animation:pvZoom .26s ease-out;
   width:calc(100vw - 32px);max-width:480px;
   max-height:80vh;border-radius:12px;
   background:#000;display:flex;align-items:center;
   justify-content:center;font-size:80px;overflow:hidden
 }
 .photo-viewer-close{
-  position:absolute;top:20px;right:20px;
+  position:absolute;top:max(64px, calc(env(safe-area-inset-top) + 16px));right:20px;
   background:rgba(255,255,255,.15);border:none;cursor:pointer;
   color:#fff;width:36px;height:36px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;font-size:20px
