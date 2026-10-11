@@ -181,6 +181,10 @@ const T = {
   profileSaved:          { ja:"保存しました", en:"Saved", zh:"已保存" },
   saveBtn:              { ja:"保存", en:"Save", zh:"保存" },
   changePhoto:          { ja:"写真を変更", en:"Change photo", zh:"更换照片" },
+  feedAll:              { ja:"みんな", en:"Everyone", zh:"大家" },
+  feedMine:             { ja:"自分", en:"Mine", zh:"我的" },
+  feedMore:             { ja:"もっと見る", en:"Load more", zh:"加载更多" },
+  feedEmpty:            { ja:"まだ投稿がありません", en:"No posts yet", zh:"暂无帖子" },
   cropTitle:            { ja:"アイコンの位置を調整", en:"Adjust photo", zh:"调整头像" },
   cropApply:            { ja:"完了", en:"Done", zh:"完成" },
   cropCancel:           { ja:"キャンセル", en:"Cancel", zh:"取消" },
@@ -1496,6 +1500,11 @@ const [geoLoading, setGeoLoading] = useState(false);
 const [sessionToken] = useState(()=>crypto.randomUUID());
 const [user, setUser] = useState(null);
   const [blockedIds, setBlockedIds] = useState([]);
+  const [feedTab, setFeedTab] = useState("all");
+  const [feed, setFeed] = useState([]);
+  const [feedLimit, setFeedLimit] = useState(30);
+  const [feedLoading, setFeedLoading] = useState(false);
+  const [feedHasMore, setFeedHasMore] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
   const [locLoading, setLocLoading] = useState(false);
   const [photoViewer, setPhotoViewer] = useState(null);
@@ -1649,6 +1658,39 @@ useEffect(()=>{
       })));
     })();
   },[selSpot?.id]);
+
+  useEffect(()=>{
+    if(tab!=="home" || feedTab!=="all") return;
+    let cancelled = false;
+    (async()=>{
+      setFeedLoading(true);
+      const { data:raw } = await supabase.from("checkins").select("*").order("created_at",{ascending:false}).limit(feedLimit+1);
+      if(cancelled) return;
+      const rows = raw||[];
+      setFeedHasMore(rows.length>feedLimit);
+      const data = rows.slice(0,feedLimit).filter(d=>!blockedIds.includes(d.user_id));
+      const userIds = [...new Set(data.map(d=>d.user_id).filter(Boolean))];
+      let pmap = {};
+      if(userIds.length>0){
+        const { data: profiles } = await supabase.from("profiles").select("id,name,avatar_url,handle").in("id", userIds);
+        pmap = Object.fromEntries((profiles||[]).map(p=>[p.id,p]));
+      }
+      if(cancelled) return;
+      setFeed(data.map(d=>{
+        const p = pmap[d.user_id]||{};
+        const dt = d.created_at ? new Date(d.created_at) : null;
+        const pad = (n)=>String(n).padStart(2,"0");
+        return {
+          id: d.id, user_id: d.user_id, spot_id: d.spot_id||"", spot: d.spot_name||"",
+          note: d.note||"", photos: d.photo_urls||[], hasImg: (d.photo_urls||[]).length>0,
+          name: p.name||t('guestUser'), handle: p.handle||"", avatar_url: p.avatar_url||"",
+          date: dt ? `${dt.getFullYear()}/${pad(dt.getMonth()+1)}/${pad(dt.getDate())} ${pad(dt.getHours())}:${pad(dt.getMinutes())}` : "",
+        };
+      }));
+      setFeedLoading(false);
+    })();
+    return ()=>{ cancelled = true; };
+  },[tab, feedTab, feedLimit, blockedIds]);
 
   const loadCheckins = async (userId) => {
     const { data, error } = await supabase
@@ -1955,7 +1997,85 @@ const searchGeo = async (q) => {
         {tab==="home" && (
           <div className="home-screen" style={{paddingTop:isNative?52:16}}>
             {/* Timeline */}
-            {(()=>{
+            <div style={{display:"flex",gap:8,padding:"4px 16px 8px"}}>
+              {[["all",t('feedAll')],["mine",t('feedMine')]].map(([k,label])=>(
+                <button key={k} onClick={()=>setFeedTab(k)}
+                  style={{padding:"7px 18px",borderRadius:999,border:"none",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",
+                    background:feedTab===k?"var(--text)":"var(--gray-100)",color:feedTab===k?"#fff":"var(--text2)"}}>{label}</button>
+              ))}
+            </div>
+            {feedTab==="all" && (
+              <div style={{padding:"0 0 100px"}}>
+                {feed.length===0 && !feedLoading && (
+                  <div style={{padding:"48px 24px",textAlign:"center",color:"var(--text3)",fontSize:14}}>{t('feedEmpty')}</div>
+                )}
+                {feed.map(item=>{
+                  const matchSpot = MAP_SPOTS.find(s=>String(s.id)===String(item.spot_id)) || MAP_SPOTS.find(s=>s.name===item.spot);
+                  const isMine = user && item.user_id===user.id;
+                  const mk = "f"+item.id;
+                  return (
+                    <div key={item.id} style={{display:"flex",gap:12,padding:"14px 16px",borderBottom:"1px solid var(--gray-100)"}}>
+                      <div onClick={()=>item.user_id && openUserProfile(item.user_id)}
+                        style={{width:38,height:38,borderRadius:"50%",background:"var(--gray-100)",overflow:"hidden",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer"}}>
+                        {item.avatar_url ? <img src={item.avatar_url} style={{width:"100%",height:"100%",objectFit:"cover"}}/> : <Ic.User s={18}/>}
+                      </div>
+                      <div style={{flex:1,minWidth:0}}>
+                        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
+                          <div onClick={()=>item.user_id && openUserProfile(item.user_id)} style={{minWidth:0,cursor:"pointer",display:"flex",alignItems:"baseline",gap:6}}>
+                            <span style={{fontWeight:700,fontSize:14,color:"var(--text)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{item.name}</span>
+                            {item.handle && <span style={{fontSize:12,color:"var(--text3)",whiteSpace:"nowrap"}}>@{item.handle}</span>}
+                          </div>
+                          {user && !isMine && (
+                            <div style={{position:"relative",flexShrink:0}}>
+                              <button onClick={()=>setTimelineMenu(m=>m===mk?null:mk)}
+                                style={{background:"none",border:"none",cursor:"pointer",color:"var(--text3)",padding:"0 4px",fontSize:18,lineHeight:1}}>•••</button>
+                              {timelineMenu===mk && (
+                                <div style={{position:"absolute",top:24,right:0,background:"#fff",borderRadius:8,boxShadow:"0 2px 12px rgba(0,0,0,.15)",zIndex:20,overflow:"hidden",minWidth:140}}>
+                                  <button onClick={async()=>{
+                                    await supabase.from("reports").insert({reporter_id:user.id,target_type:"checkin",target_id:String(item.id),reason:"user_report"});
+                                    setTimelineMenu(null);
+                                    showToast(t('reportSent'));
+                                  }} style={{display:"block",width:"100%",padding:"10px 16px",background:"none",border:"none",textAlign:"left",fontSize:13,cursor:"pointer",fontFamily:"inherit"}}>{t('reportPost')}</button>
+                                  <button onClick={async()=>{
+                                    if(!item.user_id) return;
+                                    if(!confirm(t('confirmBlockUser'))) return;
+                                    await supabase.from("blocked_users").insert({blocker_id:user.id,blocked_id:item.user_id});
+                                    setBlockedIds(b=>[...b,item.user_id]);
+                                    setTimelineMenu(null);
+                                    showToast(t('userBlocked'));
+                                  }} style={{display:"block",width:"100%",padding:"10px 16px",background:"none",border:"none",textAlign:"left",fontSize:13,color:"var(--red)",cursor:"pointer",fontFamily:"inherit"}}>{t('blockUser')}</button>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                        <div style={{fontSize:11,color:"var(--text3)",marginTop:1}}>{item.date}</div>
+                        {item.spot && (
+                          <div onClick={()=>{ if(matchSpot){ setSelSpot(matchSpot); setOverlay("detail"); } }}
+                            style={{fontSize:14,fontWeight:700,color:"var(--text)",marginTop:6,cursor:matchSpot?"pointer":"default"}}>{item.spot}</div>
+                        )}
+                        {item.note && <div style={{fontSize:14,color:"rgba(28,27,31,1)",lineHeight:1.6,marginTop:4,whiteSpace:"pre-wrap"}}>{item.note}</div>}
+                        {item.hasImg && (
+                          <div style={{display:"flex",gap:6,marginTop:8,overflowX:"auto"}}>
+                            {item.photos.map((url,i)=>(
+                              <img key={i} src={url} style={{width:item.photos.length>1?"72%":"100%",maxWidth:280,height:180,borderRadius:8,objectFit:"cover",flexShrink:0,display:"block",cursor:"pointer"}}
+                                onClick={()=>setPhotoViewer({posts:[item],postIdx:0,imgIdx:i})}/>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+                {feedHasMore && (
+                  <div style={{textAlign:"center",padding:"16px"}}>
+                    <button onClick={()=>setFeedLimit(n=>n+30)} disabled={feedLoading}
+                      style={{background:"none",border:"1px solid var(--gray-100)",borderRadius:999,padding:"8px 20px",fontSize:13,color:"var(--text2)",cursor:"pointer",fontFamily:"inherit"}}>{t('feedMore')}</button>
+                  </div>
+                )}
+              </div>
+            )}
+            {feedTab==="mine" && (()=>{
               // モックタイムラインデータ
               const TIMELINE_MOCK = [];
 
