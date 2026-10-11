@@ -1507,6 +1507,54 @@ const [user, setUser] = useState(null);
   const [feedHasMore, setFeedHasMore] = useState(false);
   const [feedBarHidden, setFeedBarHidden] = useState(false);
   const feedLastY = useRef(0);
+  const feedTrack = useRef(null);
+  const feedTouch = useRef(null);
+  const [feedAnimating, setFeedAnimating] = useState(false);
+  useEffect(()=>{
+    setFeedAnimating(true);
+    const tm = setTimeout(()=>setFeedAnimating(false), 330);
+    return ()=>clearTimeout(tm);
+  },[feedTab]);
+  const feedTS = (e)=>{
+    const p = e.touches[0];
+    feedTouch.current = { x:p.clientX, y:p.clientY, t:e.target, mode:null, w:e.currentTarget.clientWidth, dx:0 };
+  };
+  const feedTM = (e)=>{
+    const s = feedTouch.current; if(!s) return;
+    const p = e.touches[0];
+    const dx = p.clientX - s.x, dy = p.clientY - s.y;
+    if(s.mode===null){
+      if(Math.abs(dx) < 10 && Math.abs(dy) < 10) return;
+      let el = s.t, blocked = false;
+      while(el && el !== e.currentTarget){
+        if(el.scrollWidth > el.clientWidth+2 && /(auto|scroll)/.test(getComputedStyle(el).overflowX)){ blocked = true; break; }
+        el = el.parentElement;
+      }
+      s.mode = (!blocked && Math.abs(dx) > Math.abs(dy)*1.3) ? "h" : "v";
+      if(s.mode==="h"){
+        setFeedAnimating(true);
+        if(feedTrack.current) feedTrack.current.style.transition = "none";
+      }
+    }
+    if(s.mode!=="h" || !feedTrack.current) return;
+    s.dx = dx;
+    const base = feedTab==="mine" ? -s.w : 0;
+    let v = base + dx;
+    if(v > 0) v = v*0.3;
+    if(v < -s.w) v = -s.w + (v + s.w)*0.3;
+    feedTrack.current.style.transform = `translateX(${v}px)`;
+  };
+  const feedTE = ()=>{
+    const s = feedTouch.current; feedTouch.current = null;
+    if(!s || s.mode!=="h" || !feedTrack.current) return;
+    let target = feedTab;
+    if(s.dx < -s.w*0.25 && feedTab==="all") target = "mine";
+    if(s.dx > s.w*0.25 && feedTab==="mine") target = "all";
+    feedTrack.current.style.transition = "transform .28s cubic-bezier(.3,.8,.3,1)";
+    feedTrack.current.style.transform = target==="mine" ? "translateX(-50%)" : "translateX(0)";
+    setFeedTab(target);
+    setTimeout(()=>setFeedAnimating(false), 320);
+  };
   const [userLocation, setUserLocation] = useState(null);
   const [locLoading, setLocLoading] = useState(false);
   const [photoViewer, setPhotoViewer] = useState(null);
@@ -2006,21 +2054,7 @@ const searchGeo = async (q) => {
             else if(d < -8) setFeedBarHidden(false);
             if(Math.abs(d) > 8) feedLastY.current = y;
           }}
-          onTouchStart={e=>{ const p=e.touches[0]; e.currentTarget._feedSwipe={x:p.clientX,y:p.clientY,t:e.target}; }}
-          onTouchEnd={e=>{
-            const s = e.currentTarget._feedSwipe; e.currentTarget._feedSwipe = null;
-            if(!s) return;
-            const p = e.changedTouches[0];
-            const dx = p.clientX - s.x, dy = p.clientY - s.y;
-            if(Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy)*1.5) return;
-            let el = s.t;
-            while(el && el !== e.currentTarget){
-              if(el.scrollWidth > el.clientWidth+2 && /(auto|scroll)/.test(getComputedStyle(el).overflowX)) return;
-              el = el.parentElement;
-            }
-            if(dx < 0 && feedTab==="all") setFeedTab("mine");
-            if(dx > 0 && feedTab==="mine") setFeedTab("all");
-          }}>
+          onTouchStart={feedTS} onTouchMove={feedTM} onTouchEnd={feedTE} onTouchCancel={feedTE}>
             {/* Timeline */}
             <div style={{position:"sticky",top:0,zIndex:10,background:"var(--white)",padding:`${isNative?80:40}px 16px 10px`,transform:feedBarHidden?"translateY(-110%)":"translateY(0)",transition:"transform .25s ease",pointerEvents:feedBarHidden?"none":"auto"}}>
               <div className="feed-seg-track" style={{position:"relative",display:"flex",background:"var(--gray-100)",borderRadius:999,padding:4}}>
@@ -2032,7 +2066,10 @@ const searchGeo = async (q) => {
                 ))}
               </div>
             </div>
-            {feedTab==="all" && (
+            <div style={{overflow:"hidden"}}>
+            <div ref={feedTrack} style={{display:"flex",width:"200%",transform:feedTab==="mine"?"translateX(-50%)":"translateX(0)",transition:"transform .28s cubic-bezier(.3,.8,.3,1)"}}>
+            <div style={{flex:"0 0 50%",minWidth:0,height:(feedTab==="all"||feedAnimating)?"auto":0,overflow:(feedTab==="all"||feedAnimating)?"visible":"hidden"}}>
+            {(
               <div style={{padding:"0 0 100px"}}>
                 {feed.length===0 && !feedLoading && (
                   <div style={{padding:"48px 24px",textAlign:"center",color:"var(--text3)",fontSize:14}}>{t('feedEmpty')}</div>
@@ -2103,7 +2140,9 @@ const searchGeo = async (q) => {
                 )}
               </div>
             )}
-            {feedTab==="mine" && (()=>{
+            </div>
+            <div style={{flex:"0 0 50%",minWidth:0,height:(feedTab==="mine"||feedAnimating)?"auto":0,overflow:(feedTab==="mine"||feedAnimating)?"visible":"hidden"}}>
+            {(()=>{
               // モックタイムラインデータ (feedSwipe)
               const TIMELINE_MOCK = [];
 
@@ -2257,6 +2296,9 @@ const searchGeo = async (q) => {
                 </div>
               );
             })()}
+            </div>
+            </div>
+            </div>
           </div>
         )}
         {/* ════ LIST ════ */}
