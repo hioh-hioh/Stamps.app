@@ -1505,6 +1505,8 @@ const [user, setUser] = useState(null);
   const [feedLimit, setFeedLimit] = useState(30);
   const [feedLoading, setFeedLoading] = useState(false);
   const [feedHasMore, setFeedHasMore] = useState(false);
+  const [feedBarHidden, setFeedBarHidden] = useState(false);
+  const feedLastY = useRef(0);
   const [userLocation, setUserLocation] = useState(null);
   const [locLoading, setLocLoading] = useState(false);
   const [photoViewer, setPhotoViewer] = useState(null);
@@ -1996,6 +1998,14 @@ const searchGeo = async (q) => {
         {/* ════ HOME ════ */}
         {tab==="home" && (
           <div className="home-screen" style={{paddingTop:0}}
+          onScroll={e=>{
+            const y = e.currentTarget.scrollTop;
+            const d = y - feedLastY.current;
+            if(y < 60) setFeedBarHidden(false);
+            else if(d > 8) setFeedBarHidden(true);
+            else if(d < -8) setFeedBarHidden(false);
+            if(Math.abs(d) > 8) feedLastY.current = y;
+          }}
           onTouchStart={e=>{ const p=e.touches[0]; e.currentTarget._feedSwipe={x:p.clientX,y:p.clientY,t:e.target}; }}
           onTouchEnd={e=>{
             const s = e.currentTarget._feedSwipe; e.currentTarget._feedSwipe = null;
@@ -2012,7 +2022,7 @@ const searchGeo = async (q) => {
             if(dx > 0 && feedTab==="mine") setFeedTab("all");
           }}>
             {/* Timeline */}
-            <div style={{position:"sticky",top:0,zIndex:10,background:"var(--white)",padding:`${isNative?80:40}px 16px 10px`}}>
+            <div style={{position:"sticky",top:0,zIndex:10,background:"var(--white)",padding:`${isNative?80:40}px 16px 10px`,transform:feedBarHidden?"translateY(-110%)":"translateY(0)",transition:"transform .25s ease",pointerEvents:feedBarHidden?"none":"auto"}}>
               <div className="feed-seg-track" style={{position:"relative",display:"flex",background:"var(--gray-100)",borderRadius:999,padding:4}}>
                 <div className="feed-seg-thumb" style={{position:"absolute",top:4,bottom:4,left:4,width:"calc(50% - 4px)",background:"#fff",borderRadius:999,boxShadow:"0 1px 4px rgba(0,0,0,.12)",transform:feedTab==="all"?"translateX(0)":"translateX(100%)",transition:"transform .25s cubic-bezier(.3,.8,.3,1)"}}/>
                 {[["all",t('feedAll')],["mine",t('feedMine')]].map(([k,label])=>(
