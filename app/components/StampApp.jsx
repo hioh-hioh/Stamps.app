@@ -1997,7 +1997,7 @@ const searchGeo = async (q) => {
         {tab==="home" && (
           <div className="home-screen" style={{paddingTop:0}}>
             {/* Timeline */}
-            <div style={{position:"sticky",top:0,zIndex:10,background:"var(--white)",padding:`${isNative?52:16}px 16px 10px`}}>
+            <div style={{position:"sticky",top:0,zIndex:10,background:"var(--white)",padding:`${isNative?80:40}px 16px 10px`}}>
               <div className="feed-seg-track" style={{position:"relative",display:"flex",background:"var(--gray-100)",borderRadius:999,padding:4}}>
                 <div className="feed-seg-thumb" style={{position:"absolute",top:4,bottom:4,left:4,width:"calc(50% - 4px)",background:"#fff",borderRadius:999,boxShadow:"0 1px 4px rgba(0,0,0,.12)",transform:feedTab==="all"?"translateX(0)":"translateX(100%)",transition:"transform .25s cubic-bezier(.3,.8,.3,1)"}}/>
                 {[["all",t('feedAll')],["mine",t('feedMine')]].map(([k,label])=>(
