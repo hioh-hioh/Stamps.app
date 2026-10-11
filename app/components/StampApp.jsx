@@ -185,6 +185,9 @@ const T = {
   handleInvalid:         { ja:"IDは半角英小文字・数字・_ の3〜20文字で入力してください", en:"ID must be 3-20 characters: a-z, 0-9, _", zh:"ID需为3-20位小写字母、数字或下划线" },
   handleTaken:           { ja:"このIDはすでに使われています", en:"This ID is already taken", zh:"该ID已被使用" },
   handleHint:            { ja:"半角英小文字・数字・_（3〜20文字）", en:"a-z, 0-9, _ (3-20 characters)", zh:"小写字母、数字、下划线（3-20位）" },
+  shareProfile:          { ja:"プロフィールを共有", en:"Share profile", zh:"分享主页" },
+  linkCopied:            { ja:"リンクをコピーしました", en:"Link copied", zh:"链接已复制" },
+  setHandleFirst:        { ja:"先にユーザーIDを設定してください", en:"Set your user ID first", zh:"请先设置用户ID" },
   edit:                  { ja:"編集", en:"Edit", zh:"编辑" },
   selectFolderTitle:    { ja:"フォルダを選択", en:"Select a folder", zh:"选择文件夹" },
   noFolders:            { ja:"フォルダがありません", en:"No folders yet", zh:"暂无文件夹" },
@@ -1698,17 +1701,27 @@ const searchGeo = async (q) => {
     el.classList.add("closing");
     setTimeout(()=>{ setOverlay(null); el.classList.remove("closing"); }, 220);
   };
+  const shareProfile = async () => {
+    if(!profile.handle){ showToast(t('setHandleFirst')); return; }
+    const url = "https://www.stampsjp.com/@" + profile.handle;
+    try {
+      if(navigator.share){ await navigator.share({ title: (profile.name||"") + " | Stamps.", url }); return; }
+    } catch(e){ if(e && e.name==="AbortError") return; }
+    try { await navigator.clipboard.writeText(url); showToast(t('linkCopied'),"ok"); }
+    catch(e){ window.prompt("URL", url); }
+  };
+
   const openUserProfile = async (uid) => {
     if(!uid) return;
     setViewUser({id:uid, loading:true});
     setViewUserPosts([]);
     setOverlay("user");
     const [{ data:p }, { data:cs }] = await Promise.all([
-      supabase.from("profiles").select("id,name,location,bio,avatar_url").eq("id", uid).single(),
+      supabase.from("profiles").select("id,name,location,bio,avatar_url,handle").eq("id", uid).single(),
       supabase.from("checkins").select("*").eq("user_id", uid).order("created_at",{ascending:false}),
     ]);
     setViewUserPosts((cs||[]).filter(c=>(c.photo_urls||[]).length>0));
-    setViewUser({id:uid, loading:false, name:p?.name||"", location:p?.location||"", bio:p?.bio||"", avatar_url:p?.avatar_url||""});
+    setViewUser({id:uid, loading:false, name:p?.name||"", location:p?.location||"", bio:p?.bio||"", avatar_url:p?.avatar_url||"", handle:p?.handle||""});
   };
 
   const resizeImage = (file) => new Promise((resolve)=>{
@@ -2370,6 +2383,8 @@ const searchGeo = async (q) => {
               <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",gap:15}}>
                 <div style={{flex:1,minWidth:0,paddingBottom:4}}>
                   <div className="prof-name">{profile.name}</div>
+                  {profile.handle && <div style={{fontSize:13,color:"var(--text3)",marginTop:2}}>@{profile.handle}</div>}
+                  <button onClick={shareProfile} style={{marginTop:8,padding:"5px 12px",fontSize:12,fontWeight:600,color:"var(--text)",background:"none",border:"1px solid var(--gray-100)",borderRadius:999,cursor:"pointer",fontFamily:"inherit"}}>{t('shareProfile')}</button>
                   <div className="prof-bio">{profile.bio}</div>
                   <div style={{fontSize:11,color:"var(--text3)",marginTop:6}}>Post: {archives.filter(a=>a.photos?.length>0).length}　Checkin: {archives.length}</div>
                 </div>
@@ -2632,6 +2647,7 @@ const searchGeo = async (q) => {
                     {viewUser.avatar_url ? <img src={viewUser.avatar_url} style={{width:"100%",height:"100%",objectFit:"cover"}}/> : <Ic.User s={32}/>}
                   </div>
                   <div style={{fontSize:18,fontWeight:700,color:"var(--text)"}}>{viewUser.name||t('guestUser')}</div>
+                  {viewUser.handle && <div style={{fontSize:13,color:"var(--text3)",marginTop:-4}}>@{viewUser.handle}</div>}
                   {viewUser.location && <div style={{fontSize:12,color:"var(--text2)"}}>{viewUser.location}</div>}
                   {viewUser.bio && <div style={{fontSize:13,color:"var(--text)",textAlign:"center",whiteSpace:"pre-wrap"}}>{viewUser.bio}</div>}
                 </div>
