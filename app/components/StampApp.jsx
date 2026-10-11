@@ -2,6 +2,7 @@
 'use client'
 import { Marker as MapMarker } from 'react-map-gl/mapbox'
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { supabase } from '../../lib/supabase'
 import { SocialLogin } from '@capgo/capacitor-social-login'
 import { Capacitor } from '@capacitor/core'
@@ -180,6 +181,10 @@ const T = {
   profileSaved:          { ja:"保存しました", en:"Saved", zh:"已保存" },
   saveBtn:              { ja:"保存", en:"Save", zh:"保存" },
   changePhoto:          { ja:"写真を変更", en:"Change photo", zh:"更换照片" },
+  cropTitle:            { ja:"アイコンの位置を調整", en:"Adjust photo", zh:"调整头像" },
+  cropApply:            { ja:"完了", en:"Done", zh:"完成" },
+  cropCancel:           { ja:"キャンセル", en:"Cancel", zh:"取消" },
+  cropHint:             { ja:"ドラッグで移動・スライダーで拡大", en:"Drag to move, slide to zoom", zh:"拖动移动，滑动缩放" },
   namePlaceholder:      { ja:"名前を入力", en:"Enter your name", zh:"请输入姓名" },
   bioPlaceholder:        { ja:"自己紹介を入力", en:"Write a short bio", zh:"请输入个人简介" },
   handleInvalid:         { ja:"IDは半角英小文字・数字・_ の3〜20文字で入力してください", en:"ID must be 3-20 characters: a-z, 0-9, _", zh:"ID需为3-20位小写字母、数字或下划线" },
@@ -1361,6 +1366,79 @@ const Ic = {
 // ══════════════════════════════════════════════
 // APP
 // ══════════════════════════════════════════════
+function AvatarCropper({ src, onCancel, onDone, labels }) {
+  const S = 280;
+  const [img, setImg] = useState(null);
+  const [zoom, setZoom] = useState(1);
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const drag = useRef(null);
+
+  useEffect(() => {
+    const im = new window.Image();
+    im.onload = () => setImg(im);
+    im.src = src;
+  }, [src]);
+
+  const dims = (z) => {
+    if (!img) return { w: S, h: S, max: { x: 0, y: 0 } };
+    const base = Math.max(S / img.naturalWidth, S / img.naturalHeight);
+    const w = img.naturalWidth * base * z;
+    const h = img.naturalHeight * base * z;
+    return { w, h, max: { x: Math.max(0, (w - S) / 2), y: Math.max(0, (h - S) / 2) } };
+  };
+  const clamp = (p, z) => {
+    const { max } = dims(z);
+    return { x: Math.min(max.x, Math.max(-max.x, p.x)), y: Math.min(max.y, Math.max(-max.y, p.y)) };
+  };
+  const { w, h } = dims(zoom);
+
+  const onDown = (e) => {
+    e.currentTarget.setPointerCapture(e.pointerId);
+    drag.current = { sx: e.clientX, sy: e.clientY, ox: pos.x, oy: pos.y };
+  };
+  const onMove = (e) => {
+    if (!drag.current) return;
+    setPos(clamp({ x: drag.current.ox + e.clientX - drag.current.sx, y: drag.current.oy + e.clientY - drag.current.sy }, zoom));
+  };
+  const onUp = () => { drag.current = null; };
+  const onZoom = (v) => { setZoom(v); setPos((p) => clamp(p, v)); };
+
+  const done = () => {
+    if (!img) return;
+    const OUT = 512, k = OUT / S;
+    const c = document.createElement("canvas");
+    c.width = OUT; c.height = OUT;
+    const ctx = c.getContext("2d");
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(0, 0, OUT, OUT);
+    ctx.drawImage(img, (S / 2 + pos.x - w / 2) * k, (S / 2 + pos.y - h / 2) * k, w * k, h * k);
+    c.toBlob((b) => b && onDone(b), "image/jpeg", 0.9);
+  };
+
+  const btn = { background: "none", border: "none", color: "#fff", fontSize: 15, padding: "12px 16px", cursor: "pointer", fontFamily: "inherit" };
+  const node = (
+    <div style={{ position: "fixed", inset: 0, zIndex: 5000, background: "#000", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "max(env(safe-area-inset-top), 44px)" }}>
+        <button style={btn} onClick={onCancel}>{labels.cancel}</button>
+        <div style={{ color: "#fff", fontSize: 15, fontWeight: 600 }}>{labels.title}</div>
+        <button style={{ ...btn, fontWeight: 700 }} onClick={done}>{labels.apply}</button>
+      </div>
+      <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", touchAction: "none" }}
+        onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp}>
+        <div style={{ position: "relative", width: S, height: S }}>
+          {img && <img src={src} alt="" draggable={false} style={{ position: "absolute", left: "50%", top: "50%", width: w, height: h, maxWidth: "none", transform: `translate(-50%,-50%) translate(${pos.x}px,${pos.y}px)`, userSelect: "none", pointerEvents: "none" }} />}
+          <div style={{ position: "absolute", inset: 0, borderRadius: "50%", boxShadow: "0 0 0 9999px rgba(0,0,0,0.62)", border: "1.5px solid rgba(255,255,255,0.9)", pointerEvents: "none" }} />
+        </div>
+      </div>
+      <div style={{ padding: "8px 32px max(env(safe-area-inset-bottom), 32px)", textAlign: "center" }}>
+        <div style={{ color: "rgba(255,255,255,0.7)", fontSize: 12, marginBottom: 10 }}>{labels.hint}</div>
+        <input type="range" min="1" max="4" step="0.01" value={zoom} onChange={(e) => onZoom(parseFloat(e.target.value))} style={{ width: "100%" }} />
+      </div>
+    </div>
+  );
+  return createPortal(node, document.body);
+}
+
 export default function App() {
   const isNative = Capacitor.getPlatform() !== 'web';
   const [tab, setTab]             = useState("map");
@@ -1444,7 +1522,8 @@ const [user, setUser] = useState(null);
     name:"", location:"", bio:"", avatar_url:"", handle:""
   });
   const [profileEditOpen, setProfileEditOpen] = useState(false);
-  const [editDraft, setEditDraft] = useState({name:"",location:"",bio:"",avatar_url:"",handle:""}); // {posts:[], postIdx:0, imgIdx:0}
+  const [editDraft, setEditDraft] = useState({name:"",location:"",bio:"",avatar_url:"",handle:""});
+  const [cropSrc, setCropSrc] = useState(null); // {posts:[], postIdx:0, imgIdx:0}
 const [creatorAvatar, setCreatorAvatar] = useState("");
   const [folders, setFolders]       = useState([]);
   const [showFolderModal, setShowFolderModal] = useState(false);
@@ -3140,6 +3219,20 @@ const searchGeo = async (q) => {
           </div>
           <div className="pe-body">
             {/* アバター */}
+            {cropSrc && <AvatarCropper src={cropSrc}
+              labels={{title:t('cropTitle'),apply:t('cropApply'),cancel:t('cropCancel'),hint:t('cropHint')}}
+              onCancel={()=>{URL.revokeObjectURL(cropSrc);setCropSrc(null);}}
+              onDone={async(blob)=>{
+                if(!user){ setCropSrc(null); return; }
+                const path = `avatars/${user.id}/${Date.now()}.jpg`;
+                const { error } = await supabase.storage.from("photos").upload(path, blob, {contentType:"image/jpeg"});
+                if(!error){
+                  const { data } = supabase.storage.from("photos").getPublicUrl(path);
+                  setEditDraft(d=>({...d, avatar_url: data.publicUrl}));
+                }
+                URL.revokeObjectURL(cropSrc);
+                setCropSrc(null);
+              }}/>}
             <div className="pe-avatar-area">
               <label style={{cursor:"pointer"}}>
                 <div className="pe-avatar">
@@ -3148,29 +3241,11 @@ const searchGeo = async (q) => {
                     : <Ic.User s={40}/>}
                   <div className="pe-avatar-edit">＋</div>
                 </div>
-                <input type="file" accept="image/*" style={{display:"none"}} onChange={async(e)=>{
-                  const file = e.target.files[0];
-                  if(!file||!user) return;
-                  const path = `avatars/${user.id}/${Date.now()}.${file.name.split(".").pop()}`;
-                  const { error } = await supabase.storage.from("photos").upload(path, file);
-                  if(!error){
-                    const { data } = supabase.storage.from("photos").getPublicUrl(path);
-                    setEditDraft(d=>({...d, avatar_url: data.publicUrl}));
-                  }
-                }}/>
+                <input type="file" accept="image/*" style={{display:"none"}} onChange={(e)=>{ const f=e.target.files[0]; if(f) setCropSrc(URL.createObjectURL(f)); e.target.value=""; }}/>
               </label>
               <label style={{cursor:"pointer",fontSize:13,color:"var(--red)"}}>
                 {t('changePhoto')}
-                <input type="file" accept="image/*" style={{display:"none"}} onChange={async(e)=>{
-                  const file = e.target.files[0];
-                  if(!file||!user) return;
-                  const path = `avatars/${user.id}/${Date.now()}.${file.name.split(".").pop()}`;
-                  const { error } = await supabase.storage.from("photos").upload(path, file);
-                  if(!error){
-                    const { data } = supabase.storage.from("photos").getPublicUrl(path);
-                    setEditDraft(d=>({...d, avatar_url: data.publicUrl}));
-                  }
-                }}/>
+                <input type="file" accept="image/*" style={{display:"none"}} onChange={(e)=>{ const f=e.target.files[0]; if(f) setCropSrc(URL.createObjectURL(f)); e.target.value=""; }}/>
               </label>
             </div>
 
