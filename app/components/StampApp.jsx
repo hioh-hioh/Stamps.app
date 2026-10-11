@@ -2352,7 +2352,7 @@ const searchGeo = async (q) => {
           <div className="mypage-screen">
             <AppDownloadPopup />
             <button onClick={()=>setMenuOpen(true)} style={{position:"absolute",top:isNative?56:16,right:16,zIndex:30,background:"none",border:"none",padding:0,width:36,height:36,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer"}}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="21" height="14" viewBox="0 0 21 14" fill="none"><path d="M0 13.5V11.25H20.25V13.5H0ZM0 7.875V5.625H20.25V7.875H0ZM0 2.25V0H20.25V2.25H0Z" fill="#5D5D5D"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5D5D5D" strokeWidth="2" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
             </button>
             {user && (
               <button onClick={shareProfile} aria-label={t('shareProfile')} style={{position:"absolute",top:isNative?56:16,right:56,zIndex:30,background:"none",border:"none",padding:0,width:36,height:36,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer"}}>
