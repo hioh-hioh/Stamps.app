@@ -1192,11 +1192,11 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 
 /* Toast */
 .toast{
-  position:absolute;bottom:96px;left:50%;transform:translateX(-50%) translateY(16px);
+  position:absolute;bottom:calc(120px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%) translateY(16px);
   background:#616168;color:#fff;
   padding:10px 22px;border-radius:24px;font-size:13px;
   opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;
-  white-space:nowrap;z-index:400
+  white-space:nowrap;z-index:6000
 }
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.ok{background:var(--red)}
