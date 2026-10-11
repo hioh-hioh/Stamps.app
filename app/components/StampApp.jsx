@@ -1995,14 +1995,29 @@ const searchGeo = async (q) => {
 
         {/* ════ HOME ════ */}
         {tab==="home" && (
-          <div className="home-screen" style={{paddingTop:0}}>
+          <div className="home-screen" style={{paddingTop:0}}
+          onTouchStart={e=>{ const p=e.touches[0]; e.currentTarget._feedSwipe={x:p.clientX,y:p.clientY,t:e.target}; }}
+          onTouchEnd={e=>{
+            const s = e.currentTarget._feedSwipe; e.currentTarget._feedSwipe = null;
+            if(!s) return;
+            const p = e.changedTouches[0];
+            const dx = p.clientX - s.x, dy = p.clientY - s.y;
+            if(Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy)*1.5) return;
+            let el = s.t;
+            while(el && el !== e.currentTarget){
+              if(el.scrollWidth > el.clientWidth+2 && /(auto|scroll)/.test(getComputedStyle(el).overflowX)) return;
+              el = el.parentElement;
+            }
+            if(dx < 0 && feedTab==="all") setFeedTab("mine");
+            if(dx > 0 && feedTab==="mine") setFeedTab("all");
+          }}>
             {/* Timeline */}
             <div style={{position:"sticky",top:0,zIndex:10,background:"var(--white)",padding:`${isNative?80:40}px 16px 10px`}}>
               <div className="feed-seg-track" style={{position:"relative",display:"flex",background:"var(--gray-100)",borderRadius:999,padding:4}}>
                 <div className="feed-seg-thumb" style={{position:"absolute",top:4,bottom:4,left:4,width:"calc(50% - 4px)",background:"#fff",borderRadius:999,boxShadow:"0 1px 4px rgba(0,0,0,.12)",transform:feedTab==="all"?"translateX(0)":"translateX(100%)",transition:"transform .25s cubic-bezier(.3,.8,.3,1)"}}/>
                 {[["all",t('feedAll')],["mine",t('feedMine')]].map(([k,label])=>(
-                  <button key={k} onClick={()=>setFeedTab(k)}
-                    style={{position:"relative",flex:1,padding:"9px 0",border:"none",background:"none",borderRadius:999,fontSize:14,fontWeight:feedTab===k?700:500,cursor:"pointer",fontFamily:"inherit",
+                  <button key={k} onPointerDown={()=>setFeedTab(k)} onClick={()=>setFeedTab(k)}
+                    style={{position:"relative",flex:1,padding:"9px 0",border:"none",touchAction:"manipulation",WebkitTapHighlightColor:"transparent",background:"none",borderRadius:999,fontSize:14,fontWeight:feedTab===k?700:500,cursor:"pointer",fontFamily:"inherit",
                       color:feedTab===k?"var(--text)":"var(--text3)",transition:"color .2s"}}>{label}</button>
                 ))}
               </div>
@@ -2079,7 +2094,7 @@ const searchGeo = async (q) => {
               </div>
             )}
             {feedTab==="mine" && (()=>{
-              // モックタイムラインデータ
+              // モックタイムラインデータ (feedSwipe)
               const TIMELINE_MOCK = [];
 
               // archivesをタイムライン形式に変換してマージ
