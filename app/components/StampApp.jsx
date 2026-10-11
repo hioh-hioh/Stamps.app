@@ -1995,14 +1995,17 @@ const searchGeo = async (q) => {
 
         {/* ════ HOME ════ */}
         {tab==="home" && (
-          <div className="home-screen" style={{paddingTop:isNative?52:16}}>
+          <div className="home-screen" style={{paddingTop:0}}>
             {/* Timeline */}
-            <div style={{display:"flex",gap:8,padding:"4px 16px 8px"}}>
-              {[["all",t('feedAll')],["mine",t('feedMine')]].map(([k,label])=>(
-                <button key={k} onClick={()=>setFeedTab(k)}
-                  style={{padding:"7px 18px",borderRadius:999,border:"none",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",
-                    background:feedTab===k?"var(--text)":"var(--gray-100)",color:feedTab===k?"#fff":"var(--text2)"}}>{label}</button>
-              ))}
+            <div style={{position:"sticky",top:0,zIndex:10,background:"var(--white)",padding:`${isNative?52:16}px 16px 10px`}}>
+              <div className="feed-seg-track" style={{position:"relative",display:"flex",background:"var(--gray-100)",borderRadius:999,padding:4}}>
+                <div className="feed-seg-thumb" style={{position:"absolute",top:4,bottom:4,left:4,width:"calc(50% - 4px)",background:"#fff",borderRadius:999,boxShadow:"0 1px 4px rgba(0,0,0,.12)",transform:feedTab==="all"?"translateX(0)":"translateX(100%)",transition:"transform .25s cubic-bezier(.3,.8,.3,1)"}}/>
+                {[["all",t('feedAll')],["mine",t('feedMine')]].map(([k,label])=>(
+                  <button key={k} onClick={()=>setFeedTab(k)}
+                    style={{position:"relative",flex:1,padding:"9px 0",border:"none",background:"none",borderRadius:999,fontSize:14,fontWeight:feedTab===k?700:500,cursor:"pointer",fontFamily:"inherit",
+                      color:feedTab===k?"var(--text)":"var(--text3)",transition:"color .2s"}}>{label}</button>
+                ))}
+              </div>
             </div>
             {feedTab==="all" && (
               <div style={{padding:"0 0 100px"}}>
