@@ -2354,6 +2354,11 @@ const searchGeo = async (q) => {
             <button onClick={()=>setMenuOpen(true)} style={{position:"absolute",top:isNative?56:16,right:16,zIndex:30,background:"none",border:"none",padding:8,cursor:"pointer"}}>
               <svg xmlns="http://www.w3.org/2000/svg" width="21" height="14" viewBox="0 0 21 14" fill="none"><path d="M0 13.5V11.25H20.25V13.5H0ZM0 7.875V5.625H20.25V7.875H0ZM0 2.25V0H20.25V2.25H0Z" fill="#5D5D5D"/></svg>
             </button>
+            {user && (
+              <button onClick={shareProfile} aria-label={t('shareProfile')} style={{position:"absolute",top:isNative?56:16,right:56,zIndex:30,background:"none",border:"none",padding:8,cursor:"pointer",display:"flex"}}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5D5D5D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+              </button>
+            )}
             {!user ? (
               <>
               <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",height:"70vh",gap:16,padding:"0 32px",textAlign:"center"}}>
@@ -2384,7 +2389,6 @@ const searchGeo = async (q) => {
                 <div style={{flex:1,minWidth:0,paddingBottom:4}}>
                   <div className="prof-name">{profile.name}</div>
                   {profile.handle && <div style={{fontSize:13,color:"var(--text3)",marginTop:2}}>@{profile.handle}</div>}
-                  <button onClick={shareProfile} style={{marginTop:8,padding:"5px 12px",fontSize:12,fontWeight:600,color:"var(--text)",background:"none",border:"1px solid var(--gray-100)",borderRadius:999,cursor:"pointer",fontFamily:"inherit"}}>{t('shareProfile')}</button>
                   <div className="prof-bio">{profile.bio}</div>
                   <div style={{fontSize:11,color:"var(--text3)",marginTop:6}}>Post: {archives.filter(a=>a.photos?.length>0).length}　Checkin: {archives.length}</div>
                 </div>
