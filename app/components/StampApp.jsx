@@ -182,6 +182,9 @@ const T = {
   changePhoto:          { ja:"写真を変更", en:"Change photo", zh:"更换照片" },
   namePlaceholder:      { ja:"名前を入力", en:"Enter your name", zh:"请输入姓名" },
   bioPlaceholder:        { ja:"自己紹介を入力", en:"Write a short bio", zh:"请输入个人简介" },
+  handleInvalid:         { ja:"IDは半角英小文字・数字・_ の3〜20文字で入力してください", en:"ID must be 3-20 characters: a-z, 0-9, _", zh:"ID需为3-20位小写字母、数字或下划线" },
+  handleTaken:           { ja:"このIDはすでに使われています", en:"This ID is already taken", zh:"该ID已被使用" },
+  handleHint:            { ja:"半角英小文字・数字・_（3〜20文字）", en:"a-z, 0-9, _ (3-20 characters)", zh:"小写字母、数字、下划线（3-20位）" },
   edit:                  { ja:"編集", en:"Edit", zh:"编辑" },
   selectFolderTitle:    { ja:"フォルダを選択", en:"Select a folder", zh:"选择文件夹" },
   noFolders:            { ja:"フォルダがありません", en:"No folders yet", zh:"暂无文件夹" },
@@ -1435,10 +1438,10 @@ const [user, setUser] = useState(null);
   };
   const [detailPhotoIdx, setDetailPhotoIdx] = useState(0);
   const [profile, setProfile] = useState({
-    name:"", location:"", bio:"", avatar_url:""
+    name:"", location:"", bio:"", avatar_url:"", handle:""
   });
   const [profileEditOpen, setProfileEditOpen] = useState(false);
-  const [editDraft, setEditDraft] = useState({name:"",location:"",bio:"",avatar_url:""}); // {posts:[], postIdx:0, imgIdx:0}
+  const [editDraft, setEditDraft] = useState({name:"",location:"",bio:"",avatar_url:"",handle:""}); // {posts:[], postIdx:0, imgIdx:0}
 const [creatorAvatar, setCreatorAvatar] = useState("");
   const [folders, setFolders]       = useState([]);
   const [showFolderModal, setShowFolderModal] = useState(false);
@@ -1595,7 +1598,7 @@ useEffect(()=>{
   };
   const loadProfile = async (userId) => {
     const { data } = await supabase.from("profiles").select("*").eq("id", userId).single();
-    if(data) setProfile({ name: data.name||"", location: data.location||"", bio: data.bio||"", avatar_url: data.avatar_url||"" });
+    if(data) setProfile({ name: data.name||"", location: data.location||"", bio: data.bio||"", avatar_url: data.avatar_url||"", handle: data.handle||"" });
   };
   const loadFolders = async (userId) => {
     const { data } = await supabase.from("folders").select("*").eq("user_id", userId);
@@ -3102,8 +3105,15 @@ const searchGeo = async (q) => {
             <button className="arc-back" onClick={()=>setProfileEditOpen(false)}><Ic.Back/></button>
             <h2>{t('editProfileTitle')}</h2>
             <button className="pe-save" onClick={async()=>{
-              await supabase.from("profiles").upsert({id:user.id,...editDraft});
-              setProfile({...editDraft});
+              const raw = (editDraft.handle||"").trim().toLowerCase();
+              const RESERVED = ["admin","api","u","user","users","spots","settings","login","logout","sitemap","robots","stamps","support","help","about","terms","privacy"];
+              if(raw && (!/^[a-z0-9_]{3,20}$/.test(raw) || RESERVED.includes(raw))){ showToast(t('handleInvalid')); return; }
+              const payload = {id:user.id,...editDraft};
+              if(raw) payload.handle = raw; else delete payload.handle;
+              const { error } = await supabase.from("profiles").upsert(payload);
+              if(error){ showToast(error.code==="23505" ? t('handleTaken') : t('handleInvalid')); return; }
+              setProfile({...editDraft, handle: raw});
+              if(!raw) loadProfile(user.id);
               setProfileEditOpen(false);
               showToast(t('profileSaved'),"ok");
             }}>{t('saveBtn')}</button>
@@ -3150,6 +3160,19 @@ const searchGeo = async (q) => {
               <input className="pe-input" placeholder={t('namePlaceholder')}
                 value={editDraft.name}
                 onChange={e=>setEditDraft(d=>({...d,name:e.target.value}))}/>
+            </div>
+
+            {/* ユーザーID */}
+            <div className="pe-field">
+              <label className="pe-label">USER ID</label>
+              <div style={{display:"flex",alignItems:"center",gap:4}}>
+                <span style={{color:"var(--text3)",fontSize:15}}>@</span>
+                <input className="pe-input" style={{flex:1}} placeholder="your_id" maxLength={20}
+                  autoCapitalize="none" autoCorrect="off" spellCheck={false}
+                  value={editDraft.handle||""}
+                  onChange={e=>setEditDraft(d=>({...d,handle:e.target.value.toLowerCase().replace(/[^a-z0-9_]/g,"")}))}/>
+              </div>
+              <div style={{fontSize:11,color:"var(--text3)",marginTop:4}}>{t('handleHint')}</div>
             </div>
 
             {/* 自己紹介 */}
@@ -3551,7 +3574,7 @@ const searchGeo = async (q) => {
               <div>
                 <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}><span style={{width:6,height:6,borderRadius:"50%",background:"var(--red)"}}/><span style={{fontSize:14,fontWeight:700}}>{t('menuAccount')}</span></div>
                 <div style={{border:"1px solid var(--gray-200)",borderRadius:12,overflow:"hidden"}}>
-                  <button onClick={()=>{setEditDraft({name:profile.name,location:profile.location,bio:profile.bio,avatar_url:profile.avatar_url||""});setMenuOpen(false);setProfileEditOpen(true);}} style={{display:"block",width:"100%",textAlign:"left",padding:"14px 16px",fontSize:14,color:"var(--text)",background:"none",border:"none",borderBottom:"1px solid var(--gray-100)",cursor:"pointer",fontFamily:"inherit"}}>{t('menuProfile')}</button>
+                  <button onClick={()=>{setEditDraft({name:profile.name,location:profile.location,bio:profile.bio,avatar_url:profile.avatar_url||"",handle:profile.handle||""});setMenuOpen(false);setProfileEditOpen(true);}} style={{display:"block",width:"100%",textAlign:"left",padding:"14px 16px",fontSize:14,color:"var(--text)",background:"none",border:"none",borderBottom:"1px solid var(--gray-100)",cursor:"pointer",fontFamily:"inherit"}}>{t('menuProfile')}</button>
                   <button onClick={()=>{supabase.auth.signOut();setMenuOpen(false);}} style={{display:"block",width:"100%",textAlign:"left",padding:"14px 16px",fontSize:14,color:"var(--text)",background:"none",border:"none",borderBottom:"1px solid var(--gray-100)",cursor:"pointer",fontFamily:"inherit"}}>{t('menuLogout')}</button>
                   <button onClick={async()=>{
                     if(!confirm("アカウントを削除しますか？この操作は取り消せません。"))return;
