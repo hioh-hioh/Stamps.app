@@ -1507,6 +1507,7 @@ const [user, setUser] = useState(null);
   const [feedHasMore, setFeedHasMore] = useState(false);
   const [feedBarHidden, setFeedBarHidden] = useState(false);
   const feedLastY = useRef(0);
+  const homeScrollY = useRef(0);
   const feedTrack = useRef(null);
   const feedTouch = useRef(null);
   const [feedAnimating, setFeedAnimating] = useState(false);
@@ -2046,8 +2047,10 @@ const searchGeo = async (q) => {
         {/* ════ HOME ════ */}
         {tab==="home" && (
           <div className="home-screen" style={{paddingTop:0}}
+          ref={el=>{ if(el && !el._restored){ el._restored = true; el.scrollTop = homeScrollY.current; } }}
           onScroll={e=>{
             const y = e.currentTarget.scrollTop;
+            homeScrollY.current = y;
             const d = y - feedLastY.current;
             if(y < 60) setFeedBarHidden(false);
             else if(d > 8) setFeedBarHidden(true);
