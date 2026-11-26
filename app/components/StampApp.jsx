@@ -2831,7 +2831,7 @@ const searchGeo = async (q) => {
                 const showSpotRows = (showSpotEdit && isCheckedIn(selSpot)) || (showSpotEdit && !registered) || infoEdit;
                 const showRally = !(showSpotEdit && isCheckedIn(selSpot));
                 const hoursOpts = ["終日","9:00-17:00","10:00-18:00"];
-                const locOpts = ["入口付近","受付","改札の近く"];
+                const locOpts = ["改札内","改札外","駅員に依頼"];
                 const chip = (active) => ({flexShrink:0,display:"inline-flex",alignItems:"center",padding:"6px 14px",borderRadius:20,border:`1px solid ${active?"var(--red)":"var(--gray-200)"}`,background:active?"var(--red)":"var(--white)",color:active?"#fff":"var(--text2)",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"});
                 const addChip = {flexShrink:0,display:"inline-flex",alignItems:"center",padding:"6px 14px",borderRadius:20,border:"1px dashed var(--gray-200)",background:"transparent",color:"var(--text3)",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"};
                 const rowStyle = {display:"flex",gap:8,overflowX:"auto",padding:"0 14px",scrollbarWidth:"none",WebkitOverflowScrolling:"touch"};
