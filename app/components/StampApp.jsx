@@ -104,6 +104,7 @@ const T = {
   filterAll:             { ja:"すべて", en:"All", zh:"全部" },
   filterSaved:          { ja:"保存済み", en:"Saved", zh:"已保存" },
   filterCheckedIn:      { ja:"チェックイン済み", en:"Checked in", zh:"已打卡" },
+  checkinTip:            { ja:"ここからスタンプを記録できます", en:"Tap here to record a stamp", zh:"点这里记录印章" },
   checkinBtn:            { ja:"チェックイン", en:"Check in", zh:"打卡" },
   detailBtn:            { ja:"詳細", en:"Details", zh:"详情" },
   saveAction:            { ja:"保存する", en:"Save", zh:"保存" },
@@ -298,6 +299,7 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
 @media (min-width:601px){
   body{background:var(--white)}
   .fab{bottom:24px!important;right:24px!important}
+  .fab-tip{bottom:98px!important;right:24px!important}
   .frame{width:calc(100vw - 68px);height:100dvh;box-shadow:none;margin:0 0 0 68px;overflow:visible}
   .bnav{
     left:0!important;top:0;bottom:0;right:auto;
@@ -462,6 +464,13 @@ body{font-family:'Public Sans','Noto Sans JP',sans-serif;background:#E8E8E4}
   box-shadow:var(--sh-md);z-index:50;transition:transform .15s
 }
 .fab:active{transform:scale(.94)}
+.fab-tip{
+  position:fixed;bottom:calc(90px + 62px + 14px + env(safe-area-inset-bottom));right:max(16px, calc(50vw - 179px));
+  background:#1A1A18;color:#fff;font-size:13px;font-weight:500;padding:10px 14px;border-radius:12px;
+  z-index:50;pointer-events:none;box-shadow:var(--sh-md);animation:tipfloat 2.4s ease-in-out infinite
+}
+.fab-tip::after{content:"";position:absolute;right:26px;bottom:-6px;width:12px;height:12px;background:#1A1A18;transform:rotate(45deg)}
+@keyframes tipfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 
 /* ══════ HOME ══════ */
 .home-screen{flex:1;overflow-y:auto;padding-top:16px;padding-bottom:160px;background:var(--white);overscroll-behavior:contain}
@@ -1491,6 +1500,7 @@ export default function App() {
   const [selArc, setSelArc]       = useState(null);
   const [selGroup, setSelGroup]   = useState(null); // {title, items[]}
   const [archives, setArchives]   = useState([]);
+  const [archivesReady, setArchivesReady] = useState(false); // CITIP_V1
   const [spotCheckins, setSpotCheckins] = useState([]);
   const [viewUser, setViewUser] = useState(null);
   const [viewUserPosts, setViewUserPosts] = useState([]);
@@ -1672,7 +1682,7 @@ useEffect(()=>{
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_,session)=>{
       setUser(session?.user ?? null);
       if(session?.user && session.user.id !== user?.id){ loadCheckins(session.user.id); loadProfile(session.user.id); loadFolders(session.user.id); loadSavedSpots(session.user.id); }
-      else setArchives([]);
+      else { setArchives([]); setArchivesReady(true); }
     });
     return () => subscription.unsubscribe();
   },[]);
@@ -1757,6 +1767,7 @@ useEffect(()=>{
       .eq("user_id", userId)
       .order("created_at", { ascending: false });
     if(error || !data) return;
+    setArchivesReady(true);
     setArchives(data.map(d=>({
       id: d.id,
       spot_id: d.spot_id||"",
@@ -3870,6 +3881,9 @@ const searchGeo = async (q) => {
           <button className="fab"
             style={{zIndex:(tab==="map"&&showSaved&&mapFilter==="saved")?5:50}}
             onClick={()=>setNewCiOpen(true)}>+</button>
+        )}
+        {!overlay && !photoViewer && !newCiOpen && archivesReady && archives.length===0 && (
+          <div className="fab-tip">{t('checkinTip')}</div>
         )}
 
         <nav className="bnav">
