@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import type { Metadata } from "next";
+import PhotoGrid from "./PhotoGrid"; // SHARE_V1
 
 export const dynamic = "force-dynamic";
 
@@ -45,7 +46,7 @@ export default async function Page({ params }: { params: Promise<{ handle: strin
   const { handle } = await params;
   const { p, posts } = await load(handle);
 
-  const wrap: React.CSSProperties = { maxWidth: 520, margin: "0 auto", padding: "32px 16px 64px", fontFamily: "-apple-system, 'Hiragino Sans', sans-serif", color: "#111" };
+  const wrap: React.CSSProperties = { maxWidth: 520, margin: "0 auto", padding: "56px 16px 120px", fontFamily: "-apple-system, 'Hiragino Sans', sans-serif", color: "#1A1A18" };
 
   if (!p) {
     return (
@@ -60,29 +61,21 @@ export default async function Page({ params }: { params: Promise<{ handle: strin
 
   return (
     <main style={wrap}>
-      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-        <div style={{ width: 72, height: 72, borderRadius: "50%", background: "#eee", overflow: "hidden", flexShrink: 0 }}>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8, marginBottom: 20 }}>
+        <div style={{ width: 80, height: 80, borderRadius: "50%", background: "#EDEDEA", overflow: "hidden" }}>
           {p.avatar_url && <img src={p.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
         </div>
-        <div style={{ minWidth: 0 }}>
-          <div style={{ fontSize: 20, fontWeight: 700 }}>{p.name}</div>
-          <div style={{ fontSize: 14, color: "#888" }}>@{p.handle}</div>
-        </div>
+        <div style={{ fontSize: 18, fontWeight: 700 }}>{p.name}</div>
+        <div style={{ fontSize: 13, color: "#9B9B97", marginTop: -4 }}>@{p.handle}</div>
+        {p.location && <div style={{ fontSize: 12, color: "#6B6B67" }}>{p.location}</div>}
+        {p.bio && <div style={{ fontSize: 13, textAlign: "center", whiteSpace: "pre-wrap" }}>{p.bio}</div>}
       </div>
-      {p.bio && <p style={{ marginTop: 16, fontSize: 14, lineHeight: 1.6, whiteSpace: "pre-wrap" }}>{p.bio}</p>}
-      <p style={{ fontSize: 12, color: "#888", marginTop: 8 }}>チェックイン {posts.length}</p>
+      <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 8 }}>投稿 ({posts.length})</div>
+      <PhotoGrid photos={photos.map((x: any) => ({ id: x.id, url: x.photo_urls[0], alt: x.spot_name || "" }))} />
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 4, marginTop: 16 }}>
-        {photos.map((x: any) => (
-          <div key={x.id} style={{ aspectRatio: "1 / 1", background: "#eee", overflow: "hidden" }}>
-            <img src={x.photo_urls[0]} alt={x.spot_name || ""} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-          </div>
-        ))}
-      </div>
-
-      <div style={{ textAlign: "center", marginTop: 40 }}>
-        <a href="/" style={{ display: "inline-block", padding: "12px 24px", borderRadius: 999, background: "#111", color: "#fff", textDecoration: "none", fontWeight: 600, fontSize: 14 }}>
-          Stamps. を使ってみる
+      <div style={{ position: "fixed", left: 0, right: 0, bottom: 0, padding: "12px 16px calc(16px + env(safe-area-inset-bottom))", background: "linear-gradient(rgba(255,255,255,0), #fff 30%)", zIndex: 50 }}>
+        <a href="https://apps.apple.com/jp/app/id6811545575" style={{ display: "block", maxWidth: 488, margin: "0 auto", textAlign: "center", padding: 15, borderRadius: 14, background: "#E8452A", color: "#fff", textDecoration: "none", fontWeight: 700, fontSize: 15 }}>
+          アプリをダウンロード
         </a>
       </div>
     </main>
