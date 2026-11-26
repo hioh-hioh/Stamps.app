@@ -1457,6 +1457,9 @@ export default function App() {
   const [ciEventName, setCiEventName] = useState("");
   const [ciPeriodOpen, setCiPeriodOpen] = useState(false);
   const [spotInfoOpen, setSpotInfoOpen] = useState(false);
+  const [hoursInput, setHoursInput] = useState(false);
+  const [locInput, setLocInput] = useState(false);
+  const [rallyInput, setRallyInput] = useState(false);
   const [editPeriodOpen, setEditPeriodOpen] = useState(false);
   const [eventSuggestions, setEventSuggestions] = useState([]);
   const [activeEventTags, setActiveEventTags] = useState([]);
@@ -1852,7 +1855,7 @@ const searchGeo = async (q) => {
       setGeoLoading(false);
     }
   };
-  const openForm = (spot) => { setSelSpot(spot); setCiText(""); setHasPrev(false); setCiCat(""); setCiLimited(false); setCiEventName(""); setCiPeriodOpen(false); setSpotInfoOpen(!!spot.hours); setCiDateFrom(""); setCiDateTo(""); setCiHours(spot.hours||""); setCiLocation(""); setShowSpotEdit(!isCheckedIn(spot)); setOverlay("form");
+  const openForm = (spot) => { setSelSpot(spot); setCiText(""); setHasPrev(false); setCiCat(""); setCiLimited(false); setCiEventName(""); setCiPeriodOpen(false); setSpotInfoOpen(false); setHoursInput(false); setLocInput(false); setRallyInput(false); setCiDateFrom(""); setCiDateTo(""); setCiHours(spot.hours||""); setCiLocation(""); setShowSpotEdit(!isCheckedIn(spot)); setOverlay("form");
     supabase.from("checkins").select("event_name,date_from,date_to").not("event_name","is",null).order("created_at",{ascending:false}).limit(100)
       .then(({data})=>{
         const seen = new Set();
@@ -2819,92 +2822,101 @@ const searchGeo = async (q) => {
                   </label>
                 </div>
               </div>)}
-              {/* スポット情報入力 SPOTINFO_V1 */}
-              {showSpotEdit && (() => {
-                const first = !isCheckedIn(selSpot);
-                const open = !first || spotInfoOpen;
-                const chipStyle = (active) => ({padding:"6px 12px",borderRadius:16,border:"1px solid "+(active?"var(--text)":"var(--gray-200)"),background:"#fff",fontSize:12,color:active?"var(--text)":"var(--text2)",cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"});
+              {/* スタンプ情報カード STAMPCARD_V1 */}
+              {(() => {
+                const showSpotRows = showSpotEdit;
+                const showRally = !(showSpotEdit && isCheckedIn(selSpot));
                 const hoursOpts = ["終日","9:00-17:00","10:00-18:00"];
-                const locOpts = ["入口付近","受付・カウンター","改札の近く","窓口"];
+                const locOpts = ["入口付近","受付","改札の近く"];
+                const chip = (active) => ({flexShrink:0,display:"inline-flex",alignItems:"center",padding:"6px 14px",borderRadius:20,border:`1px solid ${active?"var(--red)":"var(--gray-200)"}`,background:active?"var(--red)":"var(--white)",color:active?"#fff":"var(--text2)",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"});
+                const addChip = {flexShrink:0,display:"inline-flex",alignItems:"center",padding:"6px 14px",borderRadius:20,border:"1px dashed var(--gray-200)",background:"transparent",color:"var(--text3)",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"};
+                const rowStyle = {display:"flex",gap:8,overflowX:"auto",padding:"0 14px",scrollbarWidth:"none",WebkitOverflowScrolling:"touch"};
+                const labStyle = {padding:"0 14px",fontSize:11,fontWeight:500,color:"var(--text3)",letterSpacing:".05em",marginBottom:8};
+                const inpStyle = {margin:"10px 14px 0",width:"calc(100% - 28px)",background:"#fff",boxSizing:"border-box"};
+                const hoursVis = hoursInput || (!!ciHours && !hoursOpts.includes(ciHours));
+                const locVis = locInput || (!!ciLocation && !locOpts.includes(ciLocation));
+                const rallyVis = rallyInput || (!!ciEventName && !eventSuggestions.some(e=>e.event_name===ciEventName));
+                const periodVis = rallyVis || !!ciEventName || !!ciDateFrom || !!ciDateTo;
                 return (
-                <div style={{width:"100%",boxSizing:"border-box"}}>
-                  {first && (
-                    <div onClick={()=>setSpotInfoOpen(v=>!v)} style={{display:"flex",justifyContent:"space-between",alignItems:"center",fontSize:13,color:"var(--text2)",cursor:"pointer",marginBottom:open?12:0}}>
-                      <span>{t('firstCheckinMessage')}</span>
-                      <span style={{color:"var(--text3)",fontSize:18,lineHeight:1}}>{open?"−":"＋"}</span>
-                    </div>
-                  )}
-                  {open && (
-                    <>
-                      <div style={{marginBottom:12}}>
-                        <label style={{fontSize:12,color:"var(--text3)",fontWeight:500,display:"block",marginBottom:4}}>{t('hoursLabel')}</label>
-                        <input className="modal-input" placeholder={t('hoursPlaceholder')}
-                          value={ciHours} onChange={e=>setCiHours(e.target.value)} style={{margin:0,width:"100%",boxSizing:"border-box",background:"#fff"}}/>
-                        <div style={{display:"flex",flexWrap:"wrap",gap:6,marginTop:8}}>
-                          {hoursOpts.map(o=>(
-                            <button key={o} onClick={()=>setCiHours(ciHours===o?"":o)} style={chipStyle(ciHours===o)}>{o}</button>
-                          ))}
+                  <div style={{width:"100%",boxSizing:"border-box",background:"var(--gray-50)",borderRadius:12,padding:"14px 0 4px",marginTop:8,marginBottom:12}}>
+                    <div style={{padding:"0 14px 10px",fontSize:13,fontWeight:700,color:"var(--text)"}}>スタンプの情報</div>
+                    {showSpotRows && (
+                      <>
+                        <div style={{padding:"4px 0 14px"}}>
+                          <div style={labStyle}>{t('hoursLabel')}</div>
+                          <div style={rowStyle}>
+                            {hoursOpts.map(o=>(
+                              <button key={o} onClick={()=>setCiHours(ciHours===o?"":o)} style={chip(ciHours===o)}>{o}</button>
+                            ))}
+                            {!hoursVis && <button onClick={()=>setHoursInput(true)} style={addChip}>＋ 入力</button>}
+                          </div>
+                          {hoursVis && (
+                            <input className="modal-input" placeholder={t('hoursPlaceholder')} autoFocus={hoursInput}
+                              value={ciHours} onChange={e=>setCiHours(e.target.value)} style={inpStyle}/>
+                          )}
                         </div>
-                      </div>
-                      <div style={{marginBottom:4}}>
-                        <label style={{fontSize:12,color:"var(--text3)",fontWeight:500,display:"block",marginBottom:4}}>{t('stampLocationLabel')}</label>
-                        <input className="modal-input" placeholder={t('stampLocationPlaceholder')}
-                          value={ciLocation} onChange={e=>setCiLocation(e.target.value)} style={{margin:0,width:"100%",boxSizing:"border-box",background:"#fff"}}/>
-                        <div style={{display:"flex",flexWrap:"wrap",gap:6,marginTop:8}}>
-                          {locOpts.map(o=>(
-                            <button key={o} onClick={()=>setCiLocation(ciLocation===o?"":o)} style={chipStyle(ciLocation===o)}>{o}</button>
-                          ))}
+                        <div style={{padding:"4px 0 14px"}}>
+                          <div style={labStyle}>スタンプの場所</div>
+                          <div style={rowStyle}>
+                            {locOpts.map(o=>(
+                              <button key={o} onClick={()=>setCiLocation(ciLocation===o?"":o)} style={chip(ciLocation===o)}>{o}</button>
+                            ))}
+                            {!locVis && <button onClick={()=>setLocInput(true)} style={addChip}>＋ 入力</button>}
+                          </div>
+                          {locVis && (
+                            <input className="modal-input" placeholder={t('stampLocationPlaceholder')} autoFocus={locInput}
+                              value={ciLocation} onChange={e=>setCiLocation(e.target.value)} style={inpStyle}/>
+                          )}
                         </div>
+                      </>
+                    )}
+                    {showRally && (
+                      <div style={{padding:"4px 0 14px"}}>
+                        <div style={labStyle}>スタンプラリー</div>
+                        <div style={rowStyle}>
+                          {eventSuggestions.map((ev,i)=>{
+                            const ended = isEnded(ev.date_to);
+                            const active = ciEventName===ev.event_name;
+                            return (
+                              <button key={i} onClick={()=>{ if(active){setCiEventName("");setCiDateFrom("");setCiDateTo("");} else {setCiEventName(ev.event_name);setCiDateFrom(ev.date_from||"");setCiDateTo(ev.date_to||"");} }}
+                                style={{...chip(active),color:active?"#fff":(ended?"var(--text3)":"var(--text2)")}}>
+                                {ev.event_name}
+                                {ended && <span style={{fontSize:10,fontWeight:700,background:active?"rgba(255,255,255,.3)":"#9a9a9a",color:"#fff",borderRadius:100,padding:"1px 6px",marginLeft:6}}>終了</span>}
+                              </button>
+                            );
+                          })}
+                          {!rallyVis && <button onClick={()=>setRallyInput(true)} style={addChip}>＋ 新規</button>}
+                        </div>
+                        {rallyVis && (
+                          <input className="modal-input" placeholder="例：JR東日本 夏の駅スタンプラリー" autoFocus={rallyInput}
+                            value={ciEventName} onChange={e=>setCiEventName(e.target.value)} style={inpStyle}/>
+                        )}
+                        {periodVis && (
+                          <>
+                            <div onClick={()=>setCiPeriodOpen(v=>!v)} style={{display:"flex",justifyContent:"space-between",alignItems:"center",margin:"12px 14px 0",fontSize:13,color:"var(--text2)",cursor:"pointer"}}>
+                              <span>期間を設定する（任意）</span>
+                              <span style={{color:"var(--text3)",fontSize:18,lineHeight:1}}>{(ciPeriodOpen||ciDateFrom||ciDateTo)?"−":"＋"}</span>
+                            </div>
+                            {(ciPeriodOpen||ciDateFrom||ciDateTo) && (
+                              <div className="limited-dates" style={{margin:"8px 14px 0"}}>
+                                <div className="limited-date-field">
+                                  <span className="limited-date-label">START</span>
+                                  <input type="date" className="limited-date-input" value={ciDateFrom} onChange={e=>setCiDateFrom(e.target.value)} style={{appearance:"none",WebkitAppearance:"none"}}/>
+                                </div>
+                                <span className="limited-sep" style={{paddingBottom:10,flexShrink:0}}>→</span>
+                                <div className="limited-date-field">
+                                  <span className="limited-date-label">END</span>
+                                  <input type="date" className="limited-date-input" value={ciDateTo} onChange={e=>setCiDateTo(e.target.value)} style={{appearance:"none",WebkitAppearance:"none"}}/>
+                                </div>
+                              </div>
+                            )}
+                          </>
+                        )}
                       </div>
-                    </>
-                  )}
-                </div>
+                    )}
+                  </div>
                 );
               })()}
-              {/* スタンプラリー名 */}
-              {!(showSpotEdit && isCheckedIn(selSpot)) && (
-                <div style={{width:"100%",boxSizing:"border-box",marginTop:4}}>
-                  <label style={{fontSize:12,color:"var(--text3)",fontWeight:500,display:"block",marginBottom:6}}>スタンプラリー名（任意）</label>
-                  <input className="limited-date-input" placeholder="例：JR東日本 夏の駅スタンプラリー"
-                    value={ciEventName} onChange={e=>setCiEventName(e.target.value)}
-                    style={{fontSize:16,background:"#fff",width:"100%",padding:"10px 12px",boxSizing:"border-box"}}/>
-                  {eventSuggestions.length>0 && (
-                    <div style={{display:"flex",gap:6,overflowX:"auto",marginTop:8,paddingBottom:2,width:"100%",minWidth:0,WebkitOverflowScrolling:"touch"}}>
-                      {eventSuggestions.map((ev,i)=>{
-                        const ended = isEnded(ev.date_to);
-                        return (
-                          <button key={i} onClick={()=>{setCiEventName(ev.event_name);setCiDateFrom(ev.date_from||"");setCiDateTo(ev.date_to||"");}}
-                            style={{flexShrink:0,display:"flex",alignItems:"center",gap:6,padding:"6px 12px",borderRadius:16,border:"1px solid var(--gray-200)",background:"#fff",fontSize:12,color:ended?"var(--text3)":"var(--text)",cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>
-                            {ev.event_name}
-                            {ended && <span style={{fontSize:10,fontWeight:700,background:"#9a9a9a",color:"#fff",borderRadius:100,padding:"2px 7px"}}>終了</span>}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
-                  <div onClick={()=>setCiPeriodOpen(v=>!v)} style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:12,fontSize:13,color:"var(--text2)",cursor:"pointer"}}>
-                    <span>期間を設定する（任意）</span>
-                    <span style={{color:"var(--text3)",fontSize:18,lineHeight:1}}>{(ciPeriodOpen||ciDateFrom||ciDateTo)?"−":"＋"}</span>
-                  </div>
-                  {(ciPeriodOpen||ciDateFrom||ciDateTo) && (
-                    <div className="limited-dates" style={{marginTop:8}}>
-                      <div className="limited-date-field">
-                        <span className="limited-date-label">START</span>
-                        <input type="date" className="limited-date-input"
-                          value={ciDateFrom} onChange={e=>setCiDateFrom(e.target.value)}
-                          style={{appearance:"none",WebkitAppearance:"none"}}/>
-                      </div>
-                      <span className="limited-sep" style={{paddingBottom:10,flexShrink:0}}>→</span>
-                      <div className="limited-date-field">
-                        <span className="limited-date-label">END</span>
-                        <input type="date" className="limited-date-input"
-                          value={ciDateTo} onChange={e=>setCiDateTo(e.target.value)}
-                          style={{appearance:"none",WebkitAppearance:"none"}}/>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
               </div>
               {!(showSpotEdit && isCheckedIn(selSpot)) && <div className="vis-row" style={{paddingLeft:16,paddingRight:16,width:"100%",boxSizing:"border-box",marginTop:"-4px"}}>
                 <label>{t('visibilityLabel')}</label>
