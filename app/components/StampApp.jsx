@@ -1455,6 +1455,8 @@ export default function App() {
   const [ciDateFrom, setCiDateFrom] = useState("");
   const [ciDateTo, setCiDateTo]     = useState("");
   const [ciEventName, setCiEventName] = useState("");
+  const [ciPeriodOpen, setCiPeriodOpen] = useState(false);
+  const [editPeriodOpen, setEditPeriodOpen] = useState(false);
   const [eventSuggestions, setEventSuggestions] = useState([]);
   const [activeEventTags, setActiveEventTags] = useState([]);
   const [ciHours, setCiHours] = useState("");
@@ -1633,7 +1635,7 @@ useEffect(()=>{
   if(el && el.scrollIntoView) el.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"});
 },[catSel]);
 useEffect(()=>{
-  supabase.from("checkins").select("event_name,date_from,date_to,spot_id").eq("limited",true).not("event_name","is",null)
+  supabase.from("checkins").select("event_name,date_from,date_to,spot_id").not("event_name","is",null)
     .then(({data})=>{
       const today = new Date().toISOString().slice(0,10);
       const grouped = {};
@@ -1849,15 +1851,18 @@ const searchGeo = async (q) => {
       setGeoLoading(false);
     }
   };
-  const openForm = (spot) => { setSelSpot(spot); setCiText(""); setHasPrev(false); setCiCat(""); setCiLimited(false); setCiDateFrom(""); setCiDateTo(""); setCiHours(spot.hours||""); setCiLocation(""); setShowSpotEdit(!isCheckedIn(spot)); setOverlay("form");
-    supabase.from("checkins").select("event_name,date_from,date_to").eq("limited",true).not("event_name","is",null).order("created_at",{ascending:false}).limit(50)
+  const openForm = (spot) => { setSelSpot(spot); setCiText(""); setHasPrev(false); setCiCat(""); setCiLimited(false); setCiEventName(""); setCiPeriodOpen(false); setCiDateFrom(""); setCiDateTo(""); setCiHours(spot.hours||""); setCiLocation(""); setShowSpotEdit(!isCheckedIn(spot)); setOverlay("form");
+    supabase.from("checkins").select("event_name,date_from,date_to").not("event_name","is",null).order("created_at",{ascending:false}).limit(100)
       .then(({data})=>{
         const seen = new Set();
         const unique = (data||[]).filter(d=>{
           if(!d.event_name || seen.has(d.event_name)) return false;
           seen.add(d.event_name);
           return true;
-        }).slice(0,8);
+        });
+        const _td = new Date().toLocaleDateString("sv-SE");
+        unique.sort((a,b)=>((a.date_to&&a.date_to<_td)?1:0)-((b.date_to&&b.date_to<_td)?1:0));
+        unique.splice(12);
         setEventSuggestions(unique);
       });
   };
@@ -1950,7 +1955,7 @@ const searchGeo = async (q) => {
       photo_urls: photoUrls,
       emoji: "",
       color: "#E1F5EE",
-      limited: ciLimited,
+      limited: !!(ciDateFrom||ciDateTo),
       event_name: ciEventName||null,
       date_from: ciDateFrom||null,
       date_to: ciDateTo||null,
@@ -2022,6 +2027,8 @@ const searchGeo = async (q) => {
     if(already) await supabase.from("saved_spots").delete().eq("user_id", user.id).eq("spot_id", spot.id);
     else await supabase.from("saved_spots").insert({user_id:user.id, spot_id:spot.id});
   };
+  // RALLY_V1
+  const isEnded = (to) => !!to && to < new Date().toLocaleDateString("sv-SE");
   const isSaved = (spot) => savedSpots.some(x=>x.id===spot.id);
   const isCheckedIn = (spot) => archives.some(a=>a.spot===spot.name);
   // スタンプ更新日が自分の最終訪問より新しいか
@@ -2570,7 +2577,7 @@ const searchGeo = async (q) => {
                         </div>
                         {selSpot.limited && (
                           <div style={{marginTop:4,display:"flex",alignItems:"center",gap:4}}>
-                            <span className="limited-badge">LIMITED</span>
+                            {isEnded(selSpot.dateTo) ? <span className="limited-badge" style={{background:"#9a9a9a",color:"#fff"}}>終了</span> : <span className="limited-badge">LIMITED</span>}
                             {selSpot.dateFrom && <span style={{fontSize:11,color:"var(--text3)"}}>{selSpot.dateFrom} → {selSpot.dateTo||"?"}</span>}
                           </div>
                         )}
@@ -2831,47 +2838,49 @@ const searchGeo = async (q) => {
                   </div>
                 </div>
               )}
-              {/* 期間限定設定 */}
-              {!(showSpotEdit && isCheckedIn(selSpot)) && <div className="vis-row" style={{marginBottom:"-8px"}}>
-                <label>{t('limitedTimeLabel')}</label>
-                <div className="vis-tog">
-                  <button className={`vtbtn ${ciLimited?"on":""}`} onClick={()=>setCiLimited(true)}>ON</button>
-                  <button className={`vtbtn ${!ciLimited?"on":""}`} onClick={()=>setCiLimited(false)}>OFF</button>
-                </div>
-              </div>}
-              {ciLimited && (
-                <>
-                {eventSuggestions.length>0 && (
-                  <div style={{display:"flex",gap:6,overflowX:"auto",marginTop:"4px",paddingBottom:2,width:"100%",minWidth:0,WebkitOverflowScrolling:"touch"}}>
-                    {eventSuggestions.map((ev,i)=>(
-                      <button key={i} onClick={()=>{setCiEventName(ev.event_name);setCiDateFrom(ev.date_from||"");setCiDateTo(ev.date_to||"");}}
-                        style={{flexShrink:0,padding:"6px 12px",borderRadius:16,border:"1px solid var(--gray-200)",background:"#fff",fontSize:12,color:"var(--text)",cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>
-                        {ev.event_name}
-                      </button>
-                    ))}
-                  </div>
-                )}
-                <div style={{width:"100%",boxSizing:"border-box",marginTop:"4px"}}>
-                  <input className="limited-date-input" placeholder="イベント名（任意）"
+              {/* スタンプラリー名 */}
+              {!(showSpotEdit && isCheckedIn(selSpot)) && (
+                <div style={{width:"100%",boxSizing:"border-box",marginTop:4}}>
+                  <label style={{fontSize:12,color:"var(--text3)",fontWeight:500,display:"block",marginBottom:6}}>スタンプラリー名（任意）</label>
+                  <input className="limited-date-input" placeholder="例：JR東日本 夏の駅スタンプラリー"
                     value={ciEventName} onChange={e=>setCiEventName(e.target.value)}
-                    style={{fontSize:16,background:"#fff",width:"100%",padding:"8px 12px"}}/>
-                </div>
-                <div className="limited-dates" style={{marginTop:"4px"}}>
-                  <div className="limited-date-field">
-                    <span className="limited-date-label">START</span>
-                    <input type="date" className="limited-date-input"
-                      value={ciDateFrom} onChange={e=>setCiDateFrom(e.target.value)}
-                      style={{appearance:"none",WebkitAppearance:"none"}}/>
+                    style={{fontSize:16,background:"#fff",width:"100%",padding:"10px 12px",boxSizing:"border-box"}}/>
+                  {eventSuggestions.length>0 && (
+                    <div style={{display:"flex",gap:6,overflowX:"auto",marginTop:8,paddingBottom:2,width:"100%",minWidth:0,WebkitOverflowScrolling:"touch"}}>
+                      {eventSuggestions.map((ev,i)=>{
+                        const ended = isEnded(ev.date_to);
+                        return (
+                          <button key={i} onClick={()=>{setCiEventName(ev.event_name);setCiDateFrom(ev.date_from||"");setCiDateTo(ev.date_to||"");}}
+                            style={{flexShrink:0,display:"flex",alignItems:"center",gap:6,padding:"6px 12px",borderRadius:16,border:"1px solid var(--gray-200)",background:"#fff",fontSize:12,color:ended?"var(--text3)":"var(--text)",cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>
+                            {ev.event_name}
+                            {ended && <span style={{fontSize:10,fontWeight:700,background:"#9a9a9a",color:"#fff",borderRadius:100,padding:"2px 7px"}}>終了</span>}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                  <div onClick={()=>setCiPeriodOpen(v=>!v)} style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:12,fontSize:13,color:"var(--text2)",cursor:"pointer"}}>
+                    <span>期間を設定する（任意）</span>
+                    <span style={{color:"var(--red)",fontSize:18,lineHeight:1}}>{(ciPeriodOpen||ciDateFrom||ciDateTo)?"−":"＋"}</span>
                   </div>
-                  <span className="limited-sep" style={{paddingBottom:10,flexShrink:0}}>→</span>
-                  <div className="limited-date-field">
-                    <span className="limited-date-label">END</span>
-                    <input type="date" className="limited-date-input"
-                      value={ciDateTo} onChange={e=>setCiDateTo(e.target.value)}
-                      style={{appearance:"none",WebkitAppearance:"none"}}/>
-                  </div>
+                  {(ciPeriodOpen||ciDateFrom||ciDateTo) && (
+                    <div className="limited-dates" style={{marginTop:8}}>
+                      <div className="limited-date-field">
+                        <span className="limited-date-label">START</span>
+                        <input type="date" className="limited-date-input"
+                          value={ciDateFrom} onChange={e=>setCiDateFrom(e.target.value)}
+                          style={{appearance:"none",WebkitAppearance:"none"}}/>
+                      </div>
+                      <span className="limited-sep" style={{paddingBottom:10,flexShrink:0}}>→</span>
+                      <div className="limited-date-field">
+                        <span className="limited-date-label">END</span>
+                        <input type="date" className="limited-date-input"
+                          value={ciDateTo} onChange={e=>setCiDateTo(e.target.value)}
+                          style={{appearance:"none",WebkitAppearance:"none"}}/>
+                      </div>
+                    </div>
+                  )}
                 </div>
-                </>
               )}
               </div>
               {!(showSpotEdit && isCheckedIn(selSpot)) && <div className="vis-row" style={{paddingLeft:16,paddingRight:16,width:"100%",boxSizing:"border-box",marginTop:"-4px"}}>
@@ -2983,7 +2992,7 @@ const searchGeo = async (q) => {
                           <>
                             <div style={{position:"absolute",bottom:0,left:0,right:0,height:80,borderRadius:"0 0 8px 8px",background:"linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 100%)",pointerEvents:"none"}}/>
                             <div style={{position:"absolute",left:12,bottom:12,display:"flex",flexDirection:"column",alignItems:"flex-start",gap:4}}>
-                              <span className="limited-badge">LIMITED</span>
+                              {isEnded(current.dateTo) ? <span className="limited-badge" style={{background:"#9a9a9a",color:"#fff"}}>終了</span> : <span className="limited-badge">LIMITED</span>}
                               {current.eventName && <span style={{fontSize:12,color:"#fff",fontWeight:600}}>{current.eventName}</span>}
                               {current.dateFrom && <span style={{fontSize:12,color:"#fff"}}>{current.dateFrom} → {current.dateTo||t('tbd')}</span>}
                             </div>
@@ -3175,7 +3184,8 @@ const searchGeo = async (q) => {
               <div className="arc-date">{selArc.date}</div>
               {selArc.limited && (
                 <div style={{display:"flex",alignItems:"center",gap:6,marginTop:6}}>
-                  <span className="limited-badge">LIMITED</span>
+                  {isEnded(selArc.dateTo) ? <span className="limited-badge" style={{background:"#9a9a9a",color:"#fff"}}>終了</span> : <span className="limited-badge">LIMITED</span>}
+                  {selArc.eventName && <span style={{fontSize:12,color:"var(--text)",fontWeight:600}}>{selArc.eventName}</span>}
                   {selArc.dateFrom && <span style={{fontSize:12,color:"var(--text3)"}}>{selArc.dateFrom} → {selArc.dateTo||t('tbd')}</span>}
                 </div>
               )}
@@ -3633,19 +3643,15 @@ const searchGeo = async (q) => {
                 <label className="modal-field-label">{t('stampLocationLabel')}</label>
                 <input className="modal-input" placeholder={t('stampLocationPlaceholder')} value={editLocation}
                   onChange={e=>setEditLocation(e.target.value)} style={{background:"#fff",fontSize:16}}/>
-                <div className="vis-row" style={{width:"100%",marginBottom:8}}>
-                  <label>{t('limitedTimeLabel')}</label>
-                  <div className="vis-tog">
-                    <button className={`vtbtn ${editLimited?"on":""}`} onClick={()=>setEditLimited(true)}>ON</button>
-                    <button className={`vtbtn ${!editLimited?"on":""}`} onClick={()=>setEditLimited(false)}>OFF</button>
-                  </div>
+                <label className="modal-field-label">スタンプラリー名（任意）</label>
+                <input className="modal-input" placeholder="例：JR東日本 夏の駅スタンプラリー"
+                  value={editEventName} onChange={e=>setEditEventName(e.target.value)}
+                  style={{background:"#fff",fontSize:16}}/>
+                <div onClick={()=>setEditPeriodOpen(v=>!v)} style={{display:"flex",justifyContent:"space-between",alignItems:"center",width:"100%",marginBottom:8,fontSize:13,color:"var(--text2)",cursor:"pointer"}}>
+                  <span>期間を設定する（任意）</span>
+                  <span style={{color:"var(--red)",fontSize:18,lineHeight:1}}>{(editPeriodOpen||editDateFrom||editDateTo)?"−":"＋"}</span>
                 </div>
-                {editLimited && (<>
-                  <div style={{width:"100%",boxSizing:"border-box",marginBottom:8}}>
-                    <input className="limited-date-input" placeholder="イベント名（任意）"
-                      value={editEventName} onChange={e=>setEditEventName(e.target.value)}
-                      style={{fontSize:16,background:"#fff",width:"100%",padding:"8px 12px"}}/>
-                  </div>
+                {(editPeriodOpen||editDateFrom||editDateTo) && (
                   <div className="limited-dates" style={{width:"100%",marginBottom:8}}>
                     <div className="limited-date-field">
                       <span className="limited-date-label">START</span>
@@ -3657,7 +3663,7 @@ const searchGeo = async (q) => {
                       <input type="date" className="limited-date-input" value={editDateTo} onChange={e=>setEditDateTo(e.target.value)} style={{appearance:"none",WebkitAppearance:"none"}}/>
                     </div>
                   </div>
-                </>)}
+                )}
                 <label className="modal-field-label">画像</label>
                 <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:32}}>
                   {editPhotos.map((url,i)=>(
@@ -3695,7 +3701,7 @@ const searchGeo = async (q) => {
                   <button className="modal-ok" onClick={async()=>{
                     await supabase.from("checkins").update({
                       note:editNote, photo_urls:editPhotos,
-                      limited:editLimited, event_name:editEventName||null,
+                      limited:!!(editDateFrom||editDateTo), event_name:editEventName||null,
                       date_from:editDateFrom||null, date_to:editDateTo||null,
                     }).eq("id",editingCheckin.id);
                     if(editingCheckin.spot_id && (editHours||editLocation)){
@@ -3705,8 +3711,8 @@ const searchGeo = async (q) => {
                       }).eq("id",editingCheckin.spot_id);
                       setSelSpot(s=>s?{...s,hours:editHours||s.hours,location:editLocation||s.location}:s);
                     }
-                    setArchives(a=>a.map(x=>x.id===editingCheckin.id?{...x,note:editNote,photos:editPhotos,hasImg:editPhotos.length>0,limited:editLimited,eventName:editEventName||"",dateFrom:editDateFrom,dateTo:editDateTo}:x));
-                    setSpotCheckins(a=>a.map(x=>x.id===editingCheckin.id?{...x,note:editNote,photos:editPhotos,hasImg:editPhotos.length>0,limited:editLimited,eventName:editEventName||"",dateFrom:editDateFrom,dateTo:editDateTo}:x));
+                    setArchives(a=>a.map(x=>x.id===editingCheckin.id?{...x,note:editNote,photos:editPhotos,hasImg:editPhotos.length>0,limited:!!(editDateFrom||editDateTo),eventName:editEventName||"",dateFrom:editDateFrom,dateTo:editDateTo}:x));
+                    setSpotCheckins(a=>a.map(x=>x.id===editingCheckin.id?{...x,note:editNote,photos:editPhotos,hasImg:editPhotos.length>0,limited:!!(editDateFrom||editDateTo),eventName:editEventName||"",dateFrom:editDateFrom,dateTo:editDateTo}:x));
                     setEditingCheckin(null);
                     showToast(t('profileSaved'),"ok");
                   }}>{t('saveAction')}</button>
