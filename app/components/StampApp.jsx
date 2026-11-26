@@ -1460,6 +1460,7 @@ export default function App() {
   const [hoursInput, setHoursInput] = useState(false);
   const [locInput, setLocInput] = useState(false);
   const [rallyInput, setRallyInput] = useState(false);
+  const [infoEdit, setInfoEdit] = useState(false);
   const [editPeriodOpen, setEditPeriodOpen] = useState(false);
   const [eventSuggestions, setEventSuggestions] = useState([]);
   const [activeEventTags, setActiveEventTags] = useState([]);
@@ -1855,17 +1856,16 @@ const searchGeo = async (q) => {
       setGeoLoading(false);
     }
   };
-  const openForm = (spot) => { setSelSpot(spot); setCiText(""); setHasPrev(false); setCiCat(""); setCiLimited(false); setCiEventName(""); setCiPeriodOpen(false); setSpotInfoOpen(false); setHoursInput(false); setLocInput(false); setRallyInput(false); setCiDateFrom(""); setCiDateTo(""); setCiHours(spot.hours||""); setCiLocation(""); setShowSpotEdit(!isCheckedIn(spot)); setOverlay("form");
+  const openForm = (spot) => { setSelSpot(spot); setCiText(""); setHasPrev(false); setCiCat(""); setCiLimited(false); setCiEventName(""); setCiPeriodOpen(false); setSpotInfoOpen(false); setHoursInput(false); setLocInput(false); setRallyInput(false); setInfoEdit(false); setCiDateFrom(""); setCiDateTo(""); setCiHours(""); setCiLocation(""); setShowSpotEdit(!isCheckedIn(spot)); setOverlay("form");
     supabase.from("checkins").select("event_name,date_from,date_to").not("event_name","is",null).order("created_at",{ascending:false}).limit(100)
       .then(({data})=>{
         const seen = new Set();
+        const _td = new Date().toLocaleDateString("sv-SE"); // CHECKININFO_V1
         const unique = (data||[]).filter(d=>{
           if(!d.event_name || seen.has(d.event_name)) return false;
           seen.add(d.event_name);
-          return true;
+          return !(d.date_to && d.date_to < _td);
         });
-        const _td = new Date().toLocaleDateString("sv-SE");
-        unique.sort((a,b)=>((a.date_to&&a.date_to<_td)?1:0)-((b.date_to&&b.date_to<_td)?1:0));
         unique.splice(12);
         setEventSuggestions(unique);
       });
@@ -2824,7 +2824,11 @@ const searchGeo = async (q) => {
               </div>)}
               {/* スタンプ情報カード STAMPCARD_V1 */}
               {(() => {
-                const showSpotRows = showSpotEdit;
+                const _sc = (typeof window!=="undefined" && window.__spotsCache?.[selSpot.name]) || {};
+                const hoursV = selSpot.hours || _sc.hours || "";
+                const locV = selSpot.location || _sc.location || "";
+                const registered = !!(hoursV || locV);
+                const showSpotRows = (showSpotEdit && isCheckedIn(selSpot)) || (showSpotEdit && !registered) || infoEdit;
                 const showRally = !(showSpotEdit && isCheckedIn(selSpot));
                 const hoursOpts = ["終日","9:00-17:00","10:00-18:00"];
                 const locOpts = ["入口付近","受付","改札の近く"];
@@ -2840,6 +2844,19 @@ const searchGeo = async (q) => {
                 return (
                   <div style={{width:"100%",boxSizing:"border-box",background:"var(--gray-50)",borderRadius:12,padding:"14px 0 4px",marginTop:8,marginBottom:12}}>
                     <div style={{padding:"0 14px 10px",fontSize:13,fontWeight:700,color:"var(--text)"}}>スタンプの情報</div>
+                    {!showSpotRows && (
+                      <div style={{padding:"0 14px 14px",fontSize:13,color:"var(--text)"}}>
+                        {registered ? (
+                          <>
+                            {hoursV && <div style={{display:"flex",alignItems:"flex-start",gap:8,marginBottom:6}}><span style={{display:"inline-flex",marginTop:2,color:"var(--text3)"}}><Ic.Clock/></span><span>{hoursV}</span></div>}
+                            {locV && <div style={{display:"flex",alignItems:"flex-start",gap:8,marginBottom:6}}><span style={{display:"inline-flex",marginTop:2,color:"var(--text3)"}}><Ic.Pin/></span><span>{locV}</span></div>}
+                          </>
+                        ) : (
+                          <div style={{color:"var(--text3)"}}>営業時間・スタンプの場所は未登録です</div>
+                        )}
+                        <button onClick={()=>{setInfoEdit(true);setCiHours(hoursV);setCiLocation(locV);}} style={{marginTop:4,padding:0,background:"none",border:"none",color:"var(--text3)",fontSize:12,textDecoration:"underline",cursor:"pointer",fontFamily:"inherit"}}>{registered?"情報を修正する":"情報を追加する"}</button>
+                      </div>
+                    )}
                     {showSpotRows && (
                       <>
                         <div style={{padding:"4px 0 14px"}}>
@@ -2898,7 +2915,7 @@ const searchGeo = async (q) => {
                               <span style={{color:"var(--text3)",fontSize:18,lineHeight:1}}>{(ciPeriodOpen||ciDateFrom||ciDateTo)?"−":"＋"}</span>
                             </div>
                             {(ciPeriodOpen||ciDateFrom||ciDateTo) && (
-                              <div className="limited-dates" style={{margin:"8px 14px 0"}}>
+                              <div className="limited-dates" style={{margin:"8px 14px 0",width:"auto",background:"transparent"}}> {/* DATESFIX_V1 */}
                                 <div className="limited-date-field">
                                   <span className="limited-date-label">START</span>
                                   <input type="date" className="limited-date-input" value={ciDateFrom} onChange={e=>setCiDateFrom(e.target.value)} style={{appearance:"none",WebkitAppearance:"none"}}/>
