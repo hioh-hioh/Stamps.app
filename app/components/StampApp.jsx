@@ -150,7 +150,7 @@ const T = {
   folderDeleted:        { ja:"フォルダを削除しました", en:"Folder deleted", zh:"文件夹已删除" },
   delete:                { ja:"削除", en:"Delete", zh:"删除" },
   latestInfoPlaceholder:{ ja:"最新情報", en:"Latest update", zh:"最新动态" },
-  firstCheckinMessage:  { ja:"初めてのチェックインスポットです！スポット情報を登録しましょう🎉", en:"This is your first check-in here! Let's add some spot info 🎉", zh:"这是你在这里的第一次打卡！来登记一下地点信息吧🎉" },
+  firstCheckinMessage:  { ja:"このスポットの情報を教えてください（任意）", en:"Tell us about this spot (optional)", zh:"请告诉我们这个地点的信息（可选）" },
   hoursLabel:            { ja:"営業時間", en:"Hours", zh:"营业时间" },
   hoursPlaceholder:      { ja:"例：10:00-20:00 / 終日", en:"e.g. 10:00-20:00 / All day", zh:"例如：10:00-20:00 / 全天" },
   stampLocationLabel:    { ja:"スタンプ設置場所", en:"Stamp location", zh:"印章放置位置" },
@@ -1456,6 +1456,7 @@ export default function App() {
   const [ciDateTo, setCiDateTo]     = useState("");
   const [ciEventName, setCiEventName] = useState("");
   const [ciPeriodOpen, setCiPeriodOpen] = useState(false);
+  const [spotInfoOpen, setSpotInfoOpen] = useState(false);
   const [editPeriodOpen, setEditPeriodOpen] = useState(false);
   const [eventSuggestions, setEventSuggestions] = useState([]);
   const [activeEventTags, setActiveEventTags] = useState([]);
@@ -1851,7 +1852,7 @@ const searchGeo = async (q) => {
       setGeoLoading(false);
     }
   };
-  const openForm = (spot) => { setSelSpot(spot); setCiText(""); setHasPrev(false); setCiCat(""); setCiLimited(false); setCiEventName(""); setCiPeriodOpen(false); setCiDateFrom(""); setCiDateTo(""); setCiHours(spot.hours||""); setCiLocation(""); setShowSpotEdit(!isCheckedIn(spot)); setOverlay("form");
+  const openForm = (spot) => { setSelSpot(spot); setCiText(""); setHasPrev(false); setCiCat(""); setCiLimited(false); setCiEventName(""); setCiPeriodOpen(false); setSpotInfoOpen(!!spot.hours); setCiDateFrom(""); setCiDateTo(""); setCiHours(spot.hours||""); setCiLocation(""); setShowSpotEdit(!isCheckedIn(spot)); setOverlay("form");
     supabase.from("checkins").select("event_name,date_from,date_to").not("event_name","is",null).order("created_at",{ascending:false}).limit(100)
       .then(({data})=>{
         const seen = new Set();
@@ -2818,26 +2819,48 @@ const searchGeo = async (q) => {
                   </label>
                 </div>
               </div>)}
-              {/* スポット情報入力 */}
-              {showSpotEdit && (
+              {/* スポット情報入力 SPOTINFO_V1 */}
+              {showSpotEdit && (() => {
+                const first = !isCheckedIn(selSpot);
+                const open = !first || spotInfoOpen;
+                const chipStyle = (active) => ({padding:"6px 12px",borderRadius:16,border:"1px solid "+(active?"var(--text)":"var(--gray-200)"),background:"#fff",fontSize:12,color:active?"var(--text)":"var(--text2)",cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"});
+                const hoursOpts = ["終日","9:00-17:00","10:00-18:00"];
+                const locOpts = ["入口付近","受付・カウンター","改札の近く","窓口"];
+                return (
                 <div style={{width:"100%",boxSizing:"border-box"}}>
-                  {!isCheckedIn(selSpot) && (
-                    <div style={{fontSize:13,color:"var(--red)",fontWeight:700,marginBottom:12,textAlign:"left"}}>
-                      {t('firstCheckinMessage')}
+                  {first && (
+                    <div onClick={()=>setSpotInfoOpen(v=>!v)} style={{display:"flex",justifyContent:"space-between",alignItems:"center",fontSize:13,color:"var(--text2)",cursor:"pointer",marginBottom:open?12:0}}>
+                      <span>{t('firstCheckinMessage')}</span>
+                      <span style={{color:"var(--text3)",fontSize:18,lineHeight:1}}>{open?"−":"＋"}</span>
                     </div>
                   )}
-                  <div style={{marginBottom:12}}>
-                    <label style={{fontSize:12,color:"var(--text3)",fontWeight:500,display:"block",marginBottom:4}}>{t('hoursLabel')}</label>
-                    <input className="modal-input" placeholder={t('hoursPlaceholder')}
-                      value={ciHours} onChange={e=>setCiHours(e.target.value)} style={{margin:0,width:"100%",boxSizing:"border-box",background:"#fff"}}/>
-                  </div>
-                  <div style={{marginBottom:4}}>
-                    <label style={{fontSize:12,color:"var(--text3)",fontWeight:500,display:"block",marginBottom:4}}>{t('stampLocationLabel')}</label>
-                    <input className="modal-input" placeholder={t('stampLocationPlaceholder')}
-                      value={ciLocation} onChange={e=>setCiLocation(e.target.value)} style={{margin:0,width:"100%",boxSizing:"border-box",background:"#fff"}}/>
-                  </div>
+                  {open && (
+                    <>
+                      <div style={{marginBottom:12}}>
+                        <label style={{fontSize:12,color:"var(--text3)",fontWeight:500,display:"block",marginBottom:4}}>{t('hoursLabel')}</label>
+                        <input className="modal-input" placeholder={t('hoursPlaceholder')}
+                          value={ciHours} onChange={e=>setCiHours(e.target.value)} style={{margin:0,width:"100%",boxSizing:"border-box",background:"#fff"}}/>
+                        <div style={{display:"flex",flexWrap:"wrap",gap:6,marginTop:8}}>
+                          {hoursOpts.map(o=>(
+                            <button key={o} onClick={()=>setCiHours(ciHours===o?"":o)} style={chipStyle(ciHours===o)}>{o}</button>
+                          ))}
+                        </div>
+                      </div>
+                      <div style={{marginBottom:4}}>
+                        <label style={{fontSize:12,color:"var(--text3)",fontWeight:500,display:"block",marginBottom:4}}>{t('stampLocationLabel')}</label>
+                        <input className="modal-input" placeholder={t('stampLocationPlaceholder')}
+                          value={ciLocation} onChange={e=>setCiLocation(e.target.value)} style={{margin:0,width:"100%",boxSizing:"border-box",background:"#fff"}}/>
+                        <div style={{display:"flex",flexWrap:"wrap",gap:6,marginTop:8}}>
+                          {locOpts.map(o=>(
+                            <button key={o} onClick={()=>setCiLocation(ciLocation===o?"":o)} style={chipStyle(ciLocation===o)}>{o}</button>
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
-              )}
+                );
+              })()}
               {/* スタンプラリー名 */}
               {!(showSpotEdit && isCheckedIn(selSpot)) && (
                 <div style={{width:"100%",boxSizing:"border-box",marginTop:4}}>
@@ -2861,7 +2884,7 @@ const searchGeo = async (q) => {
                   )}
                   <div onClick={()=>setCiPeriodOpen(v=>!v)} style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:12,fontSize:13,color:"var(--text2)",cursor:"pointer"}}>
                     <span>期間を設定する（任意）</span>
-                    <span style={{color:"var(--red)",fontSize:18,lineHeight:1}}>{(ciPeriodOpen||ciDateFrom||ciDateTo)?"−":"＋"}</span>
+                    <span style={{color:"var(--text3)",fontSize:18,lineHeight:1}}>{(ciPeriodOpen||ciDateFrom||ciDateTo)?"−":"＋"}</span>
                   </div>
                   {(ciPeriodOpen||ciDateFrom||ciDateTo) && (
                     <div className="limited-dates" style={{marginTop:8}}>
@@ -3649,7 +3672,7 @@ const searchGeo = async (q) => {
                   style={{background:"#fff",fontSize:16}}/>
                 <div onClick={()=>setEditPeriodOpen(v=>!v)} style={{display:"flex",justifyContent:"space-between",alignItems:"center",width:"100%",marginBottom:8,fontSize:13,color:"var(--text2)",cursor:"pointer"}}>
                   <span>期間を設定する（任意）</span>
-                  <span style={{color:"var(--red)",fontSize:18,lineHeight:1}}>{(editPeriodOpen||editDateFrom||editDateTo)?"−":"＋"}</span>
+                  <span style={{color:"var(--text3)",fontSize:18,lineHeight:1}}>{(editPeriodOpen||editDateFrom||editDateTo)?"−":"＋"}</span>
                 </div>
                 {(editPeriodOpen||editDateFrom||editDateTo) && (
                   <div className="limited-dates" style={{width:"100%",marginBottom:8}}>
