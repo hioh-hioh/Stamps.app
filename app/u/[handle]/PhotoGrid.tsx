@@ -75,10 +75,11 @@ export default function PhotoGrid({ photos }: { photos: P[] }) {
             }}
           >
             {photos.map((x, i) => (
-              <div key={x.id} style={{ width: w, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <div key={x.id} style={{ width: w, flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14 }}>
                 {Math.abs(i - idx) <= 2 && (
                   <img src={x.url} alt={x.alt} draggable={false} style={{ maxWidth: "100%", maxHeight: "80vh", objectFit: "contain", userSelect: "none" }} />
                 )}
+                {x.alt && <div style={{ color: "#fff", fontSize: 15, fontWeight: 700, padding: "0 16px", textAlign: "center" }}>{x.alt}</div>}
               </div>
             ))}
           </div>

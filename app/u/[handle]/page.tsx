@@ -58,6 +58,7 @@ export default async function Page({ params }: { params: Promise<{ handle: strin
   }
 
   const photos = posts.filter((x: any) => x.photo_urls && x.photo_urls.length);
+  const spotCount = new Set(posts.map((x: any) => x.spot_name).filter(Boolean)).size; // SHARE_V3
 
   return (
     <main style={wrap}>
@@ -70,7 +71,7 @@ export default async function Page({ params }: { params: Promise<{ handle: strin
         {p.location && <div style={{ fontSize: 12, color: "#6B6B67" }}>{p.location}</div>}
         {p.bio && <div style={{ fontSize: 13, textAlign: "center", whiteSpace: "pre-wrap" }}>{p.bio}</div>}
       </div>
-      <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 8 }}>投稿 ({posts.length})</div>
+      <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 8 }}>投稿 {posts.length}{spotCount > 0 && <span style={{ color: "#9B9B97", fontWeight: 500 }}>　·　スポット {spotCount}</span>}</div>
       <PhotoGrid photos={photos.map((x: any) => ({ id: x.id, url: x.photo_urls[0], alt: x.spot_name || "" }))} />
 
       <div style={{ position: "fixed", left: 0, right: 0, bottom: 0, padding: "12px 16px calc(16px + env(safe-area-inset-bottom))", background: "linear-gradient(rgba(255,255,255,0), #fff 30%)", zIndex: 50 }}>
