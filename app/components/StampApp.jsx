@@ -2835,7 +2835,7 @@ const searchGeo = async (q) => {
                 const chip = (active) => ({flexShrink:0,display:"inline-flex",alignItems:"center",padding:"6px 14px",borderRadius:20,border:`1px solid ${active?"var(--red)":"var(--gray-200)"}`,background:active?"var(--red)":"var(--white)",color:active?"#fff":"var(--text2)",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"});
                 const addChip = {flexShrink:0,display:"inline-flex",alignItems:"center",padding:"6px 14px",borderRadius:20,border:"1px dashed var(--gray-200)",background:"transparent",color:"var(--text3)",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"};
                 const rowStyle = {display:"flex",gap:8,overflowX:"auto",padding:"0 14px",scrollbarWidth:"none",WebkitOverflowScrolling:"touch"};
-                const labStyle = {padding:"0 14px",fontSize:11,fontWeight:500,color:"var(--text3)",letterSpacing:".05em",marginBottom:8};
+                const labStyle = {padding:"0 14px",fontSize:12,fontWeight:500,color:"var(--text3)",marginBottom:8};
                 const inpStyle = {margin:"10px 14px 0",width:"calc(100% - 28px)",background:"#fff",boxSizing:"border-box"};
                 const hoursVis = hoursInput || (!!ciHours && !hoursOpts.includes(ciHours));
                 const locVis = locInput || (!!ciLocation && !locOpts.includes(ciLocation));
